@@ -33,22 +33,18 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
                     if r.ok { State::Done(r) } else { State::Failed(r) }
                 }
                 Cmd::Stats => State::Done(fsm::stats_report(&ws)),
-                _ => {
-                    if !violations.is_empty() {
-                        State::Failed(fsm::check_report(&ws, &violations))
-                    } else {
-                        // Checked -> Planned -> (committed by driver) -> Done
-                        match fsm::plan(cmd, ws) {
-                            Ok(s) => s,
-                            Err(e) => State::Failed(Report {
-                                ok: false,
-                                summary: format!("abr: {e}"),
-                                failures: vec![],
-                                artifacts_written: 0,
-                            }),
-                        }
-                    }
-                }
+                // Generators are the fix path for violations (e.g. new tags
+                // are "not indexed" until `patterns` regenerates the index),
+                // so they run regardless; the gate lives in `check` (and CI).
+                _ => match fsm::plan(cmd, ws) {
+                    Ok(s) => s,
+                    Err(e) => State::Failed(Report {
+                        ok: false,
+                        summary: format!("abr: {e}"),
+                        failures: vec![],
+                        artifacts_written: 0,
+                    }),
+                },
             },
             // Planned -> Done: commit artifacts through the Sink port.
             State::Planned(ws, artifacts) => {

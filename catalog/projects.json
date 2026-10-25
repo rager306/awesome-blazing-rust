@@ -52,6 +52,15 @@
       "arch": ["statistical-rigor"]
     },
     {
+      "name": "sux",
+      "url": "https://github.com/vigna/sux-rs",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "succinct structures: Elias-Fano, rank/select, static functions, minimal perfect hashing",
+      "blazing": "scales to trillions of keys with very fast queries executed directly on the compressed representation.",
+      "arch": ["succinct", "rank-select", "zero-copy"]
+    },
+    {
       "name": "hashbrown",
       "url": "https://github.com/rust-lang/hashbrown",
       "section": "Algorithms & Data Structures",
@@ -286,6 +295,15 @@
       "arch": ["lsm-plus-btree"]
     },
     {
+      "name": "qdrant",
+      "url": "https://github.com/qdrant/qdrant",
+      "section": "Graph & Knowledge Graphs",
+      "type": "case-study",
+      "description": "vector database in Rust: filtered ANN search, quantization",
+      "blazing": "publishes an open benchmark suite that compares engines at comparable recall@k - speed claims are quality-adjusted, not raw.",
+      "arch": ["hnsw", "quantization", "quality-vs-speed"]
+    },
+    {
       "name": "petgraph",
       "url": "https://github.com/petgraph/petgraph",
       "section": "Graph & Knowledge Graphs",
@@ -322,6 +340,15 @@
       "arch": ["datalog", "embedded"]
     },
     {
+      "name": "fst",
+      "url": "https://github.com/BurntSushi/fst",
+      "section": "Search & Text Processing",
+      "type": "measured",
+      "description": "finite state transducers for large sets and maps with streaming construction",
+      "blazing": "~16,000,000 Wikipedia article titles (384 MB of strings) compress to a 157 MB fst with fast prefix/fuzzy queries (author's 2015 measurement - historical, tied to that setup).",
+      "arch": ["finite-state-transducer", "compact-serialization"]
+    },
+    {
       "name": "tantivy",
       "url": "https://github.com/quickwit-oss/tantivy",
       "section": "Search & Text Processing",
@@ -349,6 +376,24 @@
       "arch": ["zero-copy", "combinators"]
     },
     {
+      "name": "sonic-rs",
+      "url": "https://github.com/cloudwego/sonic-rs",
+      "section": "Data & Analytics",
+      "type": "measured",
+      "description": "SIMD JSON parsing straight into serde-compatible structs (no intermediate tape re-parse)",
+      "blazing": "published benchmarks vs serde_json and simd-json; the `sanitize` feature needed for LLVM sanitizers costs ~30% in serialization - production builds keep it off.",
+      "arch": ["simd", "typed-parse-direct"]
+    },
+    {
+      "name": "simd-json",
+      "url": "https://github.com/simd-lite/simd-json",
+      "section": "Data & Analytics",
+      "type": "case-study",
+      "description": "SIMD JSON parsing into a tape, following the simdjson design in Rust",
+      "blazing": "performance tracks the C++ simdjson implementation; best numbers require a custom allocator (mimalloc/jemalloc).",
+      "arch": ["simd", "tape-representation"]
+    },
+    {
       "name": "polars",
       "url": "https://github.com/pola-rs/polars",
       "section": "Data & Analytics",
@@ -374,6 +419,33 @@
       "description": "SQL query engine",
       "blazing": "the engine behind many \"faster than X\" blog posts; StringView and bbtree-grade extensibility.",
       "arch": ["query-optimization", "columnar", "extensible"]
+    },
+    {
+      "name": "moka",
+      "url": "https://github.com/moka-rs/moka",
+      "section": "Caching & Working Set",
+      "type": "case-study",
+      "description": "concurrent cache, Rust port of Caffeine ideas: admission/eviction policies, sync and async APIs",
+      "blazing": "the leverage is Window-TinyLFU admission keeping hot keys resident; hit-ratio studies are published in the wiki.",
+      "arch": ["window-tinylfu", "hit-ratio-first"]
+    },
+    {
+      "name": "foyer",
+      "url": "https://github.com/foyer-rs/foyer",
+      "section": "Caching & Working Set",
+      "type": "case-study",
+      "description": "hybrid RAM + disk cache for data-intensive systems",
+      "blazing": "eviction-policy benchmark harness (hit-ratio benches) lives in the repo - policy choice is measured, not vibes.",
+      "arch": ["hybrid-cache", "hit-ratio-first"]
+    },
+    {
+      "name": "differential-dataflow",
+      "url": "https://github.com/TimelyDataflow/differential-dataflow",
+      "section": "Incremental Computation",
+      "type": "measured",
+      "description": "incremental data-parallel computation on timely dataflow",
+      "blazing": "in the author's graph example (10M nodes, 50M edges), a 15 s initial computation answers input changes in ~230 us - about 100,000x faster than recomputing; batched updates average ~5 us each; two workers cut the build from 15 s to ~8 s.",
+      "arch": ["incremental-view-maintenance", "arrangement-indexing", "data-parallel"]
     },
     {
       "name": "quinn",
@@ -428,6 +500,15 @@
       "description": "zero-copy serialization",
       "blazing": "zero-copy *access* to the archived representation; validation and full reconstruction are separate, individually costed steps.",
       "arch": ["zero-copy", "relative-pointers"]
+    },
+    {
+      "name": "faer",
+      "url": "https://github.com/sarah-quinones/faer-rs",
+      "section": "Science & Computational",
+      "type": "case-study",
+      "description": "linear algebra foundation: dense matrices, decompositions, eigenproblems",
+      "blazing": "published benchmark plots against BLAS/LAPACK backends; kernels use runtime SIMD dispatch via pulp.",
+      "arch": ["simd", "runtime-dispatch"]
     },
     {
       "name": "ndarray",
@@ -617,6 +698,24 @@
       "description": "declarative UI",
       "blazing": "embedded-friendly; the other 2026 survey winner.",
       "arch": ["declarative-dsl", "embedded-first"]
+    },
+    {
+      "name": "pulp",
+      "url": "https://github.com/sarah-quinones/pulp",
+      "section": "Benchmarking & Toolchain",
+      "type": "case-study",
+      "description": "write SIMD kernels once, dispatch to AVX2/AVX-512/NEON at run time",
+      "blazing": "removes the compile-time SIMD fork dilemma; the scalar path remains the baseline for measurement.",
+      "arch": ["runtime-dispatch", "simd"]
+    },
+    {
+      "name": "cargo-pgo",
+      "url": "https://github.com/Kobzol/cargo-pgo",
+      "section": "Benchmarking & Toolchain",
+      "type": "case-study",
+      "description": "PGO and BOLT for Rust binaries from cargo",
+      "blazing": "profile-guided inlining and code layout on real workloads; validate on a workload different from the profiling one.",
+      "arch": ["pgo", "code-layout"]
     },
     {
       "name": "gungraun",

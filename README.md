@@ -15,7 +15,9 @@
 - [Storage & Embedded Databases](#storage--embedded-databases).
 - [Graph & Knowledge Graphs](#graph--knowledge-graphs).
 - [Search & Text Processing](#search--text-processing).
-- [Data & Analytics](#data--analytics).
+- [Data & Analytics](#data--analytics)
+- [Caching & Working Set](#caching--working-set)
+- [Incremental Computation](#incremental-computation).
 - [Networking & Protocols](#networking--protocols).
 - [Web & Edge](#web--edge).
 - [Science & Computational](#science--computational).
@@ -44,6 +46,8 @@ The canonical blazing projects - the ones that made "Rust is fast" a meme with r
 - [hyperfine](https://github.com/sharkdp/hyperfine) - command-line benchmarking tool. **Blazing:** statistical warm-up/outlier analysis in a CLI; the tool we benchmark this list with. **Arch:** `statistical-rigor`.
 
 ## Algorithms & Data Structures
+
+- [sux](https://github.com/vigna/sux-rs) - succinct structures: Elias-Fano, rank/select, static functions, minimal perfect hashing. **Blazing:** scales to trillions of keys with very fast queries executed directly on the compressed representation. **Arch:** `succinct`, `rank-select`, `zero-copy`.
 
 Well-known algorithms, implemented properly in Rust.
 
@@ -99,6 +103,8 @@ Well-known algorithms, implemented properly in Rust.
 
 ## Graph & Knowledge Graphs
 
+- [qdrant](https://github.com/qdrant/qdrant) - vector database in Rust: filtered ANN search, quantization. **Blazing:** publishes an open benchmark suite that compares engines at comparable recall@k - speed claims are quality-adjusted, not raw. **Arch:** `hnsw`, `quantization`, `quality-vs-speed`.
+
 - [petgraph](https://github.com/petgraph/petgraph) - THE graph data-structure crate. **Blazing:** the default choice; algorithmic core used across the ecosystem. **Arch:** `generic-graph`.
 - [rustworkx](https://github.com/Qiskit/rustworkx) - IBM's graph library (Python API requires adaptation, not drop-in NetworkX; `rustworkx-core` is the pure-Rust crate). **Blazing:** documented multi-x wins over pure-Python NetworkX at Qiskit scale. **Arch:** `python-bridge`, `parallel-algos`.
 - [oxigraph](https://github.com/oxigraph/oxigraph) - RDF/SPARQL store. **Blazing:** embedded+server SPARQL with active perf discipline; persistence is RocksDB-backed by default (feature-gated in-memory alternative). **Arch:** `sparql-engine`, `storage-backend-flag`.
@@ -106,15 +112,33 @@ Well-known algorithms, implemented properly in Rust.
 
 ## Search & Text Processing
 
+- [fst](https://github.com/BurntSushi/fst) - finite state transducers for large sets and maps with streaming construction. **Blazing:** ~16,000,000 Wikipedia article titles (384 MB of strings) compress to a 157 MB fst with fast prefix/fuzzy queries (author's 2015 measurement - historical, tied to that setup). **Arch:** `finite-state-transducer`, `compact-serialization`.
+
 - [tantivy](https://github.com/quickwit-oss/tantivy) - full-text search engine. **Blazing:** benchmarked against Lucene, frequently ahead on ingest. **Arch:** `inverted-index`, `columnar`.
 - [aho-corasick](https://github.com/BurntSushi/aho-corasick) - multi-pattern matching. **Blazing:** the prefilter behind regex/ripgrep multi-literal search. **Arch:** `automata-compilation`, `simd`.
 - [winnow](https://github.com/winnow-rs/winnow) - parser combinators. **Blazing:** zero-copy parsing as the default path. **Arch:** `zero-copy`, `combinators`.
 
 ## Data & Analytics
 
+- [sonic-rs](https://github.com/cloudwego/sonic-rs) - SIMD JSON parsing straight into serde-compatible structs (no intermediate tape re-parse). **Blazing:** published benchmarks vs serde_json and simd-json; the `sanitize` feature needed for LLVM sanitizers costs ~30% in serialization - production builds keep it off. **Arch:** `simd`, `typed-parse-direct`.
+- [simd-json](https://github.com/simd-lite/simd-json) - SIMD JSON parsing into a tape, following the simdjson design in Rust. **Blazing:** performance tracks the C++ simdjson implementation; best numbers require a custom allocator (mimalloc/jemalloc). **Arch:** `simd`, `tape-representation`.
+
 - [polars](https://github.com/pola-rs/polars) - DataFrames. **Blazing:** documented multi-x wins over pandas on groupby/join; query-optimized, lazy, parallel. **Arch:** `columnar`, `query-optimization`, `simd`.
 - [apache-arrow-rs](https://github.com/apache/arrow-rs) - Arrow columnar format. **Blazing:** zero-copy interchange - the "no-serialization" tax advantage. **Arch:** `columnar`, `zero-copy`, `stringview`.
 - [datafusion](https://github.com/apache/datafusion) - SQL query engine. **Blazing:** the engine behind many "faster than X" blog posts; StringView and bbtree-grade extensibility. **Arch:** `query-optimization`, `columnar`, `extensible`.
+
+## Caching & Working Set
+
+The win here is avoiding expensive misses - judge these by hit ratio on realistic admission policies, not by single-get latency.
+
+- [moka](https://github.com/moka-rs/moka) - concurrent cache, Rust port of Caffeine ideas: admission/eviction policies, sync and async APIs. **Blazing:** the leverage is Window-TinyLFU admission keeping hot keys resident; hit-ratio studies are published in the wiki. **Arch:** `window-tinylfu`, `hit-ratio-first`.
+- [foyer](https://github.com/foyer-rs/foyer) - hybrid RAM + disk cache for data-intensive systems. **Blazing:** eviction-policy benchmark harness (hit-ratio benches) lives in the repo - policy choice is measured, not vibes. **Arch:** `hybrid-cache`, `hit-ratio-first`.
+
+## Incremental Computation
+
+Recompute nothing you can update: define the computation once, respond to changes.
+
+- [differential-dataflow](https://github.com/TimelyDataflow/differential-dataflow) - incremental data-parallel computation on timely dataflow. **Blazing:** in the author's graph example (10M nodes, 50M edges), a 15 s initial computation answers input changes in ~230 us - about 100,000x faster than recomputing; batched updates average ~5 us each; two workers cut the build from 15 s to ~8 s. **Arch:** `incremental-view-maintenance`, `arrangement-indexing`, `data-parallel`.
 
 ## Networking & Protocols
 
@@ -129,6 +153,8 @@ Well-known algorithms, implemented properly in Rust.
 - [rkyv](https://github.com/rkyv/rkyv) - zero-copy serialization. **Blazing:** zero-copy *access* to the archived representation; validation and full reconstruction are separate, individually costed steps. **Arch:** `zero-copy`, `relative-pointers`.
 
 ## Science & Computational
+
+- [faer](https://github.com/sarah-quinones/faer-rs) - linear algebra foundation: dense matrices, decompositions, eigenproblems. **Blazing:** published benchmark plots against BLAS/LAPACK backends; kernels use runtime SIMD dispatch via pulp. **Arch:** `simd`, `runtime-dispatch`.
 
 - [ndarray](https://github.com/rust-ndarray/ndarray) - N-dimensional arrays. **Blazing:** the substrate scientific Rust computes on. **Arch:** `columnar-layout-optional`, `views`.
 - [nalgebra](https://github.com/dimforge/nalgebra) - linear algebra, statically sized. **Blazing:** compile-time dims → unrolled SIMD-friendly kernels. **Arch:** `const-generics`, `simd`.
@@ -173,6 +199,9 @@ Projects that ship their tribal knowledge as an agent-readable `SKILL.md` - beca
 
 ## Benchmarking & Toolchain
 
+- [pulp](https://github.com/sarah-quinones/pulp) - write SIMD kernels once, dispatch to AVX2/AVX-512/NEON at run time. **Blazing:** removes the compile-time SIMD fork dilemma; the scalar path remains the baseline for measurement. **Arch:** `runtime-dispatch`, `simd`.
+- [cargo-pgo](https://github.com/Kobzol/cargo-pgo) - PGO and BOLT for Rust binaries from cargo. **Blazing:** profile-guided inlining and code layout on real workloads; validate on a workload different from the profiling one. **Arch:** `pgo`, `code-layout`.
+
 - [gungraun](https://github.com/gungraun/gungraun) - former iai-callgrind; Valgrind-based instruction-count benchmarking. **Blazing:** deterministic instruction and cache-metric counts for CI regression gates (specific metrics, not a blanket "no noise" claim). **Arch:** `valgrind-based`.
 - [dhat](https://github.com/nnethercote/dhat-rs) - heap profiling. **Blazing:** the tool behind most "we cut allocations 10×" posts. **Arch:** `alloc-tracking`.
 
@@ -201,6 +230,8 @@ This week's finds from our research pipeline. New entries land here first, gradu
 Entries land here first from the weekly research pipeline, then graduate into permanent sections. Community finds are welcome via PR.
 
 ## Candidates
+
+- [roaring-rs](https://github.com/RoaringBitmap/roaring-rs) - Roaring compressed bitmaps for IDs, postings and set operations. In-repo bench harness and real datasets exist, but no published Rust-specific result yet - numbers from the Java or C implementations do not transfer automatically.
 
 Measured-numbers pending. Promote with a PR that includes evidence.
 

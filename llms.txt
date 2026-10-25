@@ -4,7 +4,7 @@
 
 ## How to consume this repository
 
-- README.md - the catalog itself (70 entries across sections, `Blazing:` = evidence, `Arch:` = pattern tags).
+- README.md - the catalog itself (81 entries across sections, `Blazing:` = evidence, `Arch:` = pattern tags).
 - catalog/projects.json - machine-readable index: name, url, section, type (measured|tool|case-study|agent-skill), description, claim, arch tags. Best entry point for agents.
 - PATTERNS.md - architecture-patterns index: which technique achieves speed, used by which projects.
 - decisions/ - ADR-style write-ups per pattern: problem, technique, evidence, trade-offs.
@@ -14,22 +14,24 @@
 ## Sections
 
 - Hall of Fame (5 entries)
-- Algorithms & Data Structures (15 entries)
+- Algorithms & Data Structures (16 entries)
 - Concurrency & Lock-free (4 entries)
 - Async Runtimes & I/O (3 entries)
 - Storage & Embedded Databases (4 entries)
-- Graph & Knowledge Graphs (4 entries)
-- Search & Text Processing (3 entries)
-- Data & Analytics (3 entries)
+- Graph & Knowledge Graphs (5 entries)
+- Search & Text Processing (4 entries)
+- Data & Analytics (5 entries)
+- Caching & Working Set (2 entries)
+- Incremental Computation (1 entries)
 - Networking & Protocols (3 entries)
 - Web & Edge (3 entries)
-- Science & Computational (6 entries)
+- Science & Computational (7 entries)
 - Crypto & Proof Systems (2 entries)
 - Verification & Correctness (3 entries)
 - Observability & Profiling (4 entries)
 - Agent Skills (1 entries)
 - UI & Apps (5 entries)
-- Benchmarking & Toolchain (2 entries)
+- Benchmarking & Toolchain (4 entries)
 - Wow & Humor (0 entries)
 - Measured Caveats (0 entries)
 - Fresh (0 entries)

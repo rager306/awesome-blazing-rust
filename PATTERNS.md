@@ -6,6 +6,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | --- | --- |
 | `aes-ni` | ahash |
 | `alloc-tracking` | divan, dhat |
+| `arrangement-indexing` | differential-dataflow |
 | `async-native` | quinn, hyper |
 | `automata-compilation` | regex, aho-corasick |
 | `backend-trait` | candle, burn |
@@ -17,15 +18,18 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `c-binding` | zstd-safe |
 | `cache-conscious-layout` | hashbrown |
 | `classical-algorithms` | num-bigint, rust-bio |
+| `code-layout` | cargo-pgo |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |
 | `columnar-layout-optional` | ndarray |
 | `combinators` | winnow |
 | `compact-index` | indexmap |
+| `compact-serialization` | fst |
 | `component-layer` | gpui-kit |
 | `connection-coalescing` | pingora |
 | `const-generics` | nalgebra |
 | `copy-on-write` | redb |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |
+| `data-parallel` | differential-dataflow |
 | `datalog` | cozo |
 | `declarative-dsl` | slint |
 | `dst-in-ci` | shuttle |
@@ -37,12 +41,17 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `feature-gated-safety` | lz4_flex |
 | [`findings-as-verdicts`](decisions/002-findings-as-verdicts.md) | uringscope, uringscope SKILL.md |
 | `finite-fields` | arkworks |
+| `finite-state-transducer` | fst |
 | `generic-graph` | petgraph |
 | `generic-vertices` | pathfinding |
 | `gpu-rendered-ui` | zed, gpui-kit |
 | `hamt` | im |
+| `hit-ratio-first` | moka, foyer |
+| `hnsw` | qdrant |
 | `hyaline-reclamation` | papaya |
+| `hybrid-cache` | foyer |
 | `immediate-mode` | egui |
+| `incremental-view-maintenance` | differential-dataflow |
 | `inline-keys` | bbtree |
 | `inline-storage` | smallvec |
 | `inverted-index` | tantivy |
@@ -67,38 +76,47 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `parallel-algos` | rustworkx |
 | `partitioned` | fjall |
 | `perf-integration` | cargo-flamegraph |
+| `pgo` | cargo-pgo |
 | `poseidon2-gf2` | paramo1d |
 | `prefilter` | regex |
 | `prefix-keys` | bbtree |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |
 | `pure-rust-port` | lz4_flex |
 | `python-bridge` | rustworkx |
+| `quality-vs-speed` | qdrant |
+| `quantization` | qdrant |
 | `query-optimization` | polars, datafusion |
+| `rank-select` | sux |
 | `read-optimized` | papaya |
 | `recursive-proofs` | paramo1d |
 | `relative-pointers` | rkyv |
+| `runtime-dispatch` | faer, pulp |
 | `sandboxing` | wasmtime |
 | `sharding` | dashmap, glommio |
 | `shuttle-in-ci` | bbtree |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, polars, nalgebra, rapier |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |
 | `sparql-engine` | oxigraph |
 | `statistical-rigor` | hyperfine, criterion |
 | `storage-backend-flag` | oxigraph |
 | `stringview` | apache-arrow-rs |
 | `structural-sharing` | im |
+| `succinct` | sux |
 | `table-driven` | crc32fast |
+| `tape-representation` | simd-json |
 | `thread-per-core` | glommio, monoio |
 | `tls-13` | quinn |
 | `typed-effects` | crux |
+| `typed-parse-direct` | sonic-rs |
 | `typegen` | crux |
 | `valgrind-based` | gungraun |
 | `vendor-pinning` | paramo1d |
 | `versioned-locks` | bbtree |
 | `verus-in-ci` | bbtree |
 | `views` | ndarray |
+| `window-tinylfu` | moka |
 | `work-stealing` | tokio, rayon, pingora |
-| `zero-copy` | ripgrep, itertools, winnow, apache-arrow-rs, rkyv |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv |
 | `zero-macro-ergonomics` | axum |
 
 ---
