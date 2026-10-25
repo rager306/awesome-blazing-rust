@@ -16,6 +16,13 @@ Put the correctness ladder **in CI, next to the benchmarks** - three guards, eac
 2. **Dynamic testing (Miri + sanitizers + fuzzing)** - interpreters and sanitizers catch UB and memory errors the type system cannot.
 3. **Dynamic scheduling testing (Shuttle + ffs)** - thousands of thread schedules per PR; fork-based DST (ffs) found a race Shuttle missed (bbtree issue #9) - run both.
 
+**What is actually proven / tested / out of scope** (nobody should read "ladder" as "fully verified"):
+
+- **Formally proven (Verus):** specific invariants - inline keys stay ordered as the keys themselves, byte-string comparison semantics. bbtree's docs list trusted assumptions and unproven properties explicitly.
+- **Tested per PR:** Miri, sanitizers, Shuttle schedule exploration.
+- **Scheduled, not per-PR:** fuzzing runs on a weekly schedule and for releases (bbtree `fuzz.yml`) - not every commit.
+- **Out of scope:** distributed and I/O-timing properties; anything outside the proven invariants above.
+
 ## Evidence
 
 - bbtree: 627 M ops/s at 96 threads *with* the full ladder on every PR - the ladder did not cost the headline numbers; it protects them.

@@ -21,6 +21,14 @@ Verification-heavy systems (recursive proofs, big indexes, ML artifacts) traditi
 - Peak process memory: **192.2 MiB** - the whole node.
 - Header chain of 249,885 blocks verified in **7.44 s**.
 
+## The budget that makes it work
+
+Bounded buffers alone do not bound a process. The real budget is component-wise:
+
+M ≈ M_shared + W·M_worker + Q·M_message + M_cache + M_temp
+
+where W = worker count, Q = max queue depth, M_cache = prepared cache cap, M_temp = transient objects. Each term needs an explicit cap, plus defined behavior on exceeding it (backpressure: how incoming work slows down). "192.2 MiB peak" is the *measured result* of such a budget, not the technique itself.
+
 ## Trade-offs / when NOT to use
 
 - Streaming adds complexity to every consumer: random access becomes sequential-shaped; latency-sensitive random reads suffer.

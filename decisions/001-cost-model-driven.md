@@ -17,7 +17,7 @@ Most data structures are built by tradition: B-trees look like 1970s papers, has
 ## Evidence
 
 - get u64: 109 ns vs std `BTreeMap` 264 ns vs crossbeam SkipMap 997 ns.
-- 96 threads: 627 M ops/s vs 70 M (12×) for std; p99 5× lower.
+- 96 threads: **12× vs crossbeam-skiplist** (the upstream headline comparison); 627 M ops/s at 96 threads. Single-thread: **5× std `BTreeMap`** (109 ns vs 264 ns). p99 5× lower.
 - Memory: 271 MB vs 315 (std) / 435 (skiplist) at 10 M keys.
 - End-to-end (map swap only) in fjall / SlateDB / Tonbo / Turso / Lance: 1.16-6.83×.
 - Cross-architecture (Zen 5, Rocket Lake, M1 Pro, Xeon, Graviton5): 2.0-2.8× vs std.

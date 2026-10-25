@@ -51,7 +51,7 @@ Well-known algorithms, implemented properly in Rust.
 
 - [hashbrown](https://github.com/rust-lang/hashbrown) - SwissTable hash map; the implementation inside Rust's std since 1.36. **Blazing:** open addressing with SIMD control-byte probing. **Arch:** `simd`, `cache-conscious-layout`.
 - [indexmap](https://github.com/indexmap-rs/indexmap) - insertion-ordered hash map + set, O(1) amortized with order. **Blazing:** std-level speed with deterministic iteration. **Arch:** `compact-index`.
-- [im](https://github.com/bodil/im-rs) - immutable/persistent collections with structural sharing. **Blazing:** O(1) clones - cheap snapshots for concurrent and functional workloads. **Arch:** `structural-sharing`, `hamt`.
+- [im](https://github.com/bodil/im-rs) - immutable/persistent collections with structural sharing (archived 2026 - historical entry). **Blazing:** O(1) clones - cheap snapshots for concurrent and functional workloads. **Arch:** `structural-sharing`, `hamt`.
 - [smallvec](https://github.com/servo/rust-smallvec) - stack-allocated small vectors. **Blazing:** eliminates heap allocation for the common short case. **Arch:** `inline-storage`.
 - [itertools](https://github.com/rust-itertools/itertools) - the algorithm toolbox on iterators. **Blazing:** zero-cost abstractions, fused adapters. **Arch:** `zero-copy`.
 
@@ -74,15 +74,15 @@ Well-known algorithms, implemented properly in Rust.
 
 ### Compression
 
-- [lz4_flex](https://github.com/pseitz/lz4_flex) - pure-Rust LZ4. **Blazing:** no C dependency, `forbid(unsafe_code)`, competitive with lz4-sys. **Arch:** `pure-rust-port`.
+- [lz4_flex](https://github.com/pseitz/lz4_flex) - pure-Rust LZ4. **Blazing:** no C dependency; the safe configuration avoids `unsafe` and is benchmarked separately from the unsafe-feature build. **Arch:** `pure-rust-port`, `feature-gated-safety`.
 - [zstd-safe](https://github.com/gyscos/zstd-rs) - zstd bindings. **Blazing:** the ratio/speed king of general compression, one call away. **Arch:** `c-binding`.
 
 ## Concurrency & Lock-free
 
-- [bbtree](https://github.com/XiangpengHao/bbtree) - concurrent ordered map built from a cost model. **Blazing:** 627 M ops/s at 96 threads (12× std `BTreeMap`); swapping the map alone into fjall/SlateDB/Tonbo/Turso/Lance gives 1.16–6.83× end-to-end; p99 5× lower. **Arch:** `cost-model-driven`, `simd`, `versioned-locks`, `inline-keys`, `prefix-keys`, `verus-in-ci`, `shuttle-in-ci`.
+- [bbtree](https://github.com/XiangpengHao/bbtree) - concurrent ordered map built from a cost model. **Blazing:** 5× std `BTreeMap` at 1 thread; 12× crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower. **Arch:** `cost-model-driven`, `simd`, `versioned-locks`, `inline-keys`, `prefix-keys`, `verus-in-ci`, `shuttle-in-ci`.
 - [crossbeam](https://github.com/crossbeam-rs/crossbeam) - epoch-based memory reclamation + concurrent queues/deques. **Blazing:** the substrate half of modern lock-free Rust runs on. **Arch:** `epoch-reclamation`, `lock-free`.
 - [dashmap](https://github.com/xacrimon/dashmap) - concurrent hash map. **Blazing:** sharded locking beats global `RwLock<HashMap>` by design. **Arch:** `sharding`.
-- [papaya](https://github.com/xacrimon/papaya) - concurrent hash map, sequel to dashmap thinking. **Blazing:** read-optimized design with epoch GC. **Arch:** `sharding`, `epoch-reclamation`.
+- [papaya](https://github.com/ibraheemdev/papaya) - concurrent hash map, read-optimized counterpoint to sharded designs. **Blazing:** built around read throughput with incremental resizing. **Arch:** `read-optimized`, `hyaline-reclamation`.
 
 ## Async Runtimes & I/O
 
@@ -92,7 +92,7 @@ Well-known algorithms, implemented properly in Rust.
 
 ## Storage & Embedded Databases
 
-- [redb](https://github.com/cberner/redb) - pure-Rust ACID B-tree database. **Blazing:** LMDB-class numbers documented in its bench suite. **Arch:** `copy-on-write`, `mmap`.
+- [redb](https://github.com/cberner/redb) - pure-Rust ACID B-tree database. **Blazing:** LMDB-class numbers documented in its bench suite; the File backend sits within ~2× of the removed (unsound-in-practice) mmap backend per the 0.14.0 changelog. **Arch:** `copy-on-write`.
 - [fjall](https://github.com/fjall-rs/fjall) - LSM storage engine. **Blazing:** benchmarked against rocksdb/sled with open methodology; bbtree swap-in partner. **Arch:** `lsm`, `partitioned`.
 - [SlateDB](https://github.com/slatedb/slatedb) - LSM on object storage (S3/R2). **Blazing:** cloud-native LSM; bbtree e2e partner. **Arch:** `lsm`, `object-storage`.
 - [sled](https://github.com/spacejam/sled) - the famous beta embedded DB. **Blazing:** the project that set the tone for "blazing" claims - treat numbers as historical. **Arch:** `lsm-plus-btree`.
@@ -100,8 +100,8 @@ Well-known algorithms, implemented properly in Rust.
 ## Graph & Knowledge Graphs
 
 - [petgraph](https://github.com/petgraph/petgraph) - THE graph data-structure crate. **Blazing:** the default choice; algorithmic core used across the ecosystem. **Arch:** `generic-graph`.
-- [rustworkx](https://github.com/Qiskit/rustworkx) - IBM's networkx-compatible graph library. **Blazing:** documented multi-x wins over pure-Python NetworkX at Qiskit scale. **Arch:** `python-bridge`, `parallel-algos`.
-- [oxigraph](https://github.com/oxigraph/oxigraph) - RDF/SPARQL store. **Blazing:** embedded+server SPARQL with active perf discipline. **Arch:** `sparql-engine`, `rocksdb-free`.
+- [rustworkx](https://github.com/Qiskit/rustworkx) - IBM's graph library (Python API requires adaptation, not drop-in NetworkX; `rustworkx-core` is the pure-Rust crate). **Blazing:** documented multi-x wins over pure-Python NetworkX at Qiskit scale. **Arch:** `python-bridge`, `parallel-algos`.
+- [oxigraph](https://github.com/oxigraph/oxigraph) - RDF/SPARQL store. **Blazing:** embedded+server SPARQL with active perf discipline; persistence is RocksDB-backed by default (feature-gated in-memory alternative). **Arch:** `sparql-engine`, `storage-backend-flag`.
 - [cozo](https://github.com/cozodb/cozo) - embedded Datalog graph DB. **Blazing:** recursive queries as a first-class, stored-procedure-free primitive. **Arch:** `datalog`, `embedded`.
 
 ## Search & Text Processing
@@ -120,13 +120,13 @@ Well-known algorithms, implemented properly in Rust.
 
 - [quinn](https://github.com/quinn-rs/quinn) - QUIC implementation. **Blazing:** 0-RTT, multiplexed streams without head-of-line blocking. **Arch:** `async-native`, `tls-13`.
 - [hyper](https://github.com/hyperium/hyper) - HTTP implementation. **Blazing:** the substrate of axum/reqwest; TechEmpower regular. **Arch:** `async-native`.
-- [pingora](https://github.com/cloudflare/pingora) - Cloudflare's proxy framework. **Blazing:** serves ~1T requests/day at Cloudflare (per their announcement). **Arch:** `zero-copy`, `thread-per-core-ish`.
+- [pingora](https://github.com/cloudflare/pingora) - Cloudflare's proxy framework. **Blazing:** in Cloudflare's migration report, ~70% less CPU and ~67% less memory than the previous proxy at the same traffic. **Arch:** `connection-coalescing`, `work-stealing`.
 
 ## Web & Edge
 
 - [axum](https://github.com/tokio-rs/axum) - ergonomic HTTP framework. **Blazing:** TechEmpower top-tier via hyper. **Arch:** `zero-macro-ergonomics`.
 - [wasmtime](https://github.com/bytecodealliance/wasmtime) - WebAssembly runtime. **Blazing:** Cranelift JIT + Spectre-mitigating design; runs in Firefox, Fastly, Docker. **Arch:** `jit`, `sandboxing`.
-- [rkyv](https://github.com/rkyv/rkyv) - zero-copy serialization. **Blazing:** deserialize = cast; documented near-zero access cost after archive. **Arch:** `zero-copy`, `relative-pointers`.
+- [rkyv](https://github.com/rkyv/rkyv) - zero-copy serialization. **Blazing:** zero-copy *access* to the archived representation; validation and full reconstruction are separate, individually costed steps. **Arch:** `zero-copy`, `relative-pointers`.
 
 ## Science & Computational
 
@@ -139,7 +139,7 @@ Well-known algorithms, implemented properly in Rust.
 
 ## Crypto & Proof Systems
 
-- [paramo1d](https://github.com/ignotusnemo/paramo1d) - mobile blockchain light client with recursive proofs. **Blazing:** full mainnet sync in 48.43 s on a $100 Redmi 15C (4 GB RAM); state proof from genesis 10.78 s; peak 192.2 MiB; 249,885-header chain verified in 7.44 s. **Arch:** `memory-bounded-streaming`, `recursive-proofs`, `vendor-pinning`, `poseidon2-gf2`.
+- [paramo1d](https://github.com/ignotusnemo/paramo1d) - mobile blockchain verification client with recursive proofs. **Blazing:** mainnet sync in 48.43 s on a $100 Redmi 15C (4 GB RAM; prepared matrix caches in place, not a cold start); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s. **Arch:** `memory-bounded-streaming`, `recursive-proofs`, `vendor-pinning`, `poseidon2-gf2`.
 - [arkworks](https://github.com/arkworks-rs) - zk-SNARK ecosystem. **Blazing:** the research-grade finite-field/curve stack most new proof systems benchmark against. **Arch:** `finite-fields`, `no-std-friendly`.
 
 ## Verification & Correctness
@@ -165,7 +165,7 @@ Projects that ship their tribal knowledge as an agent-readable `SKILL.md` - beca
 
 ## UI & Apps
 
-- [zed](https://github.com/zed-industries/zed) - the editor built on GPUI. **Blazing:** ~128–222 MB RSS in our measurements vs ~3.5 GB VS Code equivalents. **Arch:** `gpu-rendered-ui`, `own-renderer`.
+- [zed](https://github.com/zed-industries/zed) - the editor built on GPUI. **Blazing:** reported ~128-222 MB RSS vs multi-GB VS Code in published comparisons ([zed.dev/compare/vscode](https://zed.dev/compare/vscode)). **Arch:** `gpu-rendered-ui`, `own-renderer`.
 - [gpui-kit](https://github.com/longbridge/gpui-kit) - component library for GPUI ("shadcn for GPUI"). **Blazing:** brings widget completeness to raw GPUI (which critics note lacks text input). **Arch:** `gpu-rendered-ui`, `component-layer`.
 - [crux](https://github.com/redbadger/crux) - shared Rust core, native shells (Elm architecture). **Blazing:** one core, UIs in SwiftUI/Kotlin/React - typegen proves every effect is handled. **Arch:** `elm-architecture`, `typed-effects`, `typegen`.
 - [egui](https://github.com/emilk/egui) - immediate-mode GUI. **Blazing:** the pragmatic winner of the 2026 Rust GUI survey. **Arch:** `immediate-mode`.
@@ -173,7 +173,7 @@ Projects that ship their tribal knowledge as an agent-readable `SKILL.md` - beca
 
 ## Benchmarking & Toolchain
 
-- [iai-callgrind](https://github.com/iai-callgrind/iai-callgrind) - instruction-count benchmarking. **Blazing:** deterministic counts, no noise - CI-perfect. **Arch:** `valgrind-based`.
+- [gungraun](https://github.com/gungraun/gungraun) - former iai-callgrind; Valgrind-based instruction-count benchmarking. **Blazing:** deterministic instruction and cache-metric counts for CI regression gates (specific metrics, not a blanket "no noise" claim). **Arch:** `valgrind-based`.
 - [dhat](https://github.com/nnethercote/dhat-rs) - heap profiling. **Blazing:** the tool behind most "we cut allocations 10×" posts. **Arch:** `alloc-tracking`.
 
 ## Wow & Humor

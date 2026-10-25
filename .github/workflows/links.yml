@@ -5,12 +5,17 @@ on:
     - cron: "0 6 * * 1" # Mondays 06:00 UTC
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   lychee:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: lycheeverse/lychee-action@v2
+        id: lychee
         with:
           args: >-
             --no-progress --max-retries 2 --timeout 20
@@ -18,7 +23,7 @@ jobs:
             './**/*.md'
           fail: false
       - name: Open issue on broken links
-        if: env.exit_code != 0
+        if: steps.lychee.outputs.exit_code != 0
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "Broken links report"

@@ -2,6 +2,25 @@
 
 **The one rule: no numbers, no entry.** Every entry must link a public benchmark, measurement, or documented performance claim (the project's own README/blog counts if methodology is stated).
 
+## Entry types
+
+Each entry declares what it promises. Pick one:
+
+| Type | Promise to the reader |
+|---|---|
+| **Measured project** | A concrete result with conditions and a source |
+| **Perf/verification tool** | What the tool measures or verifies - and what it does not guarantee |
+| **Architecture case study** | Mechanism, preconditions, cost, and limits of an approach |
+| **Agent skill** | Application instructions for a specific tool (effectiveness assessed separately) |
+
+**Candidate** is a *status*, not a type: any entry awaiting evidence stays in the Candidates section.
+
+## Measurement passport (Measured projects)
+
+The `Blazing:` line should, at minimum, carry: the claim, the baseline it was compared against, and a link to the source. When available, add: versions/revisions, workload (data size, operation, mix), environment (CPU/OS/threads/flags), and limits (where the result does not apply). Unknown fields are written as unknown - never guessed. Three things are tracked separately: **who** measured (author / third party / this catalog), **what** is reproducible (published result only / code+data / independent replication), **when** (measurement date; reading the README is not a re-confirmation).
+
+`scope:` distinguishes microbenchmark vs component vs end-to-end. A 2× win on a 30%-of-runtime component is ~1.18× end-to-end - say which one the number is.
+
 ## Adding an entry
 
 1. Pick the right section (or propose a new one).
