@@ -57,7 +57,7 @@ cargo run -p abr --release -- patterns # rebuild the PATTERNS.md index table
 cargo run -p abr --release -- llms     # regenerate llms.txt (agent-facing index)
 ```
 
-After editing entries in README.md run `abr catalog` (and `abr patterns` if you added tags), then `abr check` must pass. A catalog about measured speed keeps itself consistent with measured-speed tooling: zero dependencies, single 7 KB binary.
+Paths are relative to the repository root, discovered by walking up from the current directory - `abr` runs from anywhere inside the repo. After editing entries in README.md run `abr catalog` (and `abr patterns` if you added tags), then `abr check` must pass. CI additionally proves projections are deterministic: regeneration must produce a byte-identical tree. A catalog about measured speed keeps itself consistent with measured-speed tooling: zero dependencies, single 7 KB binary.
 
 ## Checks
 

@@ -26,5 +26,10 @@ jobs:
         run: |
           cd cli
           cargo build --release
+          cargo test
           cd ..
           ./cli/target/release/abr check
+      - name: Projections are deterministic
+        run: |
+          ./cli/target/release/abr catalog && ./cli/target/release/abr patterns && ./cli/target/release/abr llms
+          git diff --exit-code -- catalog PATTERNS.md llms.txt
