@@ -17,6 +17,7 @@ pub enum Cmd {
     Llms,
     Check,
     Stats,
+    Upstream,
 }
 
 impl Cmd {
@@ -27,6 +28,7 @@ impl Cmd {
             "llms" => Cmd::Llms,
             "check" => Cmd::Check,
             "stats" => Cmd::Stats,
+            "upstream" => Cmd::Upstream,
             _ => return None,
         })
     }
@@ -38,6 +40,7 @@ pub struct Workspace {
     pub patterns_index: Vec<PatternRow>,
     pub patterns_raw: String,
     pub catalog_raw: Option<String>,
+    pub upstream_raw: Option<String>,
 }
 
 #[derive(Debug)]
@@ -72,7 +75,9 @@ pub fn plan(cmd: Cmd, ws: Workspace) -> Result<State, String> {
         Cmd::Catalog => vec![super::projection::catalog(&ws.model)],
         Cmd::Patterns => vec![super::projection::patterns_doc(&ws.model, &ws.patterns_raw)?],
         Cmd::Llms => vec![super::projection::llms(&ws.model)],
-        Cmd::Check | Cmd::Stats => Vec::new(),
+        // Check/Stats are terminal observations; Upstream is handled in the
+        // driver at Checked (the fetch is I/O and lives behind a port).
+        Cmd::Check | Cmd::Stats | Cmd::Upstream => Vec::new(),
     };
     Ok(State::Planned(ws, artifacts))
 }

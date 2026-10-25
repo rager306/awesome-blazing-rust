@@ -22,13 +22,12 @@ mod domain;
 mod ports;
 
 use adapters::fs_io::FsIo;
-use app::run;
 use domain::fsm::Cmd;
 use std::process::exit;
 
 fn main() {
     let arg = std::env::args().nth(1).unwrap_or_else(|| {
-        eprintln!("usage: abr <catalog|patterns|llms|check|stats>");
+        eprintln!("usage: abr <catalog|patterns|llms|check|stats|upstream>");
         exit(2);
     });
     let cmd = match Cmd::from_arg(&arg) {
@@ -38,7 +37,14 @@ fn main() {
             exit(2);
         }
     };
-    let report = run(cmd, &FsIo::discover());
+    let io = FsIo::discover();
+    // Upstream needs the network: it bypasses the pure FSM terminal branches
+    // and is never part of the CI determinism gate.
+    let report = if cmd == Cmd::Upstream {
+        app::run_upstream(&io, &adapters::gh_curl::GhCli)
+    } else {
+        app::run(cmd, &io)
+    };
     println!("{}", report.summary);
     for f in &report.failures {
         eprintln!("{f}");

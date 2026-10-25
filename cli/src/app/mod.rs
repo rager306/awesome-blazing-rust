@@ -5,12 +5,15 @@
 
 use crate::adapters::markdown;
 use crate::domain::fsm::{self, Cmd, Report, State, Workspace};
+use crate::domain::upstream::{self, UpstreamRow};
 use crate::ports::sink::Sink;
 use crate::ports::source::Source;
+use crate::ports::upstream::{TagState, UpstreamSource};
 
 pub const README: &str = "README.md";
 pub const PATTERNS: &str = "PATTERNS.md";
 pub const CATALOG: &str = "catalog/projects.json";
+pub const UPSTREAM: &str = "catalog/upstream.json";
 
 pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
     let mut state = State::Boot;
@@ -21,9 +24,10 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
                 let readme = io.read(README);
                 let patterns_raw = io.read(PATTERNS);
                 let catalog_raw = io.read_opt(CATALOG);
+                let upstream_raw = io.read_opt(UPSTREAM);
                 let model = markdown::parse_readme(&readme);
                 let patterns_index = markdown::parse_patterns(&patterns_raw);
-                State::Loaded(Workspace { model, patterns_index, patterns_raw, catalog_raw })
+                State::Loaded(Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw })
             }
             // Loaded -> Checked: domain invariants run on every command.
             State::Loaded(ws) => fsm::run_checks(ws),
@@ -63,4 +67,58 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
             State::Done(r) | State::Failed(r) => return r,
         };
     }
+}
+
+/// Upstream scan: fetch latest tags through the port, diff against the
+/// previous projection, commit the new one. Runs from Checked; the report
+/// carries the changed-repo lines so the pipeline can act on them.
+pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -> Report {
+    // Reuse the same Boot -> Loaded -> Checked prefix for invariant parity.
+    let readme = io.read(README);
+    let patterns_raw = io.read(PATTERNS);
+    let catalog_raw = io.read_opt(CATALOG);
+    let upstream_raw = io.read_opt(UPSTREAM);
+    let model = markdown::parse_readme(&readme);
+    let patterns_index = markdown::parse_patterns(&patterns_raw);
+    let ws = Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw };
+    let checked = fsm::run_checks(ws);
+
+    let ws = match checked {
+        State::Checked(ws, _) => ws,
+        _ => unreachable!("run_checks always returns Checked"),
+    };
+
+    let mut slugs: Vec<String> = ws.model.entries.iter().filter_map(|e| upstream::repo_slug(&e.url)).collect();
+    slugs.sort();
+    slugs.dedup();
+
+    let mut rows: Vec<UpstreamRow> = Vec::new();
+    let mut missing: Vec<String> = Vec::new();
+    for slug in &slugs {
+        match upstream.latest_tag(slug) {
+            TagState::Tag(tag) => rows.push(UpstreamRow { repo: slug.clone(), tag }),
+            // stable legitimate state - must not churn the weekly diff
+            TagState::NoTags => rows.push(UpstreamRow { repo: slug.clone(), tag: "(no-tags)".into() }),
+            TagState::Unreachable => missing.push(slug.clone()),
+        }
+    }
+
+    let d = upstream::diff(ws.upstream_raw.as_deref(), &rows);
+    io.write(UPSTREAM, &upstream::json(&rows));
+
+    let mut summary = format!(
+        "upstream: scanned {} repos, {} changed, {} unfetchable; wrote {UPSTREAM}",
+        slugs.len(),
+        d.changed.len(),
+        missing.len()
+    );
+    let mut failures: Vec<String> = Vec::new();
+    for line in &d.changed {
+        summary.push_str(&format!("\nCHANGED {line}"));
+    }
+    for repo in &d.gone {
+        failures.push(format!("GONE {repo} (was scanned, now unfetchable)"));
+    }
+    // Unfetchable repos are a soft condition: the scan still succeeded.
+    Report { ok: true, summary, failures, artifacts_written: 1 }
 }

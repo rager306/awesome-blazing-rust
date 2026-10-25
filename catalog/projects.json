@@ -125,7 +125,7 @@
     },
     {
       "name": "xxhash-rust",
-      "url": "https://github.com/cescou/xxhash-rust",
+      "url": "https://github.com/DoumanAsh/xxhash-rust",
       "section": "Algorithms & Data Structures",
       "type": "case-study",
       "description": "xxHash (XXH3)",

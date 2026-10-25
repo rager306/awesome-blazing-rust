@@ -64,7 +64,7 @@ Well-known algorithms, implemented properly in Rust.
 ### Hashing & Checksums
 
 - [blake3](https://github.com/BLAKE3-team/BLAKE3) - cryptographic hash. **Blazing:** ~GB/s on modern x86 (AVX2/AVX-512, per project benchmarks); orders above SHA-2/SHA-3. **Arch:** `simd`, `merkle-tree`, `multi-core-hash`.
-- [xxhash-rust](https://github.com/cescou/xxhash-rust) - xxHash (XXH3). **Blazing:** non-crypto hashing at memory-bandwidth speeds. **Arch:** `simd`.
+- [xxhash-rust](https://github.com/DoumanAsh/xxhash-rust) - xxHash (XXH3). **Blazing:** non-crypto hashing at memory-bandwidth speeds. **Arch:** `simd`.
 - [ahash](https://github.com/tkaitchuck/aHash) - DoS-resistant fast hash map hasher. **Blazing:** documented multi-fold wins over SipHash on hash-map workloads. **Arch:** `aes-ni`.
 - [crc32fast](https://github.com/srijs/rust-crc32fast) - CRC-32. **Blazing:** 15× faster than naive, via slicing-by-8 and SIMD switching. **Arch:** `simd`, `table-driven`.
 
