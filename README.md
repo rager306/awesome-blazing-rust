@@ -199,9 +199,14 @@ Measured-numbers pending. Promote with a PR that includes evidence.
 - [mimalloc](https://github.com/microsoft/mimalloc) - allocator with documented wins vs jemalloc/tcmalloc on server workloads. *Needs: a Rust-context benchmark citation.*.
 - [kutha-graph](https://github.com/rager306/kutha-graph) - greenfield graph engine (ours). *Needs: first public bench run.*.
 
+## See also
+
+- [awesome-rust](https://github.com/rust-unofficial/awesome-rust) - the encyclopedic Rust list (everything, not just measured speed).
+- [This Week in Rust](https://this-week-in-rust.org) - the weekly newsletter.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: **evidence first** - link the benchmark, name the architecture pattern, tag the entry. PRs adding entries without numbers will be asked to move them to Candidates.
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CC0-1.0 License](https://img.shields.io/badge/license-CC0--1.0-blue.svg)](LICENSE)
 
