@@ -2,6 +2,8 @@
 
 **Symptom:** "`target/` is 10+ GB", "the disk fills up after a week of development", "clone of a small crate built 2 GB of artifacts".
 
+**You are not alone.** Target-directory size was the #2 most-reported problem in the 2025 State of Rust survey, right after compile times. Community scale reports: 29-120 GB in long-lived workspaces, [773 GiB across 127 projects on one laptop](https://blog.fgribreau.com/2026/04/releasing-cargo-clean-targets-i-had-no.html). It grows without bound because artifacts are keyed by (profile x features x target triple x toolchain x lockfile), every combination keeps its own copy, and until recently Cargo deleted nothing.
+
 ## The chain, cheapest-first
 
 1. **Stop generating debuginfo by default.** In the workspace `Cargo.toml`:
@@ -64,9 +66,38 @@ strip = false
 
 If builds go through a compile-cache layer (kache, sccache-style stores with their own GC), parts of this recipe invert: `incremental = false` saves nothing (the manager's store, not cargo, holds the data) while still slowing rebuilds; a shared `CARGO_TARGET_DIR` adds nothing on one physical disk and breaks the manager's tracking. In that world the remaining levers are binary stripping (the -20-86% above) and targeted builds.
 
+## Cargo's own cleanup (status 2026-10)
+
+- **`~/.cargo` auto-GC: stable since 1.82.** Last-use tracking (sqlite) since 1.78; downloads unused 3 months and extracted sources unused 1 month are deleted at most once a day. `gc.auto.frequency = "never"` disables it. This covers the *registry* side, not `target/`.
+- **`target/` artifact GC: not yet shipped.** `cargo clean gc` and per-artifact collection remain nightly/unstable ([cargo#13060](https://github.com/rust-lang/cargo/issues/13060), [cargo#13136](https://github.com/rust-lang/cargo/issues/13136)).
+- **[Project Goal 2026](https://goals.rust-lang.org/2026/target-dir-size.html):** accepted; targets are 30-40% smaller fresh builds first, then 60-80% including repeated builds. On nightly, `-Zembed-metadata=no` stops duplicating crate metadata into `.rlib` + `.rmeta` (halves metadata size) and is being evaluated as a default.
+
+Until that lands, third-party tools are the GC:
+
+| Tool | Model |
+| --- | --- |
+| [`cargo-sweep`](https://github.com/holmgr/cargo-sweep) | age (`--time 7`, stamp/file workflow), unused toolchains (`--installed`), size cap (`--maxsize`), `--recursive` for cron |
+| [`cargo-clean-targets`](https://crates.io/crates/cargo-clean-targets) | finds real target dirs by `CACHEDIR.TAG`/`.rustc_info.json` markers, removes cache subtrees, **keeps built binaries** ([write-up](https://blog.fgribreau.com/2026/04/releasing-cargo-clean-targets-i-had-no.html): 773 GiB freed) |
+| [`cargo-clean-all`](https://github.com/dnlmlr/cargo-clean-all) | interactive per-project cleaning, can salvage executables |
+| [`cargo-overstay`](https://github.com/lilienblum/cargo-overstay) | budgets (`max_total_size`/`max_target_size`), LRU eviction, free-space triggers, build-lock aware |
+| [`cargo-cache`](https://crates.io/crates/cargo-cache) | the `~/.cargo` side: registry index/src/cache and git db, `--autoclean`, `trim` |
+
+## Backups: skip the cache by marker
+
+Cargo drops a `CACHEDIR.TAG` into every `target/`. Backup tools that honor it (`tar --exclude-caches`, borg `--exclude-caches`) skip the tree without path lists; for rsync use `--exclude='target/'`. Check what your backup tool does before it copies gigabytes of debuginfo nightly - this is the same trap that made the backups slow in the first place.
+
 ## Where it bites back
 
 - `debug = 0`: debugger breakpoints lose variable inspection; crash reports become bare addresses. `line-tables-only` keeps function+line backtraces.
 - `incremental = false`: cold builds get faster, rebuilds of *changed* crates get slower - measure on your edit-compile-test loop before committing to it.
 - A shared `CARGO_TARGET_DIR` mixes artifact variants: keep toolchain, features and `RUSTFLAGS` stable per project, or the dir bloats anyway.
 - Third-party caches (sccache and friends) need their own retention policy; disk frees only when the last link is deleted (`unlink(2)` semantics).
+- A shared `CARGO_TARGET_DIR` has a nasty edge: `cargo clean` in **any** project wipes the **whole** shared directory, all projects at once. Schedule it deliberately, not reflexively.
+
+## Primary sources
+
+- [Cargo Book: Profiles](https://doc.rust-lang.org/cargo/reference/profiles.html) - `debug`, `strip`, `incremental` semantics and inheritance.
+- [Cargo Book: Environment variables](https://doc.rust-lang.org/cargo/reference/environment-variables.html) - `CARGO_PROFILE_*` overrides, `CARGO_TARGET_DIR`.
+- [Cargo Book: Build Cache](https://doc.rust-lang.org/cargo/reference/build-cache.html) - what lives in `target/`, `CACHEDIR.TAG`.
+- [inside-rust: Reducing target directory size on nightly](https://blog.rust-lang.org/inside-rust/2026/08/18/reducing-target-dir-size-on-nightly/) - the duplicated-metadata experiment.
+- [The Rust Performance Book: Build Configuration](https://nnethercote.github.io/perf-book/build-configuration.html) - binary-size knobs and their trade-offs.
