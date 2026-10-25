@@ -224,6 +224,7 @@ Symptom-driven guides: from a developer's problem to the patterns, projects and 
 - [A graph that fits in memory and traverses fast](https://github.com/rager306/awesome-blazing-rust/blob/main/recipes/compact-graph.md) - String dictionary, dense ids, CSR, bitmap filters, hot-set caching.
 - [Throughput does not scale with threads](https://github.com/rager306/awesome-blazing-rust/blob/main/recipes/thread-scaling.md) - Read locks that write, sharding, allocation contention.
 - [JSON parsing is the top CPU consumer](https://github.com/rager306/awesome-blazing-rust/blob/main/recipes/json-cpu.md) - Scope first (Amdahl), then selective parse, SIMD parse, tape, or skip parsing entirely.
+- [Build artifacts eating your disk](https://github.com/rager306/awesome-blazing-rust/blob/main/recipes/build-disk-hygiene.md) - Debuginfo is the bulk: 24 MB to 0.8 MB on a zero-dep crate, replicated on a second host.
 
 ## Measured Caveats
 
