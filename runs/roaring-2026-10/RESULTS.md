@@ -17,7 +17,7 @@
 | Crates | roaring 0.10.12; baselines from `std::collections` |
 | Parallelism | workload single-threaded |
 
-Spot-check on the shared 12-vCPU host agrees in direction (dense 1M union materialize: 0.33 ms vs 375 ms = 1136x); ratios, not absolute values, are the claim.
+Second host (shared 12-vCPU, noisier) agrees in direction on all four shapes (dense 1M union materialize: 0.15 ms vs 415 ms = 2768x); ratios, not absolute values, are the claim.
 
 ## Method
 
