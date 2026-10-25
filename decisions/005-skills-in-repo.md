@@ -31,3 +31,7 @@ Ship a **SKILL.md inside the repository** - next to the code it documents:
 
 - [uringscope `skills/uringscope/SKILL.md`](https://github.com/rch0wdhury/uringscope/blob/main/skills/uringscope/SKILL.md).
 - Anthropic agent-skills format (`SKILL.md` with YAML frontmatter) - the de-facto standard this pattern rides on.
+
+## Validation status (2026-10-26)
+
+First controlled trial: 6 blind parallel agents (3 with a triage skill / 3 without) on a synthetic p99 regression, quiet 2-vCPU host, bit-identical-verification rubric. Result: 6/6 correct diagnoses in both groups - no measurable skill advantage at this difficulty (ceiling effect); the trial harness itself is the deliverable, plus two skill refinements contributed by the subjects. Full data: [`runs/agent-skill-exp/RESULTS.md`](../runs/agent-skill-exp/RESULTS.md). The claim stays open until a scenario separates the groups; the mechanism to measure it now exists.

@@ -1,0 +1,52 @@
+checksum: 017ac1840c000006
+drift-audit: 8846baf0d875a43c
+p50: 30 ns
+p90: 40 ns
+p99: 920 ns
+p999: 1120 ns
+slowest events (ns, event-index):
+  189706 ns @ event 1866560
+  123688 ns @ event 788755
+  86329 ns @ event 1856960
+  76598 ns @ event 25436
+  71629 ns @ event 1844470
+  45608 ns @ event 524288
+  20020 ns @ event 1018729
+  18270 ns @ event 1246089
+  17260 ns @ event 92608
+  16290 ns @ event 926464
+  14661 ns @ event 1862122
+  14299 ns @ event 1703552
+  14279 ns @ event 799026
+  14039 ns @ event 30026
+  14030 ns @ event 523537
+  14010 ns @ event 484925
+  13831 ns @ event 754757
+  13370 ns @ event 481408
+  13110 ns @ event 325364
+  12659 ns @ event 586240
+  12080 ns @ event 1818752
+  11809 ns @ event 1761435
+  11660 ns @ event 1145600
+  11110 ns @ event 224395
+  10989 ns @ event 709419
+  10920 ns @ event 995392
+  10890 ns @ event 862787
+  10880 ns @ event 732530
+  10820 ns @ event 460096
+  10800 ns @ event 810474
+  10780 ns @ event 1320157
+  10589 ns @ event 1852019
+  10500 ns @ event 398720
+  10420 ns @ event 546240
+  10261 ns @ event 1645504
+  10170 ns @ event 557888
+  9850 ns @ event 777728
+  9831 ns @ event 285236
+  9811 ns @ event 534570
+  9809 ns @ event 1823455
+  9640 ns @ event 845297
+  9469 ns @ event 386587
+  9450 ns @ event 1030272
+  9339 ns @ event 1133888
+  9240 ns @ event 337517

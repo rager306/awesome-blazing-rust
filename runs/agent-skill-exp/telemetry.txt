@@ -1,0 +1,52 @@
+checksum: 017ac1840c000006
+drift-audit: 8846baf0d875a43c
+p50: 30 ns
+p90: 40 ns
+p99: 890 ns
+p999: 980 ns
+slowest events (ns, event-index):
+  52699 ns @ event 1999999
+  40029 ns @ event 1999998
+  34319 ns @ event 1999997
+  29468 ns @ event 1999996
+  23030 ns @ event 1999995
+  19501 ns @ event 1999994
+  17980 ns @ event 1999993
+  17859 ns @ event 1999992
+  16769 ns @ event 1999991
+  13680 ns @ event 1999990
+  13338 ns @ event 1999989
+  13249 ns @ event 1999988
+  13139 ns @ event 1999987
+  13130 ns @ event 1999986
+  12709 ns @ event 1999985
+  12660 ns @ event 1999984
+  12629 ns @ event 1999983
+  12199 ns @ event 1999982
+  11758 ns @ event 1999981
+  11400 ns @ event 1999980
+  11369 ns @ event 1999979
+  10949 ns @ event 1999978
+  10840 ns @ event 1999977
+  10750 ns @ event 1999976
+  10500 ns @ event 1999975
+  10360 ns @ event 1999974
+  10280 ns @ event 1999973
+  9950 ns @ event 1999972
+  9849 ns @ event 1999971
+  9680 ns @ event 1999970
+  9600 ns @ event 1999969
+  9570 ns @ event 1999968
+  9520 ns @ event 1999967
+  9489 ns @ event 1999966
+  9320 ns @ event 1999965
+  9301 ns @ event 1999964
+  9269 ns @ event 1999963
+  9259 ns @ event 1999962
+  9229 ns @ event 1999961
+  9059 ns @ event 1999960
+  9020 ns @ event 1999959
+  9010 ns @ event 1999958
+  9000 ns @ event 1999957
+  8949 ns @ event 1999956
+  8890 ns @ event 1999955
