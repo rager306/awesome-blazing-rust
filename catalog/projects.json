@@ -91,7 +91,7 @@
       "name": "im",
       "url": "https://github.com/bodil/im-rs",
       "section": "Algorithms & Data Structures",
-      "type": "measured",
+      "type": "case-study",
       "description": "immutable/persistent collections with structural sharing (archived 2026 - historical entry)",
       "blazing": "O(1) clones - cheap snapshots for concurrent and functional workloads.",
       "arch": ["structural-sharing", "hamt"]
@@ -210,7 +210,7 @@
       "section": "Concurrency & Lock-free",
       "type": "measured",
       "description": "concurrent ordered map built from a cost model",
-      "blazing": "5× std `BTreeMap` at 1 thread; 12× crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower.",
+      "blazing": "5× vs std `BTreeMap` at 1 thread; 12× vs crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower.",
       "arch": ["cost-model-driven", "simd", "versioned-locks", "inline-keys", "prefix-keys", "verus-in-ci", "shuttle-in-ci"]
     },
     {
@@ -273,7 +273,7 @@
       "section": "Storage & Embedded Databases",
       "type": "measured",
       "description": "pure-Rust ACID B-tree database",
-      "blazing": "LMDB-class numbers documented in its bench suite; the File backend sits within ~2× of the removed (unsound-in-practice) mmap backend per the 0.14.0 changelog.",
+      "blazing": "LMDB-class numbers documented in its bench suite; the File backend stays within a ~2× margin against the removed (unsound-in-practice) mmap backend per the 0.14.0 changelog.",
       "arch": ["copy-on-write"]
     },
     {
@@ -289,7 +289,7 @@
       "name": "SlateDB",
       "url": "https://github.com/slatedb/slatedb",
       "section": "Storage & Embedded Databases",
-      "type": "measured",
+      "type": "case-study",
       "description": "LSM on object storage (S3/R2)",
       "blazing": "cloud-native LSM; bbtree e2e partner.",
       "arch": ["lsm", "object-storage"]
@@ -352,7 +352,7 @@
       "name": "fst",
       "url": "https://github.com/BurntSushi/fst",
       "section": "Search & Text Processing",
-      "type": "measured",
+      "type": "case-study",
       "description": "finite state transducers for large sets and maps with streaming construction",
       "blazing": "~16,000,000 Wikipedia article titles (384 MB of strings) compress to a 157 MB fst with fast prefix/fuzzy queries (author's 2015 measurement - historical, tied to that setup).",
       "arch": ["finite-state-transducer", "compact-serialization"]
@@ -460,7 +460,7 @@
       "name": "quinn",
       "url": "https://github.com/quinn-rs/quinn",
       "section": "Networking & Protocols",
-      "type": "measured",
+      "type": "case-study",
       "description": "QUIC implementation",
       "blazing": "0-RTT, multiplexed streams without head-of-line blocking.",
       "arch": ["async-native", "tls-13"]
@@ -579,7 +579,7 @@
       "section": "Crypto & Proof Systems",
       "type": "measured",
       "description": "mobile blockchain verification client with recursive proofs",
-      "blazing": "mainnet sync in 48.43 s on a $100 Redmi 15C (4 GB RAM; prepared matrix caches in place, not a cold start); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s.",
+      "blazing": "mainnet sync in 48.43 s on a $100 Redmi 15C against its own cold start (4 GB RAM; prepared matrix caches in place); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s.",
       "arch": ["memory-bounded-streaming", "recursive-proofs", "vendor-pinning", "poseidon2-gf2"]
     },
     {
@@ -596,8 +596,8 @@
       "url": "https://github.com/verus-lang/verus",
       "section": "Verification & Correctness",
       "type": "tool",
-      "description": "verified Rust. **Blazing (for trust):** SMT-backed proofs checked per PR - bbtree ships proofs in-repo as a performance guard. **Arch:** `proof-carrying-performance`",
-      "blazing": "",
+      "description": "verified Rust",
+      "blazing": "SMT-backed proofs checked per PR - bbtree ships proofs in-repo as a performance guard.",
       "arch": ["proof-carrying-performance"]
     },
     {
@@ -605,8 +605,8 @@
       "url": "https://github.com/rust-lang/miri",
       "section": "Verification & Correctness",
       "type": "tool",
-      "description": "interpreter catching UB. **Blazing (for trust):** runs bbtree and friends' test suites to keep the unsafe honest. **Arch:** `miri-in-ci`",
-      "blazing": "",
+      "description": "interpreter catching UB",
+      "blazing": "runs bbtree and friends' test suites to keep the unsafe honest.",
       "arch": ["miri-in-ci"]
     },
     {
@@ -614,15 +614,15 @@
       "url": "https://github.com/awslabs/shuttle",
       "section": "Verification & Correctness",
       "type": "tool",
-      "description": "concurrent testing as a library. **Blazing (for trust):** thousands of schedules per PR; pairs with fork-based DST (ffs) that caught what Shuttle missed (bbtree issue #9). **Arch:** `dst-in-ci`",
-      "blazing": "",
+      "description": "concurrent testing as a library",
+      "blazing": "thousands of schedules per PR; pairs with fork-based DST (ffs) that caught what Shuttle missed (bbtree issue #9).",
       "arch": ["dst-in-ci"]
     },
     {
       "name": "uringscope",
       "url": "https://github.com/rch0wdhury/uringscope",
       "section": "Observability & Profiling",
-      "type": "measured",
+      "type": "case-study",
       "description": "eBPF tracer for io_uring (C+BPF companion for Rust io_uring apps)",
       "blazing": "named findings with fixes - \"BATCH: you pay a syscall per request\" and \"PUNT: this is where your p99 lives\".",
       "arch": ["findings-as-verdicts", "btf-probe", "kernel-matrix-in-ci"]
@@ -694,7 +694,7 @@
       "name": "egui",
       "url": "https://github.com/emilk/egui",
       "section": "UI & Apps",
-      "type": "measured",
+      "type": "case-study",
       "description": "immediate-mode GUI",
       "blazing": "the pragmatic winner of the 2026 Rust GUI survey.",
       "arch": ["immediate-mode"]
@@ -703,7 +703,7 @@
       "name": "slint",
       "url": "https://github.com/slint-ui/slint",
       "section": "UI & Apps",
-      "type": "measured",
+      "type": "case-study",
       "description": "declarative UI",
       "blazing": "embedded-friendly; the other 2026 survey winner.",
       "arch": ["declarative-dsl", "embedded-first"]

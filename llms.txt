@@ -44,5 +44,5 @@
 ## For agents
 
 - Use catalog/projects.json for structured access; the README is prose-first.
-- A `Blazing:` line without a number is a bug: report it.
+- Card types are explicit (**Type:** in the card, the type field here): measured = numbers plus a named baseline required; tool and case-study = mechanism claims, numbers optional; agent-skill = points at a skill file. A measured card without numbers is a bug; a tool card without numbers is normal.
 - Tags are defined in PATTERNS.md; unknown tags in PRs must add a row.

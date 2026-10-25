@@ -3,7 +3,7 @@
 //! These parsers are pure (text in, domain objects out) so they are unit
 //! testable without any filesystem.
 
-use crate::domain::model::{Entry, Model, PatternRow};
+use crate::domain::model::{Entry, Kind, Model, PatternRow};
 
 /// A tag token must be lowercase alnum or '-', otherwise it is prose that
 /// leaked out of a backtick pair - never a tag.
@@ -54,28 +54,36 @@ pub fn parse_readme(readme: &str) -> Model {
                 continue;
             }
             let body = after.trim_start_matches([' ', '-']).to_string();
-            let description = body
-                .split("**Blazing:**")
-                .next()
-                .unwrap_or("")
-                .trim()
-                .trim_end_matches('.')
-                .to_string();
+            // Field runs end at the next " **" bold marker. The Blazing
+            // header may carry a variant ("**Blazing (for trust):**") - an
+            // unparsed variant must not empty the claim or smuggle markdown
+            // into the description.
+            fn field_end(s: &str) -> &str {
+                match s.find(" **") {
+                    Some(i) => &s[..i],
+                    None => s,
+                }
+            }
+            let description = match body.find("**") {
+                Some(i) => body[..i].trim().trim_end_matches('.'),
+                None => body.trim(),
+            }
+            .to_string();
             let blazing = body
-                .split("**Blazing:**")
-                .nth(1)
-                .unwrap_or("")
-                .split("**Arch:**")
-                .next()
-                .unwrap_or("")
-                .trim()
-                .to_string();
+                .find("**Blazing")
+                .and_then(|i| body[i..].find(":**").map(|c| i + c + 3))
+                .map(|start| field_end(&body[start..]).trim().to_string())
+                .unwrap_or_default();
+            let declared = body
+                .find("**Type:**")
+                .map(|i| field_end(&body[i + "**Type:**".len()..]).trim().trim_end_matches('.'))
+                .and_then(Kind::parse);
             let arch = body
                 .split("**Arch:**")
                 .nth(1)
                 .map(parse_arch_tags)
                 .unwrap_or_default();
-            model.entries.push(Entry { name, url, section: section.clone(), description, blazing, arch });
+            model.entries.push(Entry { name, url, section: section.clone(), description, blazing, arch, declared });
         }
     }
     model
@@ -147,5 +155,21 @@ Intro line.
         assert!(rows[0].has_decision_link);
         assert_eq!(rows[1].tag, "simd");
         assert_eq!(rows[1].used_by, vec!["alpha".to_string()]);
+    }
+
+    #[test]
+    fn parses_type_and_blazing_variants() {
+        let m = parse_readme(
+            "## S\n\n- [trust](https://github.com/t/t) - proves things. **Blazing (for trust):** machine-checked proofs, no runtime cost. **Type:** tool. **Arch:** `simd`.\n- [dig](https://github.com/d/d) - prose with e2e, 0-RTT, O(1), p99, since 2026. **Blazing:** handles every tier. **Type:** case-study. **Arch:** `jit`.\n",
+        );
+        let t = &m.entries[0];
+        // the trust variant must land in the claim field, not the description
+        assert_eq!(t.blazing, "machine-checked proofs, no runtime cost.");
+        assert!(!t.description.contains("**"));
+        assert_eq!(t.kind(), crate::domain::model::Kind::Tool);
+        // digits in prose must not flip the declared type
+        let d = &m.entries[1];
+        assert_eq!(d.kind(), crate::domain::model::Kind::CaseStudy);
+        assert_eq!(d.blazing, "handles every tier.");
     }
 }

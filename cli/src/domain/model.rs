@@ -19,6 +19,19 @@ impl Kind {
             Kind::AgentSkill => "agent-skill",
         }
     }
+
+    pub fn parse(s: &str) -> Option<Kind> {
+        match s.trim() {
+            "measured" => Some(Kind::Measured),
+            "tool" => Some(Kind::Tool),
+            "case-study" => Some(Kind::CaseStudy),
+            "agent-skill" => Some(Kind::AgentSkill),
+            _ => None,
+        }
+    }
+
+    /// The exact spellings the `**Type:**` marker accepts.
+    pub const VALID: &'static str = "measured | tool | case-study | agent-skill";
 }
 
 #[derive(Clone, Debug)]
@@ -29,19 +42,19 @@ pub struct Entry {
     pub description: String,
     pub blazing: String,
     pub arch: Vec<String>,
+    /// Explicit `**Type:**` marker from the card. Type is DATA, never
+    /// guessed from prose: "e2e", "0-RTT", "O(1)", "p99" and years all
+    /// contain digits, and a prose heuristic silently reclassifies a card
+    /// when its claim text changes (an emptied claim would flip the type
+    /// instead of raising an error).
+    pub declared: Option<Kind>,
 }
 
 impl Entry {
+    /// Cards without a marker fall back to case-study; `check` raises
+    /// MISSING_TYPE so the gap cannot pass silently.
     pub fn kind(&self) -> Kind {
-        if self.name == "uringscope SKILL.md" {
-            Kind::AgentSkill
-        } else if super::rules::TOOL_NAMES.contains(&self.name.as_str()) {
-            Kind::Tool
-        } else if self.blazing.chars().any(|c| c.is_ascii_digit()) {
-            Kind::Measured
-        } else {
-            Kind::CaseStudy
-        }
+        self.declared.unwrap_or(Kind::CaseStudy)
     }
 }
 

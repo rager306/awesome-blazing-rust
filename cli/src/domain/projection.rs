@@ -94,7 +94,7 @@ pub fn llms(model: &Model) -> Artifact {
     for s in &model.sections {
         out.push_str(&format!("- {} ({} entries)\n", s, model.count_in_section(s)));
     }
-    out.push_str("\n## For agents\n\n- Use catalog/projects.json for structured access; the README is prose-first.\n- A `Blazing:` line without a number is a bug: report it.\n- Tags are defined in PATTERNS.md; unknown tags in PRs must add a row.\n");
+    out.push_str("\n## For agents\n\n- Use catalog/projects.json for structured access; the README is prose-first.\n- Card types are explicit (**Type:** in the card, the type field here): measured = numbers plus a named baseline required; tool and case-study = mechanism claims, numbers optional; agent-skill = points at a skill file. A measured card without numbers is a bug; a tool card without numbers is normal.\n- Tags are defined in PATTERNS.md; unknown tags in PRs must add a row.\n");
     Artifact { path: LLMS_PATH, content: out }
 }
 
@@ -107,6 +107,7 @@ mod tests {
         Model {
             sections: vec!["S".into()],
             entries: vec![Entry {
+                declared: None,
                 name: "x".into(),
                 url: "https://e.com".into(),
                 section: "S".into(),
