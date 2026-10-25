@@ -66,7 +66,7 @@
       "section": "Algorithms & Data Structures",
       "type": "measured",
       "description": "Roaring compressed bitmaps for IDs, postings and set operations",
-      "blazing": "own run (2026-10, EPYC): dense sets intersect 1.9 ms vs 148 ms and union 0.31 ms vs 128 ms for HashSet (76-413x); on sparse uniform ids point-lookup is 8-13x slower than HashSet - density decides ([full run](runs/roaring-2026-10/RESULTS.md), scope: component).",
+      "blazing": "own run, v2 methodology (2026-10, quiet 2-vCPU, median of 7): dense union materialize 2.5 ms vs 1879 ms for HashSet (755x) and intersect 12.6 ms vs 1176 ms (93x); at sparse 0.02-0.2% density materialize wins only 4-16x, contains is 6-11x slower than HashSet, and BTreeSet wins count-only scans - density and op semantics decide ([full run](https://github.com/rager306/awesome-blazing-rust/blob/main/runs/roaring-2026-10/RESULTS.md), scope: component).",
       "arch": ["bitmap-index", "density-dependent"]
     },
     {

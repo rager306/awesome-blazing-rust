@@ -1,0 +1,53 @@
+host: AMD EPYC Processor (with IBPB) | 12 vcpus | linux
+== N = 1000000, sparse uniform (universe 2^32) ==
+  population: 2000000 draws -> A unique 999883 | B unique 893953 | overlap potential 50% of B
+  contains hit rate: 219/1M probes (0.0% of universe-drawn probes hit A)
+    contains 1M            roaring   median    597.34 ms  [543.17, 586.52, 597.06, 597.34, 636.70, 714.45, 734.44]
+    contains 1M            hashset   median     61.74 ms  [47.83, 53.90, 56.16, 61.74, 62.23, 66.09, 84.11]
+    contains 1M            btreeset  median    396.17 ms  [346.00, 363.76, 377.05, 396.17, 400.77, 406.25, 416.86]
+    intersect count        roaring   median     99.12 ms  [94.11, 98.40, 98.78, 99.12, 100.95, 102.19, 107.56]
+    intersect count        hashset   median    118.24 ms  [109.99, 117.09, 117.98, 118.24, 123.21, 129.18, 133.34]
+    intersect count        btreeset  median     25.18 ms  [23.70, 23.83, 23.95, 25.18, 25.26, 25.98, 27.62]
+    union count            roaring   median    117.85 ms  [114.93, 116.10, 117.46, 117.85, 120.02, 122.09, 126.74]
+    union count            hashset   median    114.69 ms  [100.08, 108.75, 112.42, 114.69, 115.05, 126.70, 129.46]
+    union count            btreeset  median     21.56 ms  [20.41, 21.24, 21.45, 21.56, 21.91, 21.92, 23.38]
+    intersect materialize  roaring   median     40.58 ms  [34.87, 36.25, 37.81, 40.58, 43.12, 43.74, 48.71]
+    intersect materialize  hashset   median    198.92 ms  [168.98, 192.95, 194.89, 198.92, 216.37, 216.55, 228.48]
+    intersect materialize  btreeset  median     27.17 ms  [26.47, 26.60, 26.85, 27.17, 27.52, 27.59, 28.53]
+    union materialize      roaring   median     37.80 ms  [36.64, 37.02, 37.50, 37.80, 37.90, 40.48, 50.52]
+    union materialize      hashset   median    415.27 ms  [347.47, 365.01, 414.35, 415.27, 434.55, 442.58, 444.78]
+    union materialize      btreeset  median     41.64 ms  [37.11, 38.22, 39.52, 41.64, 41.81, 43.27, 44.69]
+  cross-check OK: inter = 394093 keys, union = 1499743 keys, identical across all three (fingerprint)
+  build single-run ms - A: roaring 1310.8 | hash 130.2 | btree 56.9   B: roaring 1186.0 | hash 155.3 | btree 40.7
+== N = 1000000, dense (universe 2^23) ==
+  population: 2000000 draws -> A unique 939878 | B unique 845745 | overlap potential 50% of B
+  contains hit rate: 117201/1M probes (11.7% of universe-drawn probes hit A)
+    contains 1M            roaring   median     29.66 ms  [26.14, 26.60, 27.88, 29.66, 32.12, 34.08, 37.95]
+    contains 1M            hashset   median     96.41 ms  [92.31, 92.56, 93.15, 96.41, 103.18, 124.95, 152.62]
+    contains 1M            btreeset  median    380.91 ms  [336.63, 368.24, 369.03, 380.91, 399.19, 400.35, 455.33]
+    intersect count        roaring   median     17.49 ms  [14.16, 15.95, 16.42, 17.49, 17.74, 17.82, 19.05]
+    intersect count        hashset   median    121.35 ms  [109.61, 110.72, 112.98, 121.35, 121.79, 125.43, 130.37]
+    intersect count        btreeset  median     20.98 ms  [18.98, 20.41, 20.84, 20.98, 23.06, 23.66, 23.88]
+    union count            roaring   median     21.92 ms  [20.63, 21.17, 21.63, 21.92, 22.54, 24.80, 27.04]
+    union count            hashset   median    109.58 ms  [102.63, 103.01, 105.09, 109.58, 116.30, 119.82, 125.65]
+    union count            btreeset  median     20.27 ms  [18.48, 19.75, 20.09, 20.27, 20.35, 20.51, 21.03]
+    intersect materialize  roaring   median      2.12 ms  [2.03, 2.09, 2.11, 2.12, 2.13, 2.14, 2.31]
+    intersect materialize  hashset   median    198.31 ms  [187.95, 194.53, 197.82, 198.31, 201.11, 205.38, 232.24]
+    intersect materialize  btreeset  median     23.76 ms  [21.80, 22.96, 23.26, 23.76, 24.41, 25.05, 27.27]
+    union materialize      roaring   median      0.15 ms  [0.15, 0.15, 0.15, 0.15, 0.16, 0.17, 0.38]
+    union materialize      hashset   median    373.29 ms  [296.06, 306.20, 345.11, 373.29, 376.92, 394.21, 420.96]
+    union materialize      btreeset  median     35.56 ms  [30.22, 34.26, 35.55, 35.56, 35.72, 36.50, 37.51]
+  cross-check OK: inter = 417745 keys, union = 1367878 keys, identical across all three (fingerprint)
+  build single-run ms - A: roaring 116.6 | hash 156.3 | btree 38.1   B: roaring 112.6 | hash 187.6 | btree 38.3
+== N = 8000000, sparse uniform (universe 2^32) ==
+  population: 16000000 draws -> A unique 7992626 | B unique 7142482 | overlap potential 50% of B
+  contains hit rate: 1787/1M probes (0.2% of universe-drawn probes hit A)
+    contains 1M            roaring   median   1141.31 ms  [1057.44, 1083.93, 1094.81, 1141.31, 1145.33, 1150.27, 1163.15]
+    contains 1M            hashset   median    134.49 ms  [131.13, 131.13, 132.80, 134.49, 137.78, 137.89, 140.68]
+    contains 1M            btreeset  median    906.31 ms  [841.73, 879.15, 903.56, 906.31, 910.19, 1027.23, 1092.19]
+    intersect count        roaring   median    732.79 ms  [716.44, 720.97, 723.51, 732.79, 737.27, 750.82, 761.91]
+    intersect count        hashset   median   1592.94 ms  [1470.87, 1514.24, 1581.19, 1592.94, 1598.42, 1696.70, 1721.64]
+    intersect count        btreeset  median    193.88 ms  [185.95, 190.16, 192.93, 193.88, 194.27, 196.15, 197.21]
+    union count            roaring   median    792.91 ms  [778.18, 790.57, 791.93, 792.91, 799.19, 857.19, 888.49]
+    union count            hashset   median   1589.93 ms  [1408.32, 1459.71, 1465.31, 1589.93, 1631.67, 1664.24, 1664.88]
+    union count            btreeset  median    182.61 ms  [169.73, 174.95, 182.58, 182.61, 196.32, 198.17, 203.75]

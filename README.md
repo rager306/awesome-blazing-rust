@@ -49,7 +49,7 @@ The canonical blazing projects - the ones that made "Rust is fast" a meme with r
 ## Algorithms & Data Structures
 
 - [sux](https://github.com/vigna/sux-rs) - succinct structures: Elias-Fano, rank/select, static functions, minimal perfect hashing. **Blazing:** scales to trillions of keys with very fast queries executed directly on the compressed representation. **Type:** case-study. **Arch:** `succinct`, `rank-select`, `zero-copy`.
-- [roaring-rs](https://github.com/RoaringBitmap/roaring-rs) - Roaring compressed bitmaps for IDs, postings and set operations. **Blazing:** own run (2026-10, EPYC): dense sets intersect 1.9 ms vs 148 ms and union 0.31 ms vs 128 ms for HashSet (76-413x); on sparse uniform ids point-lookup is 8-13x slower than HashSet - density decides ([full run](runs/roaring-2026-10/RESULTS.md), scope: component). **Type:** measured. **Arch:** `bitmap-index`, `density-dependent`.
+- [roaring-rs](https://github.com/RoaringBitmap/roaring-rs) - Roaring compressed bitmaps for IDs, postings and set operations. **Blazing:** own run, v2 methodology (2026-10, quiet 2-vCPU, median of 7): dense union materialize 2.5 ms vs 1879 ms for HashSet (755x) and intersect 12.6 ms vs 1176 ms (93x); at sparse 0.02-0.2% density materialize wins only 4-16x, contains is 6-11x slower than HashSet, and BTreeSet wins count-only scans - density and op semantics decide ([full run](https://github.com/rager306/awesome-blazing-rust/blob/main/runs/roaring-2026-10/RESULTS.md), scope: component). **Type:** measured. **Arch:** `bitmap-index`, `density-dependent`.
 
 Well-known algorithms, implemented properly in Rust.
 
