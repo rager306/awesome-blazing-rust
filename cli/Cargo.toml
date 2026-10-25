@@ -1,0 +1,9 @@
+[package]
+name = "abr"
+version = "0.1.0"
+edition = "2021"
+description = "Zero-dependency CLI that keeps awesome-blazing-rust consistent: catalog, patterns index, llms.txt, validation"
+
+[profile.release]
+opt-level = 3
+lto = true

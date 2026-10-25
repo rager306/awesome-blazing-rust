@@ -46,6 +46,19 @@ If a project is interesting but has no public numbers yet, add it to **Candidate
 
 Counter-intuitive findings (compiler quirks, platform differences, misleading folk wisdom) are first-class content. PRs welcome — with the measurement, always.
 
+## Repo tooling
+
+This repository is kept consistent by its own zero-dependency Rust CLI: [`cli/`](cli/) (`abr`).
+
+```
+cargo run -p abr --release -- check    # validate cross-file consistency (CI runs this)
+cargo run -p abr --release -- catalog  # regenerate catalog/projects.json from README
+cargo run -p abr --release -- patterns # rebuild the PATTERNS.md index table
+cargo run -p abr --release -- llms     # regenerate llms.txt (agent-facing index)
+```
+
+After editing entries in README.md run `abr catalog` (and `abr patterns` if you added tags), then `abr check` must pass. A catalog about measured speed keeps itself consistent with measured-speed tooling: zero dependencies, single 7 KB binary.
+
 ## Checks
 
 CI runs:

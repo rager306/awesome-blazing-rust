@@ -1,0 +1,640 @@
+{
+  "meta": {
+    "format": "awesome-blazing-rust catalog v1",
+    "rule": "no numbers, no entry - measured entries carry claim+source; others are case-studies or tools",
+    "types": ["measured", "tool", "case-study", "agent-skill"],
+    "maintainer": "rager306"
+  },
+  "projects": [
+    {
+      "name": "ripgrep",
+      "url": "https://github.com/BurntSushi/ripgrep",
+      "section": "Hall of Fame",
+      "type": "measured",
+      "description": "recursive grep with regex support",
+      "blazing": "repeatedly benchmarks 10×+ faster than GNU grep on large trees (see the project's own fgrep/grep comparisons).",
+      "arch": ["simd", "lock-free-parallel-walk", "zero-copy"]
+    },
+    {
+      "name": "memchr",
+      "url": "https://github.com/BurntSushi/memchr",
+      "section": "Hall of Fame",
+      "type": "case-study",
+      "description": "substring & multi-substring search",
+      "blazing": "SIMD-accelerated; the backbone under `regex` and `ripgrep`.",
+      "arch": ["simd", "branchless"]
+    },
+    {
+      "name": "regex",
+      "url": "https://github.com/rust-lang/regex",
+      "section": "Hall of Fame",
+      "type": "case-study",
+      "description": "the regex engine",
+      "blazing": "literal optimizations + SIMD-powered DFA; its docs document multi-x speedups vs naive engines.",
+      "arch": ["automata-compilation", "simd", "prefilter"]
+    },
+    {
+      "name": "tokio",
+      "url": "https://github.com/tokio-rs/tokio",
+      "section": "Hall of Fame",
+      "type": "case-study",
+      "description": "the async runtime most of this list runs on",
+      "blazing": "work-stealing scheduler; powers production at AWS, Microsoft, Discord.",
+      "arch": ["work-stealing", "io-driver"]
+    },
+    {
+      "name": "hyperfine",
+      "url": "https://github.com/sharkdp/hyperfine",
+      "section": "Hall of Fame",
+      "type": "tool",
+      "description": "command-line benchmarking tool",
+      "blazing": "statistical warm-up/outlier analysis in a CLI; the tool we benchmark this list with.",
+      "arch": ["statistical-rigor"]
+    },
+    {
+      "name": "hashbrown",
+      "url": "https://github.com/rust-lang/hashbrown",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "SwissTable hash map; the implementation inside Rust's std since 1.36",
+      "blazing": "open addressing with SIMD control-byte probing.",
+      "arch": ["simd", "cache-conscious-layout"]
+    },
+    {
+      "name": "indexmap",
+      "url": "https://github.com/indexmap-rs/indexmap",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "insertion-ordered hash map + set, O(1) amortized with order",
+      "blazing": "std-level speed with deterministic iteration.",
+      "arch": ["compact-index"]
+    },
+    {
+      "name": "im",
+      "url": "https://github.com/bodil/im-rs",
+      "section": "Algorithms & Data Structures",
+      "type": "measured",
+      "description": "immutable/persistent collections with structural sharing (archived 2026 - historical entry)",
+      "blazing": "O(1) clones - cheap snapshots for concurrent and functional workloads.",
+      "arch": ["structural-sharing", "hamt"]
+    },
+    {
+      "name": "smallvec",
+      "url": "https://github.com/servo/rust-smallvec",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "stack-allocated small vectors",
+      "blazing": "eliminates heap allocation for the common short case.",
+      "arch": ["inline-storage"]
+    },
+    {
+      "name": "itertools",
+      "url": "https://github.com/rust-itertools/itertools",
+      "section": "Algorithms & Data Structures",
+      "type": "tool",
+      "description": "the algorithm toolbox on iterators",
+      "blazing": "zero-cost abstractions, fused adapters.",
+      "arch": ["zero-copy"]
+    },
+    {
+      "name": "blake3",
+      "url": "https://github.com/BLAKE3-team/BLAKE3",
+      "section": "Algorithms & Data Structures",
+      "type": "measured",
+      "description": "cryptographic hash",
+      "blazing": "~GB/s on modern x86 (AVX2/AVX-512, per project benchmarks); orders above SHA-2/SHA-3.",
+      "arch": ["simd", "merkle-tree", "multi-core-hash"]
+    },
+    {
+      "name": "xxhash-rust",
+      "url": "https://github.com/cescou/xxhash-rust",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "xxHash (XXH3)",
+      "blazing": "non-crypto hashing at memory-bandwidth speeds.",
+      "arch": ["simd"]
+    },
+    {
+      "name": "ahash",
+      "url": "https://github.com/tkaitchuck/aHash",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "DoS-resistant fast hash map hasher",
+      "blazing": "documented multi-fold wins over SipHash on hash-map workloads.",
+      "arch": ["aes-ni"]
+    },
+    {
+      "name": "crc32fast",
+      "url": "https://github.com/srijs/rust-crc32fast",
+      "section": "Algorithms & Data Structures",
+      "type": "measured",
+      "description": "CRC-32",
+      "blazing": "15× faster than naive, via slicing-by-8 and SIMD switching.",
+      "arch": ["simd", "table-driven"]
+    },
+    {
+      "name": "pathfinding",
+      "url": "https://github.com/samueltardieu/pathfinding",
+      "section": "Algorithms & Data Structures",
+      "type": "tool",
+      "description": "BFS, Dijkstra, A*, K-means, CSPs and friends",
+      "blazing": "the Swiss-army graph-algorithms crate.",
+      "arch": ["generic-vertices"]
+    },
+    {
+      "name": "rstar",
+      "url": "https://github.com/Stoeoef/rstar",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "R*-tree spatial index",
+      "blazing": "bulk-loaded queries at interactive rates.",
+      "arch": ["bulk-loading"]
+    },
+    {
+      "name": "num-bigint",
+      "url": "https://github.com/rust-num/num-bigint",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "arbitrary-precision integers",
+      "blazing": "Karatsuba multiplication in the num-rational stack.",
+      "arch": ["classical-algorithms"]
+    },
+    {
+      "name": "rayon",
+      "url": "https://github.com/rayon-rs/rayon",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "data parallelism",
+      "blazing": "near-linear scaling on parallel sort/map in typical workloads.",
+      "arch": ["work-stealing", "join-split"]
+    },
+    {
+      "name": "lz4_flex",
+      "url": "https://github.com/pseitz/lz4_flex",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "pure-Rust LZ4",
+      "blazing": "no C dependency; the safe configuration avoids `unsafe` and is benchmarked separately from the unsafe-feature build.",
+      "arch": ["pure-rust-port", "feature-gated-safety"]
+    },
+    {
+      "name": "zstd-safe",
+      "url": "https://github.com/gyscos/zstd-rs",
+      "section": "Algorithms & Data Structures",
+      "type": "case-study",
+      "description": "zstd bindings",
+      "blazing": "the ratio/speed king of general compression, one call away.",
+      "arch": ["c-binding"]
+    },
+    {
+      "name": "bbtree",
+      "url": "https://github.com/XiangpengHao/bbtree",
+      "section": "Concurrency & Lock-free",
+      "type": "measured",
+      "description": "concurrent ordered map built from a cost model",
+      "blazing": "5× std `BTreeMap` at 1 thread; 12× crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower.",
+      "arch": ["cost-model-driven", "simd", "versioned-locks", "inline-keys", "prefix-keys", "verus-in-ci", "shuttle-in-ci"]
+    },
+    {
+      "name": "crossbeam",
+      "url": "https://github.com/crossbeam-rs/crossbeam",
+      "section": "Concurrency & Lock-free",
+      "type": "case-study",
+      "description": "epoch-based memory reclamation + concurrent queues/deques",
+      "blazing": "the substrate half of modern lock-free Rust runs on.",
+      "arch": ["epoch-reclamation", "lock-free"]
+    },
+    {
+      "name": "dashmap",
+      "url": "https://github.com/xacrimon/dashmap",
+      "section": "Concurrency & Lock-free",
+      "type": "case-study",
+      "description": "concurrent hash map",
+      "blazing": "sharded locking beats global `RwLock<HashMap>` by design.",
+      "arch": ["sharding"]
+    },
+    {
+      "name": "papaya",
+      "url": "https://github.com/ibraheemdev/papaya",
+      "section": "Concurrency & Lock-free",
+      "type": "case-study",
+      "description": "concurrent hash map, read-optimized counterpoint to sharded designs",
+      "blazing": "built around read throughput with incremental resizing.",
+      "arch": ["read-optimized", "hyaline-reclamation"]
+    },
+    {
+      "name": "glommio",
+      "url": "https://github.com/DataDog/glommio",
+      "section": "Async Runtimes & I/O",
+      "type": "case-study",
+      "description": "thread-per-core io_uring runtime",
+      "blazing": "no cross-thread scheduling, direct io_uring.",
+      "arch": ["thread-per-core", "io-uring", "sharding"]
+    },
+    {
+      "name": "monoio",
+      "url": "https://github.com/bytedance/monoio",
+      "section": "Async Runtimes & I/O",
+      "type": "case-study",
+      "description": "ByteDance's thread-per-core runtime",
+      "blazing": "io_uring-first, production at scale.",
+      "arch": ["thread-per-core", "io-uring"]
+    },
+    {
+      "name": "io-uring",
+      "url": "https://github.com/tokio-rs/io-uring",
+      "section": "Async Runtimes & I/O",
+      "type": "case-study",
+      "description": "raw io_uring bindings",
+      "blazing": "one syscall for many ops - the kernel interface built to be ignored by no one.",
+      "arch": ["io-uring", "batching"]
+    },
+    {
+      "name": "redb",
+      "url": "https://github.com/cberner/redb",
+      "section": "Storage & Embedded Databases",
+      "type": "measured",
+      "description": "pure-Rust ACID B-tree database",
+      "blazing": "LMDB-class numbers documented in its bench suite; the File backend sits within ~2× of the removed (unsound-in-practice) mmap backend per the 0.14.0 changelog.",
+      "arch": ["copy-on-write"]
+    },
+    {
+      "name": "fjall",
+      "url": "https://github.com/fjall-rs/fjall",
+      "section": "Storage & Embedded Databases",
+      "type": "case-study",
+      "description": "LSM storage engine",
+      "blazing": "benchmarked against rocksdb/sled with open methodology; bbtree swap-in partner.",
+      "arch": ["lsm", "partitioned"]
+    },
+    {
+      "name": "SlateDB",
+      "url": "https://github.com/slatedb/slatedb",
+      "section": "Storage & Embedded Databases",
+      "type": "measured",
+      "description": "LSM on object storage (S3/R2)",
+      "blazing": "cloud-native LSM; bbtree e2e partner.",
+      "arch": ["lsm", "object-storage"]
+    },
+    {
+      "name": "sled",
+      "url": "https://github.com/spacejam/sled",
+      "section": "Storage & Embedded Databases",
+      "type": "case-study",
+      "description": "the famous beta embedded DB",
+      "blazing": "the project that set the tone for \"blazing\" claims - treat numbers as historical.",
+      "arch": ["lsm-plus-btree"]
+    },
+    {
+      "name": "petgraph",
+      "url": "https://github.com/petgraph/petgraph",
+      "section": "Graph & Knowledge Graphs",
+      "type": "case-study",
+      "description": "THE graph data-structure crate",
+      "blazing": "the default choice; algorithmic core used across the ecosystem.",
+      "arch": ["generic-graph"]
+    },
+    {
+      "name": "rustworkx",
+      "url": "https://github.com/Qiskit/rustworkx",
+      "section": "Graph & Knowledge Graphs",
+      "type": "case-study",
+      "description": "IBM's graph library (Python API requires adaptation, not drop-in NetworkX; `rustworkx-core` is the pure-Rust crate)",
+      "blazing": "documented multi-x wins over pure-Python NetworkX at Qiskit scale.",
+      "arch": ["python-bridge", "parallel-algos"]
+    },
+    {
+      "name": "oxigraph",
+      "url": "https://github.com/oxigraph/oxigraph",
+      "section": "Graph & Knowledge Graphs",
+      "type": "case-study",
+      "description": "RDF/SPARQL store",
+      "blazing": "embedded+server SPARQL with active perf discipline; persistence is RocksDB-backed by default (feature-gated in-memory alternative).",
+      "arch": ["sparql-engine", "storage-backend-flag"]
+    },
+    {
+      "name": "cozo",
+      "url": "https://github.com/cozodb/cozo",
+      "section": "Graph & Knowledge Graphs",
+      "type": "case-study",
+      "description": "embedded Datalog graph DB",
+      "blazing": "recursive queries as a first-class, stored-procedure-free primitive.",
+      "arch": ["datalog", "embedded"]
+    },
+    {
+      "name": "tantivy",
+      "url": "https://github.com/quickwit-oss/tantivy",
+      "section": "Search & Text Processing",
+      "type": "case-study",
+      "description": "full-text search engine",
+      "blazing": "benchmarked against Lucene, frequently ahead on ingest.",
+      "arch": ["inverted-index", "columnar"]
+    },
+    {
+      "name": "aho-corasick",
+      "url": "https://github.com/BurntSushi/aho-corasick",
+      "section": "Search & Text Processing",
+      "type": "case-study",
+      "description": "multi-pattern matching",
+      "blazing": "the prefilter behind regex/ripgrep multi-literal search.",
+      "arch": ["automata-compilation", "simd"]
+    },
+    {
+      "name": "winnow",
+      "url": "https://github.com/winnow-rs/winnow",
+      "section": "Search & Text Processing",
+      "type": "case-study",
+      "description": "parser combinators",
+      "blazing": "zero-copy parsing as the default path.",
+      "arch": ["zero-copy", "combinators"]
+    },
+    {
+      "name": "polars",
+      "url": "https://github.com/pola-rs/polars",
+      "section": "Data & Analytics",
+      "type": "case-study",
+      "description": "DataFrames",
+      "blazing": "documented multi-x wins over pandas on groupby/join; query-optimized, lazy, parallel.",
+      "arch": ["columnar", "query-optimization", "simd"]
+    },
+    {
+      "name": "apache-arrow-rs",
+      "url": "https://github.com/apache/arrow-rs",
+      "section": "Data & Analytics",
+      "type": "case-study",
+      "description": "Arrow columnar format",
+      "blazing": "zero-copy interchange - the \"no-serialization\" tax advantage.",
+      "arch": ["columnar", "zero-copy", "stringview"]
+    },
+    {
+      "name": "datafusion",
+      "url": "https://github.com/apache/datafusion",
+      "section": "Data & Analytics",
+      "type": "case-study",
+      "description": "SQL query engine",
+      "blazing": "the engine behind many \"faster than X\" blog posts; StringView and bbtree-grade extensibility.",
+      "arch": ["query-optimization", "columnar", "extensible"]
+    },
+    {
+      "name": "quinn",
+      "url": "https://github.com/quinn-rs/quinn",
+      "section": "Networking & Protocols",
+      "type": "measured",
+      "description": "QUIC implementation",
+      "blazing": "0-RTT, multiplexed streams without head-of-line blocking.",
+      "arch": ["async-native", "tls-13"]
+    },
+    {
+      "name": "hyper",
+      "url": "https://github.com/hyperium/hyper",
+      "section": "Networking & Protocols",
+      "type": "case-study",
+      "description": "HTTP implementation",
+      "blazing": "the substrate of axum/reqwest; TechEmpower regular.",
+      "arch": ["async-native"]
+    },
+    {
+      "name": "pingora",
+      "url": "https://github.com/cloudflare/pingora",
+      "section": "Networking & Protocols",
+      "type": "measured",
+      "description": "Cloudflare's proxy framework",
+      "blazing": "in Cloudflare's migration report, ~70% less CPU and ~67% less memory than the previous proxy at the same traffic.",
+      "arch": ["connection-coalescing", "work-stealing"]
+    },
+    {
+      "name": "axum",
+      "url": "https://github.com/tokio-rs/axum",
+      "section": "Web & Edge",
+      "type": "case-study",
+      "description": "ergonomic HTTP framework",
+      "blazing": "TechEmpower top-tier via hyper.",
+      "arch": ["zero-macro-ergonomics"]
+    },
+    {
+      "name": "wasmtime",
+      "url": "https://github.com/bytecodealliance/wasmtime",
+      "section": "Web & Edge",
+      "type": "case-study",
+      "description": "WebAssembly runtime",
+      "blazing": "Cranelift JIT + Spectre-mitigating design; runs in Firefox, Fastly, Docker.",
+      "arch": ["jit", "sandboxing"]
+    },
+    {
+      "name": "rkyv",
+      "url": "https://github.com/rkyv/rkyv",
+      "section": "Web & Edge",
+      "type": "case-study",
+      "description": "zero-copy serialization",
+      "blazing": "zero-copy *access* to the archived representation; validation and full reconstruction are separate, individually costed steps.",
+      "arch": ["zero-copy", "relative-pointers"]
+    },
+    {
+      "name": "ndarray",
+      "url": "https://github.com/rust-ndarray/ndarray",
+      "section": "Science & Computational",
+      "type": "case-study",
+      "description": "N-dimensional arrays",
+      "blazing": "the substrate scientific Rust computes on.",
+      "arch": ["columnar-layout-optional", "views"]
+    },
+    {
+      "name": "nalgebra",
+      "url": "https://github.com/dimforge/nalgebra",
+      "section": "Science & Computational",
+      "type": "case-study",
+      "description": "linear algebra, statically sized",
+      "blazing": "compile-time dims → unrolled SIMD-friendly kernels.",
+      "arch": ["const-generics", "simd"]
+    },
+    {
+      "name": "candle",
+      "url": "https://github.com/huggingface/candle",
+      "section": "Science & Computational",
+      "type": "case-study",
+      "description": "Hugging Face's tensor library",
+      "blazing": "minimal-deps CPU inference that made HF blogs measurable.",
+      "arch": ["backend-trait", "no-python"]
+    },
+    {
+      "name": "burn",
+      "url": "https://github.com/tracel-ai/burn",
+      "section": "Science & Computational",
+      "type": "case-study",
+      "description": "deep learning framework",
+      "blazing": "backend-agnostic; documented wins from kernel fusion on some models.",
+      "arch": ["backend-trait", "kernel-fusion"]
+    },
+    {
+      "name": "rapier",
+      "url": "https://github.com/dimforge/rapier",
+      "section": "Science & Computational",
+      "type": "case-study",
+      "description": "2D/3D physics",
+      "blazing": "real-time rigid-body simulation benchmarks published with each release.",
+      "arch": ["simd", "broad-phase-narrow-phase"]
+    },
+    {
+      "name": "rust-bio",
+      "url": "https://github.com/rust-bio/rust-bio",
+      "section": "Science & Computational",
+      "type": "case-study",
+      "description": "bioinformatics algorithms",
+      "blazing": "pairwise alignment, BWT, variant calling - the algorithms section of computational biology.",
+      "arch": ["classical-algorithms"]
+    },
+    {
+      "name": "paramo1d",
+      "url": "https://github.com/ignotusnemo/paramo1d",
+      "section": "Crypto & Proof Systems",
+      "type": "measured",
+      "description": "mobile blockchain verification client with recursive proofs",
+      "blazing": "mainnet sync in 48.43 s on a $100 Redmi 15C (4 GB RAM; prepared matrix caches in place, not a cold start); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s.",
+      "arch": ["memory-bounded-streaming", "recursive-proofs", "vendor-pinning", "poseidon2-gf2"]
+    },
+    {
+      "name": "arkworks",
+      "url": "https://github.com/arkworks-rs",
+      "section": "Crypto & Proof Systems",
+      "type": "case-study",
+      "description": "zk-SNARK ecosystem",
+      "blazing": "the research-grade finite-field/curve stack most new proof systems benchmark against.",
+      "arch": ["finite-fields", "no-std-friendly"]
+    },
+    {
+      "name": "verus",
+      "url": "https://github.com/verus-lang/verus",
+      "section": "Verification & Correctness",
+      "type": "tool",
+      "description": "verified Rust. **Blazing (for trust):** SMT-backed proofs checked per PR - bbtree ships proofs in-repo as a performance guard. **Arch:** `proof-carrying-performance`",
+      "blazing": "",
+      "arch": ["proof-carrying-performance"]
+    },
+    {
+      "name": "miri",
+      "url": "https://github.com/rust-lang/miri",
+      "section": "Verification & Correctness",
+      "type": "tool",
+      "description": "interpreter catching UB. **Blazing (for trust):** runs bbtree and friends' test suites to keep the unsafe honest. **Arch:** `miri-in-ci`",
+      "blazing": "",
+      "arch": ["miri-in-ci"]
+    },
+    {
+      "name": "shuttle",
+      "url": "https://github.com/awslabs/shuttle",
+      "section": "Verification & Correctness",
+      "type": "tool",
+      "description": "concurrent testing as a library. **Blazing (for trust):** thousands of schedules per PR; pairs with fork-based DST (ffs) that caught what Shuttle missed (bbtree issue #9). **Arch:** `dst-in-ci`",
+      "blazing": "",
+      "arch": ["dst-in-ci"]
+    },
+    {
+      "name": "uringscope",
+      "url": "https://github.com/rch0wdhury/uringscope",
+      "section": "Observability & Profiling",
+      "type": "measured",
+      "description": "eBPF tracer for io_uring (C+BPF companion for Rust io_uring apps)",
+      "blazing": "named findings with fixes - \"BATCH: you pay a syscall per request\" and \"PUNT: this is where your p99 lives\".",
+      "arch": ["findings-as-verdicts", "btf-probe", "kernel-matrix-in-ci"]
+    },
+    {
+      "name": "cargo-flamegraph",
+      "url": "https://github.com/flamegraph-rs/flamegraph",
+      "section": "Observability & Profiling",
+      "type": "tool",
+      "description": "flamegraphs from cargo",
+      "blazing": "the first tool you reach for when \"blazing\" needs evidence.",
+      "arch": ["perf-integration"]
+    },
+    {
+      "name": "criterion",
+      "url": "https://github.com/bheisler/criterion.rs",
+      "section": "Observability & Profiling",
+      "type": "tool",
+      "description": "statistics-driven benchmarking",
+      "blazing": "regression detection with outlier resistance.",
+      "arch": ["statistical-rigor"]
+    },
+    {
+      "name": "divan",
+      "url": "https://github.com/nvzqz/divan",
+      "section": "Observability & Profiling",
+      "type": "tool",
+      "description": "fast, smart benchmarking",
+      "blazing": "allocation & wall-time profiling with less boilerplate.",
+      "arch": ["alloc-tracking"]
+    },
+    {
+      "name": "uringscope SKILL.md",
+      "url": "https://github.com/rch0wdhury/uringscope/blob/main/skills/uringscope/SKILL.md",
+      "section": "Agent Skills",
+      "type": "agent-skill",
+      "description": "for the eBPF io_uring tracer: when-to-reach-for triggers phrased as symptoms (p99 regressions, iou-wrk-* thread storms, syscall-per-op drift)",
+      "blazing": "turns profiling output into named verdicts.",
+      "arch": ["skills-in-repo", "findings-as-verdicts"]
+    },
+    {
+      "name": "zed",
+      "url": "https://github.com/zed-industries/zed",
+      "section": "UI & Apps",
+      "type": "measured",
+      "description": "the editor built on GPUI",
+      "blazing": "reported ~128-222 MB RSS vs multi-GB VS Code in published comparisons ([zed.dev/compare/vscode](https://zed.dev/compare/vscode)).",
+      "arch": ["gpu-rendered-ui", "own-renderer"]
+    },
+    {
+      "name": "gpui-kit",
+      "url": "https://github.com/longbridge/gpui-kit",
+      "section": "UI & Apps",
+      "type": "case-study",
+      "description": "component library for GPUI (\"shadcn for GPUI\")",
+      "blazing": "brings widget completeness to raw GPUI (which critics note lacks text input).",
+      "arch": ["gpu-rendered-ui", "component-layer"]
+    },
+    {
+      "name": "crux",
+      "url": "https://github.com/redbadger/crux",
+      "section": "UI & Apps",
+      "type": "case-study",
+      "description": "shared Rust core, native shells (Elm architecture)",
+      "blazing": "one core, UIs in SwiftUI/Kotlin/React - typegen proves every effect is handled.",
+      "arch": ["elm-architecture", "typed-effects", "typegen"]
+    },
+    {
+      "name": "egui",
+      "url": "https://github.com/emilk/egui",
+      "section": "UI & Apps",
+      "type": "measured",
+      "description": "immediate-mode GUI",
+      "blazing": "the pragmatic winner of the 2026 Rust GUI survey.",
+      "arch": ["immediate-mode"]
+    },
+    {
+      "name": "slint",
+      "url": "https://github.com/slint-ui/slint",
+      "section": "UI & Apps",
+      "type": "measured",
+      "description": "declarative UI",
+      "blazing": "embedded-friendly; the other 2026 survey winner.",
+      "arch": ["declarative-dsl", "embedded-first"]
+    },
+    {
+      "name": "gungraun",
+      "url": "https://github.com/gungraun/gungraun",
+      "section": "Benchmarking & Toolchain",
+      "type": "tool",
+      "description": "former iai-callgrind; Valgrind-based instruction-count benchmarking",
+      "blazing": "deterministic instruction and cache-metric counts for CI regression gates (specific metrics, not a blanket \"no noise\" claim).",
+      "arch": ["valgrind-based"]
+    },
+    {
+      "name": "dhat",
+      "url": "https://github.com/nnethercote/dhat-rs",
+      "section": "Benchmarking & Toolchain",
+      "type": "tool",
+      "description": "heap profiling",
+      "blazing": "the tool behind most \"we cut allocations 10×\" posts.",
+      "arch": ["alloc-tracking"]
+    }
+  ]
+}

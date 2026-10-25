@@ -16,3 +16,15 @@ jobs:
         with:
           node-version: 22
       - run: npx -y awesome-lint readme.md
+
+  abr-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Consistency check (catalog / patterns / llms)
+        run: |
+          cd cli
+          cargo build --release
+          cd ..
+          ./cli/target/release/abr check
