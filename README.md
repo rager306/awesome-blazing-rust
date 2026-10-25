@@ -251,6 +251,9 @@ This section is the intake of a weekly research pipeline. Lifecycle of an entry:
 
 Last full review: 2026-10-25. Community finds are welcome via PR - same bar applies.
 
+- [blaze](https://github.com/indexable-inc/blaze) - incremental rebuilds beside cargo: keeps the project compiled in memory, recompiles only changed functions (Cranelift) and patches the program cargo built. **Blazing:** author benchmarks, edit-rebuild on real projects, Linux x86-64: ripgrep 508 -> 56 ms, helix 2.15 s -> 116 ms, bun (1.25M lines) 9.11 s -> 451 ms vs cargo build; ~20 ms save-to-run with live edits ([method and per-platform numbers](https://github.com/indexable-inc/blaze/blob/main/docs/benchmarks.md)). **Arch:** `jit`, `hot-patch`.
+- [dbdelve](https://github.com/ShayanAbbas1/dbdelve) - native multi-engine database client on GPUI (Postgres, MySQL, SQLite, DuckDB, MongoDB, Redis and more), no Electron/JVM. **Blazing:** author benchmark vs DBeaver 25.3.1 (M1 Pro, 2026-10, median of 5, alternating runs): launch 1.1 s vs 5.2 s, idle memory 133 MB vs 606 MB, 1M-row grid 56 s vs 208 s at 4.9 GB vs 17 GB ([method](https://github.com/ShayanAbbas1/dbdelve/blob/main/BENCHMARKS.md)). **Arch:** `gpu-rendered-ui`.
+
 ## Candidates
 
 

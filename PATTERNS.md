@@ -46,10 +46,11 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `finite-state-transducer` | fst |
 | `generic-graph` | petgraph |
 | `generic-vertices` | pathfinding |
-| `gpu-rendered-ui` | zed, gpui-kit |
+| `gpu-rendered-ui` | zed, gpui-kit, dbdelve |
 | `hamt` | im |
 | `hit-ratio-first` | moka, foyer |
 | `hnsw` | qdrant |
+| `hot-patch` | blaze |
 | `hyaline-reclamation` | papaya |
 | `hybrid-cache` | foyer |
 | `immediate-mode` | egui |
@@ -59,7 +60,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `inverted-index` | tantivy |
 | `io-driver` | tokio |
 | `io-uring` | glommio, monoio, io-uring |
-| `jit` | wasmtime |
+| `jit` | wasmtime, blaze |
 | `join-split` | rayon |
 | `kernel-fusion` | burn |
 | `kernel-matrix-in-ci` | uringscope |

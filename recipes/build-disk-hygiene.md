@@ -24,7 +24,7 @@ incremental = false          # saves incremental/; slows rebuilds of changed cra
 export CARGO_TARGET_DIR="$HOME/.cache/cargo-target/my-project"
 ```
 
-This reuses artifacts across worktrees but does not cap anything - watch it with `du -sh "$CARGO_TARGET_DIR"` and clean with `cargo clean -p <pkg>` or [`cargo-sweep`](https://github.com/romac/cargo-sweep) (timestamp-based).
+This reuses artifacts across worktrees but does not cap anything - watch it with `du -sh "$CARGO_TARGET_DIR"` and clean with `cargo clean -p <pkg>`, [`cargo-clean-all`](https://github.com/dnlmlr/cargo-clean-all), or [`cargo-sweep`](https://github.com/holmgr/cargo-sweep) (timestamp-based; **unmaintained** - its README recommends `cargo-clean-all` for new users).
 
 4. **Bring debuginfo back per-run, not per-config:**
 
@@ -64,12 +64,18 @@ strip = false
 
 ## When a cache manager is in charge
 
-If builds go through a compile-cache layer (kache, sccache-style stores with their own GC), parts of this recipe invert: `incremental = false` saves nothing (the manager's store, not cargo, holds the data) while still slowing rebuilds; a shared `CARGO_TARGET_DIR` adds nothing on one physical disk and breaks the manager's tracking. In that world the remaining levers are binary stripping (the -20-86% above) and targeted builds.
+Cache layers have *different* rules - do not generalize one to another:
+
+- **sccache** (`RUSTC_WRAPPER`): its Rust docs require **disabling incremental compilation** for compilations to be cacheable, and it does not cache crates that invoke the system linker (bin, dylib, cdylib, proc-macro). So under sccache `incremental = false` is not just harmless - it is required, and the final binary link stays outside the cache.
+- **Hardlink-style target caches** (kache and friends): the manager's store, not cargo, holds the reuse data. There `incremental = false` saves nothing while still slowing rebuilds, and a shared `CARGO_TARGET_DIR` on one physical disk adds nothing and breaks the manager's tracking.
+- Plain cargo (no wrapper): the rest of this recipe applies as written.
+
+Identify which regime you are in before applying advice from either row.
 
 ## Cargo's own cleanup (status 2026-10)
 
-- **`~/.cargo` auto-GC: stable since 1.82.** Last-use tracking (sqlite) since 1.78; downloads unused 3 months and extracted sources unused 1 month are deleted at most once a day. `gc.auto.frequency = "never"` disables it. This covers the *registry* side, not `target/`.
-- **`target/` artifact GC: not yet shipped.** `cargo clean gc` and per-artifact collection remain nightly/unstable ([cargo#13060](https://github.com/rust-lang/cargo/issues/13060), [cargo#13136](https://github.com/rust-lang/cargo/issues/13136)).
+- **`~/.cargo` auto-GC: stable since Cargo 1.88 (June 2025).** Last-use tracking (sqlite) since 1.78; downloads unused 3 months and extracted sources unused 1 month are deleted at most once a day. Disable with `cache.auto-clean-frequency = "never"`. This covers the *global* registry/git caches, not `target/`.
+- **`target/` artifact GC: not yet shipped.** `cargo clean gc` / `-Zgc` targets the global caches in the cargo home, not build artifacts; per-artifact `target/` collection remains unstable ([cargo#13060](https://github.com/rust-lang/cargo/issues/13060), [cargo#13136](https://github.com/rust-lang/cargo/issues/13136)).
 - **[Project Goal 2026](https://goals.rust-lang.org/2026/target-dir-size.html):** accepted; targets are 30-40% smaller fresh builds first, then 60-80% including repeated builds. On nightly, `-Zembed-metadata=no` stops duplicating crate metadata into `.rlib` + `.rmeta` (halves metadata size) and is being evaluated as a default.
 
 Until that lands, third-party tools are the GC:
