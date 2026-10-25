@@ -44,7 +44,25 @@ Workload: a zero-dependency crate (this repo's `cli/`), cold `cargo build`, dev 
 | debug = 0 + incremental = false | **0.8 MB** | **0.7 MB / 0.31 s** |
 | line-tables-only | 5.0 MB / 1.21 s | 9.4 MB / 0.60 s |
 
+Same crate, **binary size** (what installers and e2e harnesses copy around): default dev 5.9 MB, `line-tables-only` 5.1 MB (-13%), `strip = "debuginfo"` **0.8 MB (-86%)**. If your pain is binaries being copied N times, stripping is the lever; `line-tables-only` barely helps there.
+
 Two hosts, same direction: debuginfo is the bulk of the savings. Absolute sizes vary with dependency count - the zero-dep case is the floor, a 300-dependency workspace scales it up, ratios hold. Reproduce: any crate, `CARGO_PROFILE_DEV_DEBUG=0 CARGO_TARGET_DIR=$(mktemp -d) cargo build`, then `du -sh`.
+
+## Two catches from real-world review
+
+1. **Strip cascades through profile inheritance.** A custom `[profile.debugging] inherits = "dev"` picks up `strip = "debuginfo"` too - the debugger loses everything exactly when you asked for a debugging profile. Every inheriting profile needs an explicit `strip = false`.
+2. **Env overrides create fingerprint variants.** Each distinct `CARGO_PROFILE_*` combination builds and *keeps* separate artifacts in `target/` - a disk-hygiene recipe that leans on env overrides feeds the disease it cures. For recurring needs declare a profile once; env is for true one-offs:
+
+```toml
+[profile.debugging]
+inherits = "dev"
+debug = 2
+strip = false
+```
+
+## When a cache manager is in charge
+
+If builds go through a compile-cache layer (kache, sccache-style stores with their own GC), parts of this recipe invert: `incremental = false` saves nothing (the manager's store, not cargo, holds the data) while still slowing rebuilds; a shared `CARGO_TARGET_DIR` adds nothing on one physical disk and breaks the manager's tracking. In that world the remaining levers are binary stripping (the -20-86% above) and targeted builds.
 
 ## Where it bites back
 
