@@ -3,9 +3,10 @@ name: Lint
 on:
   push:
     branches: [main]
-    paths: ["**.md"]
+    paths: ["**.md", "llms.txt", "catalog/**", "cli/**", ".github/**"]
   pull_request:
-    paths: ["**.md"]
+    paths: ["**.md", "llms.txt", "catalog/**", "cli/**", ".github/**"]
+  workflow_dispatch:
 
 jobs:
   awesome-lint:
