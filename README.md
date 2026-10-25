@@ -1,6 +1,4 @@
-# Awesome Blazing Rust
-[![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+# Awesome Blazing Rust [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
 > Rust projects that **prove** their speed. Every entry ships measured numbers - and the architectural tricks behind them are named.
 
@@ -204,4 +202,6 @@ Measured-numbers pending. Promote with a PR that includes evidence.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: **evidence first** - link the benchmark, name the architecture pattern, tag the entry. PRs adding entries without numbers will be asked to move them to Candidates.
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
