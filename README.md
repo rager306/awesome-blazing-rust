@@ -29,7 +29,8 @@
 - [Benchmarking & Toolchain](#benchmarking--toolchain).
 - [Wow & Humor](#wow--humor).
 - [Measured Caveats](#measured-caveats).
-- [Fresh](#fresh).
+- [Fresh](#fresh)
+- [Recipes](#recipes).
 - [Candidates](#candidates)
 - [See also](#see-also).
 
@@ -214,6 +215,14 @@ Projects that ship their tribal knowledge as an agent-readable `SKILL.md` - beca
 - [Redox](https://github.com/redox-os/redox) - a complete OS in Rust. **Wow:** drivers, GUI, shell - everything.
 - [human-panic](https://github.com/rust-cli/human-panic) - crash reports humans can read, with the famous "Well, this is embarrassing" banner. **Humor:** empathy as a feature.
 - [ferris-says](https://github.com/mgattozzi/ferris-says) - the crab says things. **Humor:** the official mascot as a CLI.
+
+## Recipes
+
+Symptom-driven guides: from a developer's problem to the patterns, projects and limits. Contributions welcome - a recipe must end in a verifiable experiment, not a vibe.
+
+- [A graph that fits in memory and traverses fast](https://github.com/rager306/awesome-blazing-rust/blob/main/recipes/compact-graph.md) - string dictionary, dense ids, CSR, bitmap filters, hot-set caching.
+- [Throughput does not scale with threads](https://github.com/rager306/awesome-blazing-rust/blob/main/recipes/thread-scaling.md) - read locks that write, sharding, allocation contention.
+- [JSON parsing is the top CPU consumer](https://github.com/rager306/awesome-blazing-rust/blob/main/recipes/json-cpu.md) - scope first (Amdahl), then selective parse, SIMD parse, tape, or skip parsing entirely.
 
 ## Measured Caveats
 

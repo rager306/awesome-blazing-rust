@@ -33,6 +33,7 @@
 - UI & Apps (5 entries)
 - Benchmarking & Toolchain (4 entries)
 - Wow & Humor (0 entries)
+- Recipes (0 entries)
 - Measured Caveats (0 entries)
 - Fresh (0 entries)
 - Candidates (0 entries)
