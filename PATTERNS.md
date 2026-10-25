@@ -4,7 +4,7 @@ The second axis of this list: **how** the speed is achieved. Each pattern below 
 
 | Pattern | Used by |
 |---|---|
-| `cost-model-driven` | bbtree |
+| [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |
 | `simd` | bbtree, memchr, blake3, xxhash-rust, polars, nalgebra, rapier, hashbrown |
 | `versioned-locks` | bbtree |
 | `inline-keys` | bbtree |
@@ -26,14 +26,15 @@ The second axis of this list: **how** the speed is achieved. Each pattern below 
 | `automata-compilation` | regex, aho-corasick |
 | `prefilter` | regex |
 | `work-stealing` | tokio, rayon |
-| `findings-as-verdicts` | uringscope |
+| [`findings-as-verdicts`](decisions/002-findings-as-verdicts.md) | uringscope |
 | `kernel-matrix-in-ci` | uringscope |
 | `btf-probe` | uringscope |
 | `recursive-proofs` | paramo1d |
-| `memory-bounded-streaming` | paramo1d |
+| [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |
 | `vendor-pinning` | paramo1d |
+| [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope |
 | `poseidon2-gf2` | paramo1d |
-| `proof-carrying-performance` | verus, bbtree |
+| [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus, bbtree |
 | `miri-in-ci` | miri, bbtree |
 | `dst-in-ci` | shuttle, bbtree |
 | `gpu-rendered-ui` | zed, gpui-kit |
@@ -46,6 +47,8 @@ The second axis of this list: **how** the speed is achieved. Each pattern below 
 ---
 
 ## Pattern Notes
+
+Patterns with a link have a full write-up in [decisions/](decisions/) - problem, technique, evidence, trade-offs.
 
 Short versions. Each entry's `Blazing:` line in the README carries the evidence; this is the "how".
 

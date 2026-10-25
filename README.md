@@ -21,7 +21,8 @@
 - [Science & Computational](#science--computational).
 - [Crypto & Proof Systems](#crypto--proof-systems).
 - [Verification & Correctness](#verification--correctness).
-- [Observability & Profiling](#observability--profiling).
+- [Observability & Profiling](#observability--profiling)
+- [Agent Skills](#agent-skills).
 - [UI & Apps](#ui--apps).
 - [Benchmarking & Toolchain](#benchmarking--toolchain).
 - [Wow & Humor](#wow--humor).
@@ -155,6 +156,12 @@ Performance you can trust - proofs and dynamic testing as CI gates.
 - [cargo-flamegraph](https://github.com/flamegraph-rs/flamegraph) - flamegraphs from cargo. **Blazing:** the first tool you reach for when "blazing" needs evidence. **Arch:** `perf-integration`.
 - [criterion](https://github.com/bheisler/criterion.rs) - statistics-driven benchmarking. **Blazing:** regression detection with outlier resistance. **Arch:** `statistical-rigor`.
 - [divan](https://github.com/nvzqz/divan) - fast, smart benchmarking. **Blazing:** allocation & wall-time profiling with less boilerplate. **Arch:** `alloc-tracking`.
+
+## Agent Skills
+
+Projects that ship their tribal knowledge as an agent-readable `SKILL.md` - because in 2026 the first user is often an AI agent. Entry links point at the skill file itself.
+
+- [uringscope SKILL.md](https://github.com/rch0wdhury/uringscope/blob/main/skills/uringscope/SKILL.md) - for the eBPF io_uring tracer: when-to-reach-for triggers phrased as symptoms (p99 regressions, iou-wrk-* thread storms, syscall-per-op drift). **Blazing:** turns profiling output into named verdicts. **Arch:** `skills-in-repo`, `findings-as-verdicts`. See [ADR-005](decisions/005-skills-in-repo.md).
 
 ## UI & Apps
 
