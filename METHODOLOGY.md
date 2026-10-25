@@ -35,5 +35,5 @@ Every measured entry states its scope. Amdahl applies: a 2× win on a component 
 
 ## 6. Known limits of this catalog
 
-- Author-reported numbers are taken at face value with methodology as stated; we did not rerun them (yet - own reproducible runs are on the roadmap).
+- Author-reported numbers are taken at face value with methodology as stated. Where the claim is central, the catalog reruns the measurement itself (runs/: roaring-rs replicated 2026-10; the rest remain author-reported pending re-checks).
 - Baselines are named because "5× faster" without "than what, on which machine, at which thread count" is marketing, not evidence.

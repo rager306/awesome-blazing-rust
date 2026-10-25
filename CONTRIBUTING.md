@@ -30,7 +30,7 @@ The `Blazing:` line should, at minimum, carry: the claim, the baseline it was co
    - [name](url) — what it is, one line. **Blazing:** <the measurement with units and context>. **Arch:** `pattern-one`, `pattern-two`
    ```
 
-3. `Blazing:` must contain *numbers with context* — "12× std BTreeMap at 96 threads", not "very fast".
+3. `Blazing:` must contain *numbers with context* — "12× vs crossbeam-skiplist at 96 threads", not "very fast".
 4. `Arch:` tags must exist in [PATTERNS.md](PATTERNS.md) — if you coin a new one, add it to the index with a 2-3 line explanation.
 5. One entry per project; cross-posting the same project into multiple sections is not allowed — pick the primary home.
 
@@ -51,10 +51,10 @@ Counter-intuitive findings (compiler quirks, platform differences, misleading fo
 This repository is kept consistent by its own zero-dependency Rust CLI: [`cli/`](cli/) (`abr`).
 
 ```
-cargo run -p abr --release -- check    # validate cross-file consistency (CI runs this)
-cargo run -p abr --release -- catalog  # regenerate catalog/projects.json from README
-cargo run -p abr --release -- patterns # rebuild the PATTERNS.md index table
-cargo run -p abr --release -- llms     # regenerate llms.txt (agent-facing index)
+cargo run --manifest-path cli/Cargo.toml --release -- check    # validate cross-file consistency (CI runs this)
+cargo run --manifest-path cli/Cargo.toml --release -- catalog  # regenerate catalog/projects.json from README
+cargo run --manifest-path cli/Cargo.toml --release -- patterns # rebuild the PATTERNS.md index table
+cargo run --manifest-path cli/Cargo.toml --release -- llms     # regenerate llms.txt (agent-facing index)
 ```
 
 Paths are relative to the repository root, discovered by walking up from the current directory - `abr` runs from anywhere inside the repo. After editing entries in README.md run `abr catalog` (and `abr patterns` if you added tags), then `abr check` must pass. CI additionally proves projections are deterministic: regeneration must produce a byte-identical tree. A catalog about measured speed keeps itself consistent with measured-speed tooling: zero dependencies, single 7 KB binary.

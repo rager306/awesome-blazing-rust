@@ -25,7 +25,7 @@ When spikes are periodic, look for work whose cost is O(state) executed on a per
 - Histogram/rotation jobs: compacting, snapshotting, flushing at counts or intervals.
 - `truncate`/`drain` of accumulators that only run when a cap is hit.
 
-The check that nails it: spike spacing (in events) times per-event fast-path cost should roughly equal the spike magnitude if the slow path scales with state size. If a 1M-element `insert(0)` runs every 512 events, expect spikes ~2^10 times the fast path.
+One common shape (verify, don't assume): when the slow path's cost scales with accumulated state, spike spacing times per-event fast-path cost roughly equals the spike magnitude - e.g. a 1M-element `insert(0)` every 512 events can produce spikes ~2^10 times the fast path. Spacing and per-event cost can also drift independently, so confirm the suspected path by instrumenting it, not from arithmetic alone.
 
 ## Step 3 - fix classes
 
@@ -35,4 +35,4 @@ The check that nails it: spike spacing (in events) times per-event fast-path cos
 
 ## Verify
 
-Re-run the same workload; the fix must collapse p99 to within a small factor of p50 **without** changing p50. A fix that changes p50 changed the fast path too - wrong fix.
+Re-run the same workload; the fix must collapse p99 to within a small factor of p50, and p50 must stay within run-to-run noise. If p50 moved beyond noise, explain it before accepting the fix: either it touched the fast path (intended? measure the new cost) or the environment drifted (re-run the baseline).

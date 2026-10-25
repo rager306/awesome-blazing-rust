@@ -19,7 +19,7 @@
 | B2 | no | yes | yes | yes | yes, bit-identical | 23 | 873 s |
 | B3 | no | yes | yes | yes | yes, bit-identical | 11 | 446 s |
 
-**6/6 correct in both groups.** Aggregate cost: 47 API calls in each group (coincidence), mean wall 714 s (A) vs 575 s (B) - within shared-host noise, no claim either way.
+**3/3 correct with the skill, 3/3 without - 6/6 total.** Aggregate cost: 47 API calls in each group (coincidence), mean wall 714 s (A) vs 575 s (B) - within shared-host noise, no claim either way.
 
 ## Findings
 
