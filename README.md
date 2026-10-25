@@ -49,6 +49,7 @@ The canonical blazing projects - the ones that made "Rust is fast" a meme with r
 ## Algorithms & Data Structures
 
 - [sux](https://github.com/vigna/sux-rs) - succinct structures: Elias-Fano, rank/select, static functions, minimal perfect hashing. **Blazing:** scales to trillions of keys with very fast queries executed directly on the compressed representation. **Arch:** `succinct`, `rank-select`, `zero-copy`.
+- [roaring-rs](https://github.com/RoaringBitmap/roaring-rs) - Roaring compressed bitmaps for IDs, postings and set operations. **Blazing:** own run (2026-10, EPYC): dense sets intersect 1.9 ms vs 148 ms and union 0.31 ms vs 128 ms for HashSet (76-413x); on sparse uniform ids point-lookup is 8-13x slower than HashSet - density decides ([full run](runs/roaring-2026-10/RESULTS.md), scope: component). **Arch:** `bitmap-index`, `density-dependent`.
 
 Well-known algorithms, implemented properly in Rust.
 
@@ -234,13 +235,23 @@ Symptom-driven guides: from a developer's problem to the patterns, projects and 
 
 ## Fresh
 
-This week's finds from our research pipeline. New entries land here first, graduate into sections once verified.
+This section is the intake of a weekly research pipeline. Lifecycle of an entry:
 
-Entries land here first from the weekly research pipeline, then graduate into permanent sections. Community finds are welcome via PR.
+**Spotted → Sources verified → Measurement formatted → Accepted → Due for re-check.**
+
+|Stage                |Meaning                                                                                                                                           |
+|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|Spotted              |Found in release notes, papers, or our research digest.                                                                                           |
+|Sources verified     |Every number traced to a primary source - retold READMEs do not count.                                                                            |
+|Measurement formatted|The `Blazing:` line carries claim, baseline, and scope ([METHODOLOGY](https://github.com/rager306/awesome-blazing-rust/blob/main/METHODOLOGY.md)).|
+|Accepted             |The entry moves from Fresh into a permanent section.                                                                                              |
+|Due for re-check     |Old results stay useful when honestly dated; versions drift.                                                                                      |
+|Replicated (top tier)|The catalog ran its own benchmark ([runs/](https://github.com/rager306/awesome-blazing-rust/tree/main/runs)), independent of upstream numbers.    |
+
+Last full review: 2026-10-25. Community finds are welcome via PR - same bar applies.
 
 ## Candidates
 
-- [roaring-rs](https://github.com/RoaringBitmap/roaring-rs) - Roaring compressed bitmaps for IDs, postings and set operations. In-repo bench harness and real datasets exist, but no published Rust-specific result yet - numbers from the Java or C implementations do not transfer automatically.
 
 Measured-numbers pending. Promote with a PR that includes evidence.
 

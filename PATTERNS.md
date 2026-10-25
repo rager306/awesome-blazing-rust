@@ -11,6 +11,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `automata-compilation` | regex, aho-corasick |
 | `backend-trait` | candle, burn |
 | `batching` | io-uring |
+| `bitmap-index` | roaring-rs |
 | `branchless` | memchr |
 | `broad-phase-narrow-phase` | rapier |
 | `btf-probe` | uringscope |
@@ -32,6 +33,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `data-parallel` | differential-dataflow |
 | `datalog` | cozo |
 | `declarative-dsl` | slint |
+| `density-dependent` | roaring-rs |
 | `dst-in-ci` | shuttle |
 | `elm-architecture` | crux |
 | `embedded` | cozo |

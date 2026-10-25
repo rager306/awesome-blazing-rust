@@ -61,6 +61,15 @@
       "arch": ["succinct", "rank-select", "zero-copy"]
     },
     {
+      "name": "roaring-rs",
+      "url": "https://github.com/RoaringBitmap/roaring-rs",
+      "section": "Algorithms & Data Structures",
+      "type": "measured",
+      "description": "Roaring compressed bitmaps for IDs, postings and set operations",
+      "blazing": "own run (2026-10, EPYC): dense sets intersect 1.9 ms vs 148 ms and union 0.31 ms vs 128 ms for HashSet (76-413x); on sparse uniform ids point-lookup is 8-13x slower than HashSet - density decides ([full run](runs/roaring-2026-10/RESULTS.md), scope: component).",
+      "arch": ["bitmap-index", "density-dependent"]
+    },
+    {
       "name": "hashbrown",
       "url": "https://github.com/rust-lang/hashbrown",
       "section": "Algorithms & Data Structures",
