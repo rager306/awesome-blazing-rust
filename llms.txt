@@ -8,6 +8,7 @@
 - catalog/projects.json - machine-readable index: name, url, section, type (measured|tool|case-study|agent-skill), description, claim, arch tags. Best entry point for agents.
 - PATTERNS.md - architecture-patterns index: which technique achieves speed, used by which projects.
 - decisions/ - ADR-style write-ups per pattern: problem, technique, evidence, trade-offs.
+- recipes/ - symptom-driven guides: from a developer problem to patterns, projects and their limits.
 - CONTRIBUTING.md - entry rules: types, measurement passport, evidence requirements.
 - METHODOLOGY.md - evidence comparability rules.
 
