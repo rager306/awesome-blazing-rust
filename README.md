@@ -201,8 +201,8 @@ Measured-numbers pending. Promote with a PR that includes evidence.
 
 ## See also
 
-- [awesome-rust](https://github.com/rust-unofficial/awesome-rust) - the encyclopedic Rust list (everything, not just measured speed).
-- [This Week in Rust](https://this-week-in-rust.org) - the weekly newsletter.
+- [awesome-rust](https://github.com/rust-unofficial/awesome-rust) - The encyclopedic Rust list (everything, not just measured speed).
+- [This Week in Rust](https://this-week-in-rust.org) - The weekly newsletter.
 
 ## Contributing
 
