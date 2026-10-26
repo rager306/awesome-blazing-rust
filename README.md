@@ -270,6 +270,7 @@ Measured-numbers pending. Promote with a PR that includes evidence.
 
 - [awesome-rust](https://github.com/rust-unofficial/awesome-rust) - The encyclopedic Rust list (everything, not just measured speed).
 - [This Week in Rust](https://this-week-in-rust.org) - The weekly newsletter.
+- [maze: B-trees, Pages and Denis Villeneuve's Prisoners](https://piyushyaps.in/posts/b-trees-pages-and-denis-villeneuves-prisoners) - Build-log of a first storage engine in Rust: slotted pages, B+tree fanout math (4 KiB page, 290 routing cells, depth 3 for 40M rows), SQLite page-type codes and the honest open questions ([code](https://github.com/piyushnotvibing/maze)).
 
 ## Contributing
 
