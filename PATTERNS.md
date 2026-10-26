@@ -17,7 +17,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `btf-probe` | uringscope |
 | `bulk-loading` | rstar |
 | `c-binding` | zstd-safe |
-| `cache-conscious-layout` | hashbrown, taffy |
+| `cache-conscious-layout` | hashbrown, taffy, eg-strider |
 | `classical-algorithms` | num-bigint, rust-bio |
 | `code-layout` | cargo-pgo |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |
@@ -54,7 +54,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `hyaline-reclamation` | papaya |
 | `hybrid-cache` | foyer |
 | `immediate-mode` | egui |
-| `incremental-view-maintenance` | differential-dataflow |
+| `incremental-view-maintenance` | differential-dataflow, eg-strider |
 | `inline-keys` | bbtree |
 | `inline-storage` | smallvec |
 | `invariants-as-tests` | nachalnik |

@@ -797,6 +797,15 @@
       "description": "memory-safe camera RAW decoder in Rust: ~40 formats, 1,980 of 2,016 raw.pixls.us corpus files decode, multithreaded even single-stream codecs (lossless JPEG, Nikon, Pentax) via speculative parallel decoding, explicit SIMD kernels (SSSE3/SSE4.1, NEON, WASM SIMD128), fused single-pass RAW-to-RGB on CPU or GPU (WGSL for Metal/Vulkan/DX12/WebGPU), bounds-checked parsing with pre-checked allocation limits and 15 in-tree fuzz targets; Rust/C/C++/Python (NumPy zero-copy)/WASM bindings plus a LibRaw-compatible C API subset",
       "blazing": "author benchmark vs LibRaw 0.22, RawSpeed, rawler, rawpy, dcraw (62 popular + 159-file corpus, median of 7 runs in a fresh process per (file, library, mode, threads), every build flag documented, raw data and charts in-tree): RAW-to-RGB 8.8x vs LibRaw on Ryzen 9700X and 15.4x on M1 Ultra all-cores (59/59 files), 2.1x/1.8x single-threaded; RawSpeed is faster single-threaded on Apple Silicon (median 0.83x) - a \"where FlashRaw is not the fastest\" section is part of the docs ([method](https://github.com/ybouane/flashraw/blob/main/docs/benchmarks.md)).",
       "arch": ["simd", "data-parallel", "speculative-parallel-decode"]
+    },
+    {
+      "name": "eg-strider",
+      "url": "https://github.com/jackyzha0/eg-strider",
+      "section": "Fresh",
+      "type": "measured",
+      "description": "collaborative text editing on the Eg-walker event-graph lineage (plain index-based operations, CRDT-like state built only during concurrent merges); reverse piece table with a finger search (8-byte pieces stay in L1/L2, surviving text copied exactly once, deleted text never copied), cheap-path-first merging (non-overlapping concurrent edits just shift by the net length change; CRDT fallback only inside conflicting spans), run/causality planning maintained incrementally on append, lazy sectioned files (header/text/history, history cut at linear boundaries so reopen reads header+text only), struct-of-arrays layouts (16-byte runs vs 64), zstd on text and history",
+      "blazing": "author benchmarks vs diamond-types, Yjs, Loro and Automerge (median of 100 runs, libraries cycling through traces so the branch predictor cannot overfit one trace, merge times include appending since wins moved work out of the merge): merge 2.45-10x vs diamond-types and up to 1091x vs Automerge, reopen ~25x vs whole-file load (0.03-0.08 ms), steady-state memory more than halved; honest losses published - Automerge snapshots are smaller on some traces (C1: 116 vs 141 KiB). Research-grade: no input validation, a single invalid event panics; a validating server in front is the proposed fix ([post](https://jzhao.xyz/posts/eg-strider)).",
+      "arch": ["incremental-view-maintenance", "cache-conscious-layout"]
     }
   ]
 }
