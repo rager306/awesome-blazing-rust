@@ -17,7 +17,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `btf-probe` | uringscope |
 | `bulk-loading` | rstar |
 | `c-binding` | zstd-safe |
-| `cache-conscious-layout` | hashbrown |
+| `cache-conscious-layout` | hashbrown, taffy |
 | `classical-algorithms` | num-bigint, rust-bio |
 | `code-layout` | cargo-pgo |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |

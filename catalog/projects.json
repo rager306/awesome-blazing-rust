@@ -779,6 +779,15 @@
       "description": "transparent agent runtime (context, tools, permissions and requests as explicit user-editable state, append-only event log, no `unsafe`, no sockets in the core) plus `kamchatka`, a terminal agent with a kernel-sandboxed shell (Landlock + seccomp, asked when a command *actually tries* the network), per-item context control with undo, and byte-for-byte reproducible releases",
       "blazing": "mechanism claims, no benchmark: every documented invariant has a red test, `cargo mutants` survivors get a test or a written excuse it can't be caught, model-introspection eval makes \"why do you think that?\" falsifiable, and build-profile decisions in Cargo.toml carry their own measurements (fat LTO 10.8 MB vs 14.3 default; `opt-level=\"s\"` saves 3.5 MB for 15-18% slower screen draws).",
       "arch": ["sandboxing", "invariants-as-tests"]
+    },
+    {
+      "name": "taffy",
+      "url": "https://github.com/DioxusLabs/taffy",
+      "section": "Fresh",
+      "type": "measured",
+      "description": "flexbox and CSS Grid layout engine in Rust powering Servo, Bevy, Zed (GPUI), Slint and Lapce; per-node fixed-size measure cache with bit-packed keys (two `Option<f32>` + available space in one `u64`, requested-axis bits hidden in f32 sign bits), spec-conformance tests generated from CSS Working Group fixtures by the `gentest` tooling",
+      "blazing": "author benchmarks vs Yoga 0.4.0 (M1 Pro, criterion, commits pinned): deep 100k-node hierarchies 63.8 vs 76.8 ms and super-deep 472 µs vs 555 µs (-58..-71% vs its own 0.2 after cache rework), but wide 100k-node trees 247 vs 136 ms - ~1.8x slower there; regressions published alongside wins in-tree ([method and full tables](https://github.com/DioxusLabs/taffy/blob/main/benches/results-2023-02-08.md)).",
+      "arch": ["cache-conscious-layout"]
     }
   ]
 }
