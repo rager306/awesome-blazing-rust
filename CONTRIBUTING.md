@@ -65,3 +65,23 @@ CI runs:
 
 - `awesome-lint` — README structure and link format
 - `lychee` — link checking (weekly; broken links auto-open an issue)
+
+## Run code quality gates (`runs/`)
+
+Bench code in `runs/` follows the same evidence ethos as the entries, applied to itself.
+Three author-run gates, recorded in the run's `RESULTS.md` (these run locally, not in CI —
+mutation testing is too slow to gate a push):
+
+- **Mutation survivors ledger** — run `cargo-mutants` over the run's crate. Every surviving
+  mutant gets a test that catches it or a one-line written reason it cannot be caught. A
+  survivor with no verdict is an open finding, not a pass.
+- **CRAP < 10 per function** — cyclomatic complexity squared times untaken branch coverage,
+  plus complexity. Reduce by splitting the function, testing it, or both. As a review
+  approximation for fully covered functions: keep cyclomatic complexity at 5 or under.
+- **Duplication** — structurally duplicated blocks (similarity ≥ 0.8) are extracted or
+  justified. One benchmark = one op semantic: a repeated setup block across scenarios is a
+  sign the scenarios want a parameter, not a copy.
+
+The pattern comes from [ub-mode](https://github.com/unclebob/ub-mode) and its companion
+tools (crapper, dryer, mutator); the ledger discipline follows hashcat's `cargo mutants`
+practice: a rule nobody can catch gets a written reason, or it does not ship.
