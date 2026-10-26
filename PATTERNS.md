@@ -57,6 +57,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `incremental-view-maintenance` | differential-dataflow |
 | `inline-keys` | bbtree |
 | `inline-storage` | smallvec |
+| `invariants-as-tests` | nachalnik |
 | `inverted-index` | tantivy |
 | `io-driver` | tokio |
 | `io-uring` | glommio, monoio, io-uring |
@@ -94,7 +95,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `recursive-proofs` | paramo1d |
 | `relative-pointers` | rkyv |
 | `runtime-dispatch` | faer, pulp |
-| `sandboxing` | wasmtime |
+| `sandboxing` | wasmtime, nachalnik |
 | `sharding` | dashmap, glommio |
 | `shuttle-in-ci` | bbtree |
 | `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp |

@@ -770,6 +770,15 @@
       "description": "RFC draft (by the blake3 author): a pending future that requests a wakeup must be",
       "blazing": "mechanism claim, no benchmark: snoozing hidden in common patterns (select! by reference through the `Pin<&mut _>` impl, `StreamExt::next`) withholds wakeups and surfaces as futurelock deadlocks, missed wakeups, timeouts and UI stutter ([Futurelock case study](https://rfd.shared.oxide.computer/rfd/0609)).",
       "arch": ["wakeup-contract"]
+    },
+    {
+      "name": "nachalnik",
+      "url": "https://github.com/ljedrz/nachalnik",
+      "section": "Fresh",
+      "type": "case-study",
+      "description": "transparent agent runtime (context, tools, permissions and requests as explicit user-editable state, append-only event log, no `unsafe`, no sockets in the core) plus `kamchatka`, a terminal agent with a kernel-sandboxed shell (Landlock + seccomp, asked when a command *actually tries* the network), per-item context control with undo, and byte-for-byte reproducible releases",
+      "blazing": "mechanism claims, no benchmark: every documented invariant has a red test, `cargo mutants` survivors get a test or a written excuse it can't be caught, model-introspection eval makes \"why do you think that?\" falsifiable, and build-profile decisions in Cargo.toml carry their own measurements (fat LTO 10.8 MB vs 14.3 default; `opt-level=\"s\"` saves 3.5 MB for 15-18% slower screen draws).",
+      "arch": ["sandboxing", "invariants-as-tests"]
     }
   ]
 }
