@@ -263,6 +263,7 @@ Measured-numbers pending. Promote with a PR that includes evidence.
 
 - [mimalloc](https://github.com/microsoft/mimalloc) - allocator with documented wins vs jemalloc/tcmalloc on server workloads. *Needs: a Rust-context benchmark citation.*.
 - [kutha-graph](https://github.com/rager306/kutha-graph) - greenfield graph engine (ours). *Needs: first public bench run.*.
+- [respan-gateway](https://github.com/respanai/respan-gateway) - single-binary AI gateway in Rust: any client format (OpenAI Chat/Responses, Anthropic Messages, Gemini) to any model with streaming/tools/reasoning translation, cross-vendor realtime voice, MCP tools inside chat, hedged requests, plugins compiled in on a four-hook trait. **Blazing:** author claim 0.07 ms added latency, 56k RPS, 31 MB, "~3× the next fastest gateway" - no published methodology. *Needs: benchmark method (hardware, competitor versions, request profile) or a catalog own-run.*.
 
 ## See also
 
