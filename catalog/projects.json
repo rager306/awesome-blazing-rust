@@ -788,6 +788,15 @@
       "description": "flexbox and CSS Grid layout engine in Rust powering Servo, Bevy, Zed (GPUI), Slint and Lapce; per-node fixed-size measure cache with bit-packed keys (two `Option<f32>` + available space in one `u64`, requested-axis bits hidden in f32 sign bits), spec-conformance tests generated from CSS Working Group fixtures by the `gentest` tooling",
       "blazing": "author benchmarks vs Yoga 0.4.0 (M1 Pro, criterion, commits pinned): deep 100k-node hierarchies 63.8 vs 76.8 ms and super-deep 472 µs vs 555 µs (-58..-71% vs its own 0.2 after cache rework), but wide 100k-node trees 247 vs 136 ms - ~1.8x slower there; regressions published alongside wins in-tree ([method and full tables](https://github.com/DioxusLabs/taffy/blob/main/benches/results-2023-02-08.md)).",
       "arch": ["cache-conscious-layout"]
+    },
+    {
+      "name": "flashraw",
+      "url": "https://github.com/ybouane/flashraw",
+      "section": "Fresh",
+      "type": "measured",
+      "description": "memory-safe camera RAW decoder in Rust: ~40 formats, 1,980 of 2,016 raw.pixls.us corpus files decode, multithreaded even single-stream codecs (lossless JPEG, Nikon, Pentax) via speculative parallel decoding, explicit SIMD kernels (SSSE3/SSE4.1, NEON, WASM SIMD128), fused single-pass RAW-to-RGB on CPU or GPU (WGSL for Metal/Vulkan/DX12/WebGPU), bounds-checked parsing with pre-checked allocation limits and 15 in-tree fuzz targets; Rust/C/C++/Python (NumPy zero-copy)/WASM bindings plus a LibRaw-compatible C API subset",
+      "blazing": "author benchmark vs LibRaw 0.22, RawSpeed, rawler, rawpy, dcraw (62 popular + 159-file corpus, median of 7 runs in a fresh process per (file, library, mode, threads), every build flag documented, raw data and charts in-tree): RAW-to-RGB 8.8x vs LibRaw on Ryzen 9700X and 15.4x on M1 Ultra all-cores (59/59 files), 2.1x/1.8x single-threaded; RawSpeed is faster single-threaded on Apple Silicon (median 0.83x) - a \"where FlashRaw is not the fastest\" section is part of the docs ([method](https://github.com/ybouane/flashraw/blob/main/docs/benchmarks.md)).",
+      "arch": ["simd", "data-parallel", "speculative-parallel-decode"]
     }
   ]
 }

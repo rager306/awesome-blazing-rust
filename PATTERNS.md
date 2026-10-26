@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |
 | `copy-on-write` | redb |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |
-| `data-parallel` | differential-dataflow |
+| `data-parallel` | differential-dataflow, flashraw |
 | `datalog` | cozo |
 | `declarative-dsl` | slint |
 | `density-dependent` | roaring-rs |
@@ -98,9 +98,10 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `sandboxing` | wasmtime, nachalnik |
 | `sharding` | dashmap, glommio |
 | `shuttle-in-ci` | bbtree |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |
 | `sparql-engine` | oxigraph |
+| `speculative-parallel-decode` | flashraw |
 | `statistical-rigor` | hyperfine, criterion |
 | `storage-backend-flag` | oxigraph |
 | `stringview` | apache-arrow-rs |
