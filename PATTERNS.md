@@ -117,6 +117,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `versioned-locks` | bbtree |
 | `verus-in-ci` | bbtree |
 | `views` | ndarray |
+| `wakeup-contract` | strict-future-contract |
 | `window-tinylfu` | moka |
 | `work-stealing` | tokio, rayon, pingora |
 | `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv |
