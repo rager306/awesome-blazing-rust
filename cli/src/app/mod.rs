@@ -14,6 +14,7 @@ pub const README: &str = "README.md";
 pub const PATTERNS: &str = "PATTERNS.md";
 pub const CATALOG: &str = "catalog/projects.json";
 pub const UPSTREAM: &str = "catalog/upstream.json";
+pub const STRIKE: &str = "catalog/upstream-state.json";
 
 pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
     let mut state = State::Boot;
@@ -104,10 +105,55 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
     }
 
     let d = upstream::diff(ws.upstream_raw.as_deref(), &rows);
+
+    // Strike ledger: consecutive failures per repo, reset on any success.
+    let outcomes: Vec<(String, upstream::Outcome)> = slugs
+        .iter()
+        .map(|s| {
+            let o = if missing.contains(s) {
+                upstream::Outcome::Unreachable
+            } else {
+                upstream::Outcome::Ok
+            };
+            (s.clone(), o)
+        })
+        .collect();
+    let strike_prev = upstream::parse_strike(&io.read_opt(STRIKE).unwrap_or_default());
+
+    // Circuit breaker: a mass-failure run is an upstream incident - freeze
+    // both the projection and the ledger so one bad day poisons nothing
+    // (a half-empty projection would churn the next diff with fake churn).
+    if upstream::incident(missing.len(), slugs.len()) {
+        let mut failures = vec![format!(
+            "INCIDENT {}/{} repos unreachable (> 3%) - projection and strike state frozen",
+            missing.len(),
+            slugs.len()
+        )];
+        failures.extend(missing.iter().map(|r| format!("UNREACHABLE {r}")));
+        return Report {
+            ok: true,
+            summary: format!("upstream: scanned {} repos, incident - nothing written", slugs.len()),
+            failures,
+            artifacts_written: 0,
+        };
+    }
+
+    let strike_new = upstream::apply(&strike_prev, &outcomes);
     io.write(UPSTREAM, &upstream::json(&rows));
+    io.write(STRIKE, &upstream::strike_json(&strike_new));
+
+    let mut bumped = 0;
+    let mut recovered = 0;
+    for (repo, n) in &strike_new.0 {
+        match strike_prev.0.get(repo) {
+            Some(old) if n > old => bumped += 1,
+            Some(old) if n < old => recovered += 1,
+            _ => {}
+        }
+    }
 
     let mut summary = format!(
-        "upstream: scanned {} repos, {} changed, {} unfetchable; wrote {UPSTREAM}",
+        "upstream: scanned {} repos, {} changed, {} unfetchable; strikes +{bumped}/-{recovered}; wrote {UPSTREAM} + {STRIKE}",
         slugs.len(),
         d.changed.len(),
         missing.len()
@@ -120,5 +166,8 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
         failures.push(format!("GONE {repo} (was scanned, now unfetchable)"));
     }
     // Unfetchable repos are a soft condition: the scan still succeeded.
-    Report { ok: true, summary, failures, artifacts_written: 1 }
+    for repo in upstream::tripwire(&strike_new) {
+        failures.push(format!("TRIPWIRE {repo}: 3 strikes (enforcement is phase 2)"));
+    }
+    Report { ok: true, summary, failures, artifacts_written: 2 }
 }
