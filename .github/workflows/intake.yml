@@ -170,9 +170,16 @@ jobs:
             exit 0
           fi
           BRANCH="agent/card-${ISSUE_NUMBER}-${{ github.run_id }}"
+          # Base the branch on CURRENT main, not on the main the job checked out:
+          # a card run takes minutes, and a branch that lags behind main shows the
+          # workflow files as reverted, which GitHub rejects for a GitHub App push
+          # ("refusing to allow a GitHub App to create or update workflow ...").
+          git stash push -q -- README.md catalog PATTERNS.md llms.txt
+          git fetch -q origin main
+          git checkout -B "$BRANCH" origin/main
+          git stash pop -q
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
           git add README.md catalog PATTERNS.md llms.txt
           git commit -qm "Draft card from issue #${ISSUE_NUMBER}"
           git push origin "$BRANCH"
