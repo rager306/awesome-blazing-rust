@@ -120,8 +120,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           CATALOG_REPOS=$(python3 -c "import json;print('\n'.join(p['url'] for p in json.load(open('catalog/projects.json'))['projects']))")
+          mapfile -t ITEMS < <(jq -c '.[0:3][]' candidates.json)
           CREATED=0
-          for c in $(jq -c '.[0:3][]' candidates.json); do
+          for c in "${ITEMS[@]}"; do
             REPO=$(jq -r '.repo_url' <<<"$c")
             NAME=$(jq -r '.name' <<<"$c")
             grep -qF "$REPO" <<<"$CATALOG_REPOS" && { echo "skip (in catalog): $REPO"; continue; }
