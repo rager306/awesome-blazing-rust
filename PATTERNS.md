@@ -85,7 +85,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefilter` | regex |
 | `prefix-keys` | bbtree |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |
-| `pure-rust-port` | lz4_flex, gitoxide |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq |
 | `python-bridge` | rustworkx |
 | `quality-vs-speed` | qdrant |
 | `quantization` | qdrant |

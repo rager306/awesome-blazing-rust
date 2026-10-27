@@ -851,6 +851,15 @@
       "description": "HTTP/1.1+HTTP/2 load generator and Rust HTTP-client benchmarking harness (hyper, reqwest, tokio-uring, monoio, compio backends) with coordinated-omission-corrected latency per Gil Tene's HdrHistogram method",
       "blazing": "self-run in-repo charts: tokio-uring client 382K RPS on one thread scaling to 1.1M at 4 and hyper 198K -> 724K, reported above wrk on HTTP/1.1; hyper-h2 187K -> 689K RPS above rewrk on HTTP/2 ([numbers and charts](https://github.com/awgn/plumbrs#performance)) - no hardware, server, or competitor-version methodology published, so author-claim until replicated.",
       "arch": ["io-uring", "async-native"]
+    },
+    {
+      "name": "jaq",
+      "url": "https://github.com/01mf02/jaq",
+      "section": "Candidates",
+      "type": "measured",
+      "description": "jq clone in Rust (MIT, active, jaq-3.0; core audited by Radically Open Security): drop-in `jq` CLI plus embeddable thread-safe `jaq-core` library, adding YAML/CBOR/TOML/XML",
+      "blazing": "self-run benchmark with public in-repo methodology ([bench.sh](https://raw.githubusercontent.com/01mf02/jaq/main/bench.sh): user time via `/usr/bin/time -f %U`, min of 3 runs, AMD Ryzen 5 5500U) vs jq 1.8.1 and gojq 0.12.18 ([full table](https://github.com/01mf02/jaq#performance)): group-by on 1M items 260 ms vs 1790 ms for jq (~7x) and 1580 ms for gojq, sort 90 ms vs 430/550, 100k `def`s 50 ms where jq-1.8.1 errors out (N/A), `upto` 8192 in 0 ms (below timer resolution) vs 440 ms; fastest on 20 of 31 benchmarks, with the losses in the same table - jq fastest on 5 (reduce, try-catch, pyramid, ack, range-prop), gojq on 6 (e.g. native `flatten`).",
+      "arch": ["pure-rust-port"]
     }
   ]
 }
