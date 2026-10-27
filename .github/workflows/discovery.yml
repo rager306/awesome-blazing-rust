@@ -7,6 +7,11 @@ name: Discovery
 # issues per run; each issue triggers the Intake workflow -> draft PR ->
 # maintainer merge. Dedup: current catalog + open intake issues are passed
 # in, and the pipeline re-checks repo_url before creating an issue.
+#
+# Guardrails: dontAsk permission mode (everything not allow-listed is auto-
+# denied; read-only-ness comes from the allow-list itself - only search and
+# read MCP tools), turn cap, wall-clock timeout, JSON output. Plan mode is
+# NOT used here because it blocks MCP tool calls entirely.
 
 on:
   schedule:
@@ -61,6 +66,7 @@ jobs:
           - Only propose projects whose benchmark evidence you actually saw in a primary source (the repo's own benchmarks, a methodology page, a published results file). Never invent numbers, never fabricate URLs.
           - Rust or Rust-core projects only. No abandoned repos (no commit in 12+ months) without an explicit note.
           - Output format is strict: ONLY a JSON array, no markdown fences, no prose before or after.
+          - Available MCP tools (call them directly, do not search for tools): mcp__web-search-prime__web_search_prime, mcp__web-reader__web_reader, mcp__zread__search_doc.
           EOF
           )
           PROMPT=$(cat <<EOF_TASK
@@ -86,9 +92,9 @@ jobs:
           )
           timeout 1500 claude -p "$PROMPT" \
             --append-system-prompt "$SYSTEM" \
-            --permission-mode plan \
+            --permission-mode dontAsk \
             --strict-mcp-config --mcp-config mcp.json \
-            --allowedTools "Read,Grep,Glob,mcp__web-search-prime__webSearchPrime,mcp__web-reader__webReader,mcp__zread__search_doc" \
+            --allowedTools "Read,Grep,Glob,mcp__web-search-prime__web_search_prime,mcp__web-reader__web_reader,mcp__zread__search_doc" \
             --max-turns 18 \
             --output-format stream-json --verbose \
             | tee discovery-stream.jsonl | jq -r 'select(.type=="result") | .result' > candidates-raw.txt
