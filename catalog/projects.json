@@ -842,6 +842,15 @@
       "description": "minimal benchmark-grade HTTP server that serves a single configurable static response from memory, built as a runtime testbed: stock tokio, smol and four io_uring runtimes (monoio, compio, tokio-uring, glommio) behind a `--runtime` flag, with per-worker single-threaded runtimes, SO_REUSEPORT load balancing and pre-encoded zero-allocation responses on io_uring",
       "blazing": "author benchmark, 1024 connections, minimal static in-memory responses, no logging, CPU pinning where applicable ([README table](https://github.com/awgn/statico#performance)): statico (monoio) 1,436,420 req/s at 4 threads (656,517 at 1) vs nginx (return) 832,082, actix-web 798,809, Go fasthttp 605,603 at 4 threads - 1.7-2.4x ahead; all four io_uring runtimes land 1.14-1.44M req/s at 4 threads vs 1,071,433 for stock tokio; load generator and hardware are not named in the README.",
       "arch": ["io-uring", "thread-per-core", "zero-copy"]
+    },
+    {
+      "name": "plumbrs",
+      "url": "https://github.com/awgn/plumbrs",
+      "section": "Candidates",
+      "type": "case-study",
+      "description": "HTTP/1.1+HTTP/2 load generator and Rust HTTP-client benchmarking harness (hyper, reqwest, tokio-uring, monoio, compio backends) with coordinated-omission-corrected latency per Gil Tene's HdrHistogram method",
+      "blazing": "self-run in-repo charts: tokio-uring client 382K RPS on one thread scaling to 1.1M at 4 and hyper 198K -> 724K, reported above wrk on HTTP/1.1; hyper-h2 187K -> 689K RPS above rewrk on HTTP/2 ([numbers and charts](https://github.com/awgn/plumbrs#performance)) - no hardware, server, or competitor-version methodology published, so author-claim until replicated.",
+      "arch": ["io-uring", "async-native"]
     }
   ]
 }
