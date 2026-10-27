@@ -50,6 +50,14 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # The collection takes minutes; main can move underneath it (the first
+          # run's push was rejected for this reason). Rebase the one file onto
+          # the current main instead of racing it.
+          git stash push -q -- catalog/signals.json
+          git fetch -q origin main
+          git checkout -q origin/main -- . 2>/dev/null || true
+          git merge -q --ff-only origin/main 2>/dev/null || git reset -q --hard origin/main
+          git stash pop -q
           git add catalog/signals.json
           git commit -qm "Signals: refresh $(date -u +%F)"
           git push
