@@ -1,0 +1,81 @@
+name: Agent
+
+# Nightly agent job on the z.ai GLM subscription (Anthropic-protocol endpoint).
+#
+# Read-only curator: reads the upstream scan artifacts and posts a digest to
+# the run summary. Guardrails: plan permission mode (zero mutations),
+# Read/Grep/Glob tool surface, turn cap, wall-clock timeout, JSON output.
+# The agent never pushes; this job has contents: read only.
+
+on:
+  schedule:
+    - cron: "47 6 * * *" # 06:47 UTC daily, after the Links scan (06:17)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent
+  cancel-in-progress: false
+
+jobs:
+  curator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Nightly curator digest
+        env:
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          ANTHROPIC_MODEL: glm-5.3-flash
+          ANTHROPIC_SMALL_FAST_MODEL: glm-4.5-air
+          ANTHROPIC_DEFAULT_SONNET_MODEL: glm-5.3-flash
+          ANTHROPIC_DEFAULT_OPUS_MODEL: glm-5.3-flash
+          ANTHROPIC_DEFAULT_HAIKU_MODEL: glm-4.5-air
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+          API_TIMEOUT_MS: "3000000"
+        run: |
+          set -o pipefail
+          SYSTEM=$(cat <<'EOF'
+          You are the nightly curator of this repository. House rules:
+          - Report facts with file paths and numbers you actually saw; never invent numbers.
+          - Say "not found" instead of guessing.
+          - You propose, deterministic gates decide. Read-only by default.
+          - Public repo: English only. Output is markdown under 25 lines.
+          EOF
+          )
+          PROMPT=$(cat <<'EOF'
+          Nightly curator digest. Read-only analysis of this catalog repository.
+
+          Sources (read them first):
+          - catalog/upstream-state.json - strike ledger, one JSON object per line: {"repo": "...", "strikes": N}
+          - catalog/upstream.json - tag projection, one object per line: {"repo": "...", "tag": "..."}
+
+          Deliver markdown sections:
+          ## Watch list
+          Repos with strikes >= 1, each with its count; mark any at strikes >= 3 as REMOVAL CANDIDATE (phase-2 policy; do NOT edit anything).
+          ## Tag notes
+          Repos showing "(no-tags)" in the projection.
+          ## Recommendation
+          One actionable suggestion for the maintainer.
+
+          Facts only, with file paths. If a file is missing, say so. End with a `verdict:` line (ok / watch / act).
+          EOF
+          )
+          timeout 600 claude -p "$PROMPT" \
+            --append-system-prompt "$SYSTEM" \
+            --permission-mode plan \
+            --allowedTools "Read,Grep,Glob" \
+            --max-turns 15 \
+            --output-format json \
+            | tee curator-run.json | jq -r '.result' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload run log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: curator-run
+          path: curator-run.json
