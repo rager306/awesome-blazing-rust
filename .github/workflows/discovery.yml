@@ -81,15 +81,16 @@ jobs:
           # from live servers only; MCP_ALLOW lists their tools for Claude.
           # mcp.json holds secrets - never uploaded as an artifact.
           : > providers.txt
-          probe() { # name url [header]
-            code=$(curl -s -o /dev/null -w '%{http_code}' -m 15 -X POST \
+          probe() { # name url [header] - MCP needs an initialize + SSE-capable Accept
+            code=$(curl -s -o /dev/null -w '%{http_code}' -m 20 -X POST \
               ${3:+-H "$3"} -H 'Content-Type: application/json' \
-              -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' "$2" 2>/dev/null || echo 000)
-            if [ "$code" = 200 ] || [ "$code" = 401 ] || [ "$code" = 403 ]; then
-              echo "UP $1 ($code)"
-            else
-              echo "DOWN $1 ($code)"
-            fi
+              -H 'Accept: application/json, text/event-stream' \
+              -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"abr-discovery","version":"1"}}}' \
+              "$2" 2>/dev/null || echo 000)
+            case "$code" in
+              200|400|401|403|406) echo "UP $1 ($code)" ;; # answered at protocol level
+              *) echo "DOWN $1 ($code)" ;;
+            esac
           }
           P_ZAI="Authorization: Bearer ${ANTHROPIC_AUTH_TOKEN}"
           P_EXA="x-api-key: ${EXA_API_KEY}"
