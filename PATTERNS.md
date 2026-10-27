@@ -60,7 +60,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `invariants-as-tests` | nachalnik |
 | `inverted-index` | tantivy |
 | `io-driver` | tokio |
-| `io-uring` | glommio, monoio, io-uring |
+| `io-uring` | glommio, monoio, io-uring, statico |
 | `jit` | wasmtime, blaze |
 | `join-split` | rayon |
 | `kernel-fusion` | burn |
@@ -109,7 +109,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `succinct` | sux |
 | `table-driven` | crc32fast |
 | `tape-representation` | simd-json |
-| `thread-per-core` | glommio, monoio |
+| `thread-per-core` | glommio, monoio, statico |
 | `tls-13` | quinn |
 | `typed-effects` | crux |
 | `typed-parse-direct` | sonic-rs |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |
 | `window-tinylfu` | moka |
 | `work-stealing` | tokio, rayon, pingora |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, statico |
 | `zero-macro-ergonomics` | axum |
 
 ---
