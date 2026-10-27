@@ -94,7 +94,9 @@ jobs:
           3. Research the suggested repository: gh api repos/<owner>/<repo> for license, stars, pushed_at, language; fetch its README and benchmark docs to verify the evidence yourself.
           4. If the benchmark evidence checks out with real numbers and a methodology, set Type: measured; if evidence is weak or missing, set Type: case-study and name what is missing.
           5. Insert the card at the end of the "## Candidates" section of README.md (that is the draft zone - existing entries there show the tone). Match the section's existing style exactly.
-          6. Run ./cli/target/release/abr catalog to sync catalog/projects.json from README, then ./cli/target/release/abr check - it must pass; fix the card until it does.
+          6. Regenerate EVERY derived artifact from the README (catalog alone is not enough - a new tag's usage column and the section counts live in the other two):
+               ./cli/target/release/abr catalog && ./cli/target/release/abr patterns && ./cli/target/release/abr llms
+             then ./cli/target/release/abr check - it must pass; fix the card until it does.
           7. Do NOT touch any other file. Do NOT git commit or push.
 
           Output: the card text (or the single SKIP line), then a verdict line: fits / fits-with-caveats / does-not-fit + one sentence why.
@@ -103,7 +105,7 @@ jobs:
           timeout 900 claude -p "$PROMPT" \
             --append-system-prompt "$SYSTEM" \
             --permission-mode dontAsk \
-            --allowedTools "Read,Grep,Glob,Edit,Write,Bash(gh api *),Bash(gh repo view *),Bash(gh api repos/*),Bash(./cli/target/release/abr catalog),Bash(./cli/target/release/abr check)" \
+            --allowedTools "Read,Grep,Glob,Edit,Write,Bash(gh api *),Bash(gh repo view *),Bash(gh api repos/*),Bash(./cli/target/release/abr catalog),Bash(./cli/target/release/abr patterns),Bash(./cli/target/release/abr llms),Bash(./cli/target/release/abr check)" \
             --max-turns 30 \
             --output-format json \
             | tee intake-run.json | jq -r '.result' > intake-result.md
@@ -119,6 +121,12 @@ jobs:
           # the PR carries - and a card that fails it never becomes a PR.
           echo "### Gates (run in the pipeline at this commit)" > gates.md
           FAIL=0
+          # Regenerate every projection from the README first: the intake agent is
+          # asked to do it, but the pipeline must not depend on that. A stale
+          # PATTERNS.md/llms.txt is what the determinism gate rejects in CI.
+          ./cli/target/release/abr catalog >/dev/null 2>&1
+          ./cli/target/release/abr patterns >/dev/null 2>&1
+          ./cli/target/release/abr llms >/dev/null 2>&1
           if ./cli/target/release/abr check > gate-abr.log 2>&1; then
             echo "- \`abr check\` - pass" >> gates.md
           else
@@ -150,7 +158,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
         run: |
-          if git diff --quiet -- README.md catalog/projects.json; then
+          # "No card" is decided by README alone: the projections are regenerated
+          # by the gates step above, so they always differ only if a card landed.
+          if git diff --quiet -- README.md; then
             if head -n 1 intake-result.md | grep -q '^SKIP:'; then
               gh issue comment "$ISSUE_NUMBER" --body "$(head -n 1 intake-result.md) - no card drafted by the freshness gate; closing."
               gh issue close "$ISSUE_NUMBER"
@@ -163,7 +173,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add README.md catalog/projects.json
+          git add README.md catalog PATTERNS.md llms.txt
           git commit -qm "Draft card from issue #${ISSUE_NUMBER}"
           git push origin "$BRANCH"
           {
