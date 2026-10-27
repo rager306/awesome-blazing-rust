@@ -255,7 +255,7 @@ def main():
             "observed_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
             "github": {
                 "archived": meta.get("archived"),
-                "pushed_at": pushed,
+                "pushed_at": meta.get("pushed_at"),
                 "stars": meta.get("stargazers_count"),
                 "license": meta.get("license"),
             },
