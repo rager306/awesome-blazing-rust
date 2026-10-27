@@ -158,7 +158,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T18:31:31Z",
-        "stars": 69495,
+        "stars": 69496,
         "license": "Unlicense"
       },
       "crate": {
@@ -439,7 +439,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T19:06:07Z",
+        "pushed_at": "2026-10-27T19:38:47Z",
         "stars": 3647,
         "license": "Apache-2.0"
       },
@@ -457,7 +457,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:55:17Z",
+        "pushed_at": "2026-10-27T19:37:23Z",
         "stars": 9539,
         "license": "Apache-2.0"
       },
@@ -650,7 +650,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T19:06:52Z",
+        "pushed_at": "2026-10-27T19:37:07Z",
         "stars": 18786,
         "license": "Apache-2.0"
       },
@@ -1355,7 +1355,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T19:25:42Z",
-        "stars": 1406,
+        "stars": 1413,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -2277,7 +2277,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T19:32:25Z",
+        "pushed_at": "2026-10-27T19:40:14Z",
         "stars": 24298,
         "license": "NOASSERTION"
       },
@@ -2500,7 +2500,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T19:35:47Z",
+        "pushed_at": "2026-10-27T19:37:13Z",
         "stars": 16179,
         "license": "Apache-2.0"
       },
@@ -2663,7 +2663,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T17:53:16Z",
-        "stars": 92287,
+        "stars": 92288,
         "license": "NOASSERTION"
       },
       "crate": null,
