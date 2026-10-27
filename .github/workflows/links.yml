@@ -1,17 +1,57 @@
 name: Links
 
+# Daily upstream scan + link check.
+#
+# - upstream job: `abr upstream` re-reads every GitHub card (latest tag),
+#   maintains the strike ledger (catalog/upstream-state.json) and the tag
+#   projection (catalog/upstream.json), and pushes to main only when the
+#   scan changed something. A >3% mass-failure run is an incident: the
+#   scan writes nothing and says so in its report.
+# - lychee job: checks every markdown link, opens/updates a single
+#   "Broken links report" issue instead of creating a new one each day.
+
 on:
   schedule:
-    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+    - cron: "17 6 * * *" # 06:17 UTC daily
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
+concurrency:
+  group: links
+  cancel-in-progress: false
+
 jobs:
+  upstream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Scan upstream tags (strike ledger + incident breaker)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          cd cli
+          cargo build --release
+          ./target/release/abr upstream | tee "$GITHUB_STEP_SUMMARY"
+      - name: Commit scan artifacts
+        run: |
+          if git diff --quiet -- catalog/upstream.json catalog/upstream-state.json; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add catalog/upstream.json catalog/upstream-state.json
+          git commit -qm "Upstream scan $(date -u +%F)"
+          git push
+
   lychee:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: lycheeverse/lychee-action@v2
@@ -22,10 +62,31 @@ jobs:
             --exclude 'linkedin\.com|twitter\.com|x\.com'
             './**/*.md'
           fail: false
-      - name: Open issue on broken links
+      - name: Update or open the broken-links issue
         if: steps.lychee.outputs.exit_code != 0
-        uses: peter-evans/create-issue-from-file@v5
-        with:
-          title: "Broken links report"
-          content-filepath: ./lychee/out.md
-          labels: "link-rot"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "## Broken links $(date -u +%F)"
+            echo
+            cat lychee/out.md
+          } > lychee/report.md
+          EXISTING=$(gh issue list --label link-rot --state open --json number \
+            --jq '.[0].number' || true)
+          if [ -n "$EXISTING" ]; then
+            gh issue edit "$EXISTING" --body-file lychee/report.md
+          else
+            gh issue create --title "Broken links report" \
+              --body-file lychee/report.md --label link-rot
+          fi
+      - name: Close the issue when everything is fixed
+        if: steps.lychee.outputs.exit_code == 0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          EXISTING=$(gh issue list --label link-rot --state open --json number \
+            --jq '.[0].number' || true)
+          if [ -n "$EXISTING" ]; then
+            gh issue close "$EXISTING" --comment "All links reachable at this run."
+          fi
