@@ -145,23 +145,35 @@ jobs:
            "notes": "one sentence for the PR body: what the evidence is and where it is weakest"}
 
           Quality bar: if the benchmark evidence is weak or missing, still draft the card with **Type:** case-study and say what is missing in the Blazing line. Skip only when the project is not Rust or has no verifiable speed claim at all.
+
+          Budget: at most 8 tool calls. Read the repo README and ONE benchmark document, then write the card - a large repository is not a reason to keep reading.
           EOF_ISSUE
           )
+          ATTEMPT_TIMEOUT=600
           run_agent() {
-            timeout 780 claude -p "$PROMPT" \
+            timeout $ATTEMPT_TIMEOUT claude -p "$PROMPT" \
               --append-system-prompt "$SYSTEM" \
               --permission-mode dontAsk \
               --allowedTools "Read,Grep,Glob,Bash(gh api *),Bash(gh repo view *)" \
-              --max-turns 30 \
+              --max-turns 20 \
               --output-format json \
               | jq -r '.result // empty'
           }
-          OUT=$(run_agent)
-          # One retry: a model session can come up without its tool registry,
-          # which shows as a result that contains no JSON object at all.
-          if ! grep -q '"card"' <<<"$OUT"; then
+          set +e
+          OUT=$(run_agent); RC=$?
+          if [ "$RC" = 124 ]; then
+            echo "::warning::research hit the ${ATTEMPT_TIMEOUT}s cap"
+          fi
+          # Retry only the recoverable case: the session came up without its
+          # tool registry and answered without a single JSON object. A timeout
+          # is not retried - it would just burn the job budget twice.
+          if [ "$RC" = 0 ] && ! grep -q '"card"' <<<"$OUT"; then
             echo "first attempt had no card object; retrying once"
-            OUT=$(run_agent)
+            OUT=$(run_agent); RC=$?
+          fi
+          set -e
+          if [ -z "$OUT" ]; then
+            echo "::warning::agent returned no output (rc=$RC)"
           fi
           printf '%s\n' "$OUT" > agent-result.md
           python3 - <<'PYEOF'
