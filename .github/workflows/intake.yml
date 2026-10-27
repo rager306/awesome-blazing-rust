@@ -1,0 +1,125 @@
+name: Intake
+
+# Card intake: a "Suggest a project" issue (label: card-intake) makes the agent
+# research the suggested repository, draft a catalog card in the house format,
+# sync catalog/projects.json, and self-check with `abr check`. The PIPELINE -
+# never the agent - commits the result to an agent/* branch and opens a draft
+# PR; CI gates (awesome-lint + abr check) verify it and a maintainer merges.
+#
+# Guardrails: dontAsk permission mode (everything not allow-listed is denied),
+# narrow Bash prefix allow-list, turn cap, wall-clock timeout, JSON output.
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to process"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: intake
+  cancel-in-progress: false
+
+jobs:
+  draft-card:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'card-intake'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build abr CLI
+        run: cd cli && cargo build --release
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Draft card from issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          ANTHROPIC_MODEL: glm-5.3-flash
+          ANTHROPIC_SMALL_FAST_MODEL: glm-4.5-air
+          ANTHROPIC_DEFAULT_SONNET_MODEL: glm-5.3-flash
+          ANTHROPIC_DEFAULT_OPUS_MODEL: glm-5.3-flash
+          ANTHROPIC_DEFAULT_HAIKU_MODEL: glm-4.5-air
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+          API_TIMEOUT_MS: "3000000"
+        run: |
+          set -o pipefail
+          ISSUE_BODY=$(gh issue view "$ISSUE_NUMBER" --json title,body -q '"# " + .title + "\n\n" + .body')
+          SYSTEM=$(cat <<'EOF'
+          You are the card-intake agent of this catalog repository. House rules:
+          - Evidence ladder: Blazing (claimed) < Measured (public methodology) < Replicated (we re-ran it). Never invent numbers.
+          - Verify claims against primary sources (the repo, its docs, its benchmarks), not aggregators.
+          - You propose, deterministic gates decide. Only edit README.md and regenerate catalog/projects.json via abr - nothing else.
+          - Never git commit, never git push. Public repo: English only.
+          - Say "not found" instead of guessing; report file paths and numbers you actually saw.
+          EOF
+          )
+          PROMPT=$(cat <<EOF_ISSUE
+          Draft a catalog card from this project-suggestion issue (issue #${ISSUE_NUMBER}):
+
+          ${ISSUE_BODY}
+
+          Steps:
+          1. Study 2-3 existing cards in README.md first - the house format is a dense one-liner: [name](url) - what it is ... **Blazing:** evidence with real numbers and a methodology link ... **Type:** measured|tool|case-study. **Arch:** tags.
+          2. Research the suggested repository: gh api repos/<owner>/<repo> for license, stars, pushed_at, language; fetch its README and benchmark docs to verify the evidence yourself.
+          3. If the benchmark evidence checks out with real numbers and a methodology, set Type: measured; if evidence is weak or missing, set Type: case-study and name what is missing.
+          4. Insert the card at the end of the "## Candidates" section of README.md (that is the draft zone - existing entries there show the tone). Match the section's existing style exactly.
+          5. Run ./cli/target/release/abr catalog to sync catalog/projects.json from README, then ./cli/target/release/abr check - it must pass; fix the card until it does.
+          6. Do NOT touch any other file. Do NOT git commit or push.
+
+          Output: the card text, then a verdict line: fits / fits-with-caveats / does-not-fit + one sentence why.
+          EOF_ISSUE
+          )
+          timeout 900 claude -p "$PROMPT" \
+            --append-system-prompt "$SYSTEM" \
+            --permission-mode dontAsk \
+            --allowedTools "Read,Grep,Glob,Edit,Write,Bash(gh api *),Bash(gh repo view *),Bash(gh api repos/*),Bash(./cli/target/release/abr catalog),Bash(./cli/target/release/abr check)" \
+            --max-turns 30 \
+            --output-format json \
+            | tee intake-run.json | jq -r '.result' > intake-result.md
+      - name: Open draft PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+        run: |
+          if git diff --quiet -- README.md catalog/projects.json; then
+            gh issue comment "$ISSUE_NUMBER" --body "No card produced this run - see the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+            exit 0
+          fi
+          BRANCH="agent/card-${ISSUE_NUMBER}-$(date -u +%m%d)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add README.md catalog/projects.json
+          git commit -qm "Draft card from issue #${ISSUE_NUMBER}"
+          git push origin "$BRANCH"
+          {
+            echo "Draft card from #${ISSUE_NUMBER}."
+            echo
+            echo "## Agent verdict"
+            echo
+            cat intake-result.md
+            echo
+            echo "Closes #${ISSUE_NUMBER}"
+            echo
+            echo "Gates: \`abr check\` passed in-run; awesome-lint + abr check run on merge to main."
+          } > pr-body.md
+          gh pr create --title "Card draft from issue #${ISSUE_NUMBER}" \
+            --body-file pr-body.md --head "$BRANCH" --label card-draft
+          gh issue comment "$ISSUE_NUMBER" --body "Draft PR opened: ${{ github.server_url }}/${{ github.repository }}/pull/$(gh pr view --json number -q .number) - a maintainer review merges it into the catalog."
+      - name: Upload run log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: intake-run
+          path: intake-run.json

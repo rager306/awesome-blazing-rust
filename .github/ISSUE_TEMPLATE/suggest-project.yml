@@ -1,0 +1,38 @@
+name: Suggest a project
+description: Propose a measurably fast Rust project for the catalog
+title: "Suggest a project: <name>"
+labels: ["card-intake"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. An agent will research the repo, draft a catalog
+        card and open a draft PR — maintainers review it against the evidence ladder.
+  - type: input
+    id: repo
+    attributes:
+      label: Repository URL
+      description: GitHub URL of the project
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+  - type: input
+    id: benchmark
+    attributes:
+      label: Benchmark evidence
+      description: Link to benchmarks or a methodology document (primary source, not a blog rewrite)
+      placeholder: https://github.com/owner/repo/blob/main/benchmarks/...
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What it does
+      description: One line
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it fits
+      description: Optional - numbers, comparisons, why it belongs in a speed-focused catalog
