@@ -121,8 +121,8 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `views` | ndarray |
 | `wakeup-contract` | strict-future-contract |
 | `window-tinylfu` | moka |
-| `work-stealing` | tokio, rayon, pingora |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv |
+| `work-stealing` | tokio, rayon, pingora, ruff |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, ruff |
 | `zero-macro-ergonomics` | axum |
 
 ---
