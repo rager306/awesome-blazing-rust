@@ -83,6 +83,71 @@ pub fn diff(prev_raw: Option<&str>, rows: &[UpstreamRow]) -> Diff {
     d
 }
 
+/// Per-repo scan outcome, decoupled from the ports layer: the driver maps
+/// TagState::Unreachable to Unreachable, Tag/NoTags to Ok.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Outcome {
+    Ok,
+    Unreachable,
+}
+
+/// Consecutive-failure ledger: repo -> strikes (0 = healthy/observed).
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Strike(pub std::collections::BTreeMap<String, u32>);
+
+/// Success resets a repo's streak, Unreachable increments it. Repos new to
+/// the ledger start at 0 (a first scan is not a strike).
+pub fn apply(mut strike: Strike, outcomes: &[(String, Outcome)]) -> Strike {
+    for (repo, outcome) in outcomes {
+        let n = strike.0.entry(repo.clone()).or_insert(0);
+        match outcome {
+            Outcome::Ok => *n = 0,
+            Outcome::Unreachable => *n += 1,
+        }
+    }
+    strike
+}
+
+/// Circuit breaker: more than 3% of scanned repos unreachable in one run
+/// means something upstream broke - the run is an incident, not a signal.
+pub fn incident(unreachable: usize, scanned: usize) -> bool {
+    scanned > 0 && (unreachable as f64) / (scanned as f64) > 0.03
+}
+
+/// Repos at or past the enforcement threshold (phase 2 removes these).
+pub fn tripwire(strike: &Strike) -> Vec<String> {
+    strike.0.iter().filter(|(_, n)| **n >= 3).map(|(r, _)| r.clone()).collect()
+}
+
+/// Deterministic one-line-object projection (same contract style as `json`).
+pub fn strike_json(strike: &Strike) -> String {
+    let mut out = String::from("[\n");
+    for (i, (repo, n)) in strike.0.iter().enumerate() {
+        let comma = if i + 1 == strike.0.len() { "" } else { "," };
+        out.push_str(&format!("  {{\"repo\": \"{repo}\", \"strikes\": {n}}}{comma}\n"));
+    }
+    out.push_str("]\n");
+    out
+}
+
+/// Tolerant scan of the exact format `strike_json` emits.
+pub fn parse_strike(raw: &str) -> Strike {
+    let mut s = Strike::default();
+    for line in raw.lines() {
+        let line = line.trim().trim_end_matches(',');
+        if !line.starts_with("{\"repo\": \"") {
+            continue;
+        }
+        let inner = line.trim_start_matches("{\"repo\": \"").trim_end_matches('}');
+        if let Some((repo, n)) = inner.split_once("\", \"strikes\": ") {
+            if let Ok(n) = n.parse::<u32>() {
+                s.0.insert(repo.to_string(), n);
+            }
+        }
+    }
+    s
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -121,5 +186,57 @@ mod tests {
         let d = diff(Some(&prev), &now);
         assert_eq!(d.changed, vec!["a/b: v1 -> v2".to_string(), "n/m: v0 (first scan)".to_string()]);
         assert_eq!(d.gone, vec!["x/y".to_string()]);
+    }
+
+    #[test]
+    fn strike_increments_on_unreachable_and_resets_on_success() {
+        let mut s = Strike::default();
+        let out = |unreachable: bool| vec![("a/b".to_string(), if unreachable { Outcome::Unreachable } else { Outcome::Ok })];
+        s = apply(s, &out(true));
+        s = apply(s, &out(true));
+        assert_eq!(s.0.get("a/b"), Some(&2));
+        s = apply(s, &out(false));
+        assert_eq!(s.0.get("a/b"), Some(&0));
+    }
+
+    #[test]
+    fn strike_tracks_repos_independently() {
+        let mut s = Strike::default();
+        s = apply(s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+        s = apply(s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+        assert_eq!(s.0.get("a/b"), Some(&2));
+        assert_eq!(s.0.get("c/d"), Some(&0));
+    }
+
+    #[test]
+    fn incident_trips_only_above_three_percent() {
+        // 1 of 30 = 3.3% > 3%: incident.
+        assert!(incident(1, 30));
+        // 1 of 40 = 2.5%: no incident.
+        assert!(!incident(1, 40));
+        // 0 of 0: no incident (nothing scanned, nothing to conclude).
+        assert!(!incident(0, 0));
+        // All reachable: no incident.
+        assert!(!incident(0, 1));
+    }
+
+    #[test]
+    fn tripwire_reports_three_strikes() {
+        let mut s = Strike::default();
+        for _ in 0..3 {
+            s = apply(s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+        }
+        assert_eq!(tripwire(&s), vec!["a/b".to_string()]);
+    }
+
+    #[test]
+    fn strike_state_roundtrips_through_lines() {
+        let mut s = Strike::default();
+        s = apply(s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+        s = apply(s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+        let text = strike_json(&s);
+        let back = parse_strike(&text);
+        assert_eq!(back.0.get("a/b"), Some(&2));
+        assert_eq!(back.0.get("c/d"), Some(&0));
     }
 }
