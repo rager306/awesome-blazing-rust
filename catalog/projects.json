@@ -806,6 +806,15 @@
       "description": "collaborative text editing on the Eg-walker event-graph lineage (plain index-based operations, CRDT-like state built only during concurrent merges); reverse piece table with a finger search (8-byte pieces stay in L1/L2, surviving text copied exactly once, deleted text never copied), cheap-path-first merging (non-overlapping concurrent edits just shift by the net length change; CRDT fallback only inside conflicting spans), run/causality planning maintained incrementally on append, lazy sectioned files (header/text/history, history cut at linear boundaries so reopen reads header+text only), struct-of-arrays layouts (16-byte runs vs 64), zstd on text and history",
       "blazing": "author benchmarks vs diamond-types, Yjs, Loro and Automerge (median of 100 runs, libraries cycling through traces so the branch predictor cannot overfit one trace, merge times include appending since wins moved work out of the merge): merge 2.45-10x vs diamond-types and up to 1091x vs Automerge, reopen ~25x vs whole-file load (0.03-0.08 ms), steady-state memory more than halved; honest losses published - Automerge snapshots are smaller on some traces (C1: 116 vs 141 KiB). Research-grade: no input validation, a single invalid event panics; a validating server in front is the proposed fix ([post](https://jzhao.xyz/posts/eg-strider)).",
       "arch": ["incremental-view-maintenance", "cache-conscious-layout"]
+    },
+    {
+      "name": "datafusion",
+      "url": "https://github.com/apache/datafusion",
+      "section": "Candidates",
+      "type": "measured",
+      "description": "extensible, Arrow-native SQL query engine for single-node analytics in Rust (Apache-2.0, 9.5k stars, pushed 2026-10; the engine many Rust data systems embed)",
+      "blazing": "DataFusion 43.0.0 was the fastest single-node engine for querying Parquet in ClickBench 'hot' runs (2024-11-16, partitioned 14 GB Parquet, c6a.4xlarge 16 CPU / 32 GB) - faster than DuckDB, chDB and ClickHouse on the same hardware, first Rust engine to hold the spot; ClickBench performance improved over 30% between DataFusion 34 (Dec 2023) and 43 (Nov 2024); the authors' own footnote concedes DuckDB is slightly faster on 'cold' runs ([post](https://datafusion.apache.org/blog/2024/11/18/datafusion-fastest-single-node-parquet-clickbench/), methodology: open [ClickBench scripts](https://github.com/ClickHouse/ClickBench/tree/main/datafusion), raw run data in [datafusion#13099](https://github.com/apache/datafusion/issues/13099); in-tree [benchmarks/](https://github.com/apache/datafusion/tree/main/benchmarks) suite - TPC-H/TPC-DS/parquet/sort via bench.sh + compare.py - tracks DF-vs-DF regressions, not competitive claims).",
+      "arch": ["query-optimization", "columnar", "stringview"]
     }
   ]
 }
