@@ -144,8 +144,12 @@ jobs:
               echo
               echo "_Auto-discovered by the discovery agent on $(date -u +%F). The intake agent drafts a card; a maintainer merges._"
             } > issue-body.md
-            gh issue create --title "Suggest a project: ${NAME} (auto-discovered)" \
-              --body-file issue-body.md --label card-intake >/dev/null && CREATED=$((CREATED+1))
+            ISSUE_URL=$(gh issue create --title "Suggest a project: ${NAME} (auto-discovered)" \
+              --body-file issue-body.md --label card-intake) && CREATED=$((CREATED+1))
+            # GITHUB_TOKEN events cannot trigger workflows (anti-recursion), so
+            # chain the Intake run explicitly - workflow_dispatch is the exception.
+            gh workflow run intake.yml --repo "${{ github.repository }}" \
+              -f issue_number="$(basename "$ISSUE_URL")"
           done
           echo "intake issues created: $CREATED"
       - name: Upload run log
