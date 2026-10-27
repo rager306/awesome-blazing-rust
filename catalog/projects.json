@@ -806,6 +806,15 @@
       "description": "collaborative text editing on the Eg-walker event-graph lineage (plain index-based operations, CRDT-like state built only during concurrent merges); reverse piece table with a finger search (8-byte pieces stay in L1/L2, surviving text copied exactly once, deleted text never copied), cheap-path-first merging (non-overlapping concurrent edits just shift by the net length change; CRDT fallback only inside conflicting spans), run/causality planning maintained incrementally on append, lazy sectioned files (header/text/history, history cut at linear boundaries so reopen reads header+text only), struct-of-arrays layouts (16-byte runs vs 64), zstd on text and history",
       "blazing": "author benchmarks vs diamond-types, Yjs, Loro and Automerge (median of 100 runs, libraries cycling through traces so the branch predictor cannot overfit one trace, merge times include appending since wins moved work out of the merge): merge 2.45-10x vs diamond-types and up to 1091x vs Automerge, reopen ~25x vs whole-file load (0.03-0.08 ms), steady-state memory more than halved; honest losses published - Automerge snapshots are smaller on some traces (C1: 116 vs 141 KiB). Research-grade: no input validation, a single invalid event panics; a validating server in front is the proposed fix ([post](https://jzhao.xyz/posts/eg-strider)).",
       "arch": ["incremental-view-maintenance", "cache-conscious-layout"]
+    },
+    {
+      "name": "ntex",
+      "url": "https://github.com/ntex-rs/ntex",
+      "section": "Candidates",
+      "type": "measured",
+      "description": "framework for composable async network services (HTTP, WebSockets) on selectable tokio/compio/neon runtimes (Apache-2.0/MIT, active, MSRV 1.88)",
+      "blazing": "third-party rewrk hello-world bench (Ryzen 9 5900X, `rewrk -t 24 -c 500 -d 30s`): 843,766 req/s at 4.5 MB peak memory vs hyper 768,859 req/s at 12.4 MB and axum 768,607 req/s - about 10% under actix-web's 933,297 req/s at a third of its 13.6 MB memory ([results and method](https://github.com/programatik29/rust-web-benchmarks/blob/master/result/hello-world.md)).",
+      "arch": ["async-native", "combinators"]
     }
   ]
 }

@@ -7,7 +7,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `aes-ni` | ahash |
 | `alloc-tracking` | divan, dhat |
 | `arrangement-indexing` | differential-dataflow |
-| `async-native` | quinn, hyper |
+| `async-native` | quinn, hyper, ntex |
 | `automata-compilation` | regex, aho-corasick |
 | `backend-trait` | candle, burn |
 | `batching` | io-uring |
@@ -22,7 +22,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `code-layout` | cargo-pgo |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |
 | `columnar-layout-optional` | ndarray |
-| `combinators` | winnow |
+| `combinators` | winnow, ntex |
 | `compact-index` | indexmap |
 | `compact-serialization` | fst |
 | `component-layer` | gpui-kit |

@@ -267,6 +267,7 @@ Measured-numbers pending. Promote with a PR that includes evidence.
 - [mimalloc](https://github.com/microsoft/mimalloc) - allocator with documented wins vs jemalloc/tcmalloc on server workloads. *Needs: a Rust-context benchmark citation.*.
 - [kutha-graph](https://github.com/rager306/kutha-graph) - greenfield graph engine (ours). *Needs: first public bench run.*.
 - [respan-gateway](https://github.com/respanai/respan-gateway) - single-binary AI gateway in Rust: any client format (OpenAI Chat/Responses, Anthropic Messages, Gemini) to any model with streaming/tools/reasoning translation, cross-vendor realtime voice, MCP tools inside chat, hedged requests, plugins compiled in on a four-hook trait. **Blazing:** author claim 0.07 ms added latency, 56k RPS, 31 MB, "~3× the next fastest gateway" - no published methodology. *Needs: benchmark method (hardware, competitor versions, request profile) or a catalog own-run.*.
+- [ntex](https://github.com/ntex-rs/ntex) - framework for composable async network services (HTTP, WebSockets) on selectable tokio/compio/neon runtimes (Apache-2.0/MIT, active, MSRV 1.88). **Blazing:** third-party rewrk hello-world bench (Ryzen 9 5900X, `rewrk -t 24 -c 500 -d 30s`): 843,766 req/s at 4.5 MB peak memory vs hyper 768,859 req/s at 12.4 MB and axum 768,607 req/s - about 10% under actix-web's 933,297 req/s at a third of its 13.6 MB memory ([results and method](https://github.com/programatik29/rust-web-benchmarks/blob/master/result/hello-world.md)). **Type:** measured. **Arch:** `async-native`, `combinators`.
 
 ## See also
 
