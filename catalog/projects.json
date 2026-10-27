@@ -860,6 +860,15 @@
       "description": "jq clone in Rust (MIT, active, jaq-3.0; core audited by Radically Open Security): drop-in `jq` CLI plus embeddable thread-safe `jaq-core` library, adding YAML/CBOR/TOML/XML",
       "blazing": "self-run benchmark with public in-repo methodology ([bench.sh](https://raw.githubusercontent.com/01mf02/jaq/main/bench.sh): user time via `/usr/bin/time -f %U`, min of 3 runs, AMD Ryzen 5 5500U) vs jq 1.8.1 and gojq 0.12.18 ([full table](https://github.com/01mf02/jaq#performance)): group-by on 1M items 260 ms vs 1790 ms for jq (~7x) and 1580 ms for gojq, sort 90 ms vs 430/550, 100k `def`s 50 ms where jq-1.8.1 errors out (N/A), `upto` 8192 in 0 ms (below timer resolution) vs 440 ms; fastest on 20 of 31 benchmarks, with the losses in the same table - jq fastest on 5 (reduce, try-catch, pyramid, ack, range-prop), gojq on 6 (e.g. native `flatten`).",
       "arch": ["pure-rust-port"]
+    },
+    {
+      "name": "ruff",
+      "url": "https://github.com/astral-sh/ruff",
+      "section": "Candidates",
+      "type": "case-study",
+      "description": "Python linter and code formatter written in Rust with drop-in Black parity, replacing flake8, isort, pyupgrade, pydocstyle and autoflake in one tool",
+      "blazing": "README benchmark chart lints the whole CPython codebase from scratch at a claimed '10-100x faster than existing linters (like Flake8) and formatters (like Black)' (methodology: chart image in [README Performance section](https://github.com/astral-sh/ruff#performance) only - no written methodology reachable this session, so the range is vendor-claimed, not replicated).",
+      "arch": ["work-stealing", "zero-copy"]
     }
   ]
 }
