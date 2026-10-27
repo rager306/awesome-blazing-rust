@@ -24,7 +24,7 @@ concurrency:
 jobs:
   discover:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Install Claude Code
@@ -41,6 +41,8 @@ jobs:
           ANTHROPIC_DEFAULT_HAIKU_MODEL: glm-4.5-air
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
           API_TIMEOUT_MS: "3000000"
+          MCP_TIMEOUT: "30000"
+          MCP_TOOL_TIMEOUT: "120000"
         run: |
           set -o pipefail
           CATALOG_REPOS=$(python3 -c "import json;print('\n'.join(p['url'] for p in json.load(open('catalog/projects.json'))['projects']))")
@@ -70,8 +72,8 @@ jobs:
           Already suggested (open issues, do NOT propose):
           ${OPEN_INTAKES}
 
-          Method:
-          1. Run several web searches with the webSearchPrime tool, e.g.:
+          Method (budget: at most 10 tool calls total - 3-4 searches, then verify only the top hits):
+          1. Run 3-4 web searches with the webSearchPrime tool, e.g.:
              - "blazing fast" rust benchmark 2026
              - fastest rust <domain> benchmark for domains: compression, parsing, http server, database, json, cli, search
              - rust benchmark results blog post 2026 github
@@ -82,16 +84,16 @@ jobs:
           0 to 5 items. Quality over quantity: an empty array is a valid answer.
           EOF_TASK
           )
-          timeout 900 claude -p "$PROMPT" \
+          timeout 1500 claude -p "$PROMPT" \
             --append-system-prompt "$SYSTEM" \
             --permission-mode plan \
             --strict-mcp-config --mcp-config mcp.json \
             --allowedTools "Read,Grep,Glob,mcp__web-search-prime__webSearchPrime,mcp__web-reader__webReader,mcp__zread__search_doc" \
-            --max-turns 25 \
-            --output-format json \
-            | tee discovery-run.json | jq -r '.result' > candidates-raw.txt
+            --max-turns 18 \
+            --output-format stream-json --verbose \
+            | tee discovery-stream.jsonl | jq -r 'select(.type=="result") | .result' > candidates-raw.txt
           sed -e 's/^```(json)*//' -e 's/```$//' candidates-raw.txt | sed '/^\s*$/d' > candidates.json
-          jq -e 'type == "array"' candidates.json >/dev/null || { echo "AGENT OUTPUT NOT JSON - see artifact"; exit 0; }
+          jq -e 'type == "array"' candidates.json >/dev/null || { echo "AGENT OUTPUT NOT JSON (or run hit the cap) - see discovery-stream.jsonl artifact"; exit 0; }
       - name: Open intake issues for new candidates
         env:
           GH_TOKEN: ${{ github.token }}
@@ -130,5 +132,5 @@ jobs:
         with:
           name: discovery-run
           path: |
-            discovery-run.json
+            discovery-stream.jsonl
             candidates.json
