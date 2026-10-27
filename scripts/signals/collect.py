@@ -69,12 +69,14 @@ CRITIQUE_MARKERS = (
 )
 PERF_WORDS = ("bench", "fast", "speed", "perf", "slower", "faster")
 DISPUTE_SINCE = "2020"
-# The model's own yes/no boundary. Calibrated on the 21-item fixture
+# The docs' guidance is explicit: route a noul near 0.5 to a person. So there
+# are three buckets, not two - accept, review, drop - and only the accept
+# bucket carries a machine conclusion. Calibrated on the 21-item fixture
 # (runs/signals-2026-10): noise peaks at 0.42, the two real critiques sit at
-# 0.61 and 0.71, so 0.5 separates them with a margin on both sides. Provisional
-# - the labelled set is small, and triage_eval.py prints every probability so
-# the threshold can be moved on evidence rather than taste.
-TRIAGE_MIN_P = 0.5
+# 0.61 and 0.71. Provisional: the labelled set is small, and triage_eval.py
+# prints every probability so the cutoffs can move on evidence.
+TRIAGE_ACCEPT = 0.65
+TRIAGE_REVIEW = 0.35
 
 
 def http_json(url, timeout=25):
@@ -195,18 +197,18 @@ def hn_candidates(name, slug):
 
 
 def triage_disputes(candidates, slug):
-    """Keep only candidates a small typed-decision model calls a real critique."""
+    """Keep what a small decision model calls a critique, and flag the unsure."""
     kept = []
     for c in candidates:
         answers = triage.decide(c["text"], {"critique": triage.critique_question(slug)})
         p = triage.noul_p(answers, "critique")
-        if p is None or p < TRIAGE_MIN_P:
+        if p is None or p < TRIAGE_REVIEW:
             continue
         kept.append({
             "source": c["source"],
             "url": c["url"],
             "created_at": c["created_at"],
-            "status": "machine-triaged",
+            "status": "machine-triaged" if p >= TRIAGE_ACCEPT else "needs-review",
             "p": round(p, 2),
         })
     return kept
@@ -305,6 +307,15 @@ def main():
 
     verdicts, notes = load_previous()
     index = rustsec_index()
+
+    # Ask the API which models this key may use once, instead of discovering it
+    # as a 403 on every request. No decision model, no triage.
+    triage_on = False
+    if args.triage and os.environ.get("SUBQ_API_KEY"):
+        models = triage.available_models()
+        triage_on = triage.DEFAULT_MODEL in models
+        if not triage_on:
+            print(f"triage off: {triage.DEFAULT_MODEL} not in {models}", file=sys.stderr)
     rows = []
     for i, slug in enumerate(slugs, 1):
         name = slug.split("/")[1]
@@ -318,8 +329,13 @@ def main():
         # Disputes are a human/agent input: keyword extraction was measured and
         # rejected (runs/signals-2026-10). The field stays in the schema so a
         # maintainer can record a real one.
-        if args.triage and os.environ.get("SUBQ_API_KEY"):
-            disputes = triage_disputes(hn_candidates(name, slug), slug)
+        if triage_on:
+            try:
+                disputes = triage_disputes(hn_candidates(name, slug), slug)
+            except triage.NoCredits as e:
+                print(f"triage off for the rest of the run: {e}", file=sys.stderr)
+                triage_on = False
+                disputes = []
         else:
             disputes = []
 

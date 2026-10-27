@@ -94,12 +94,43 @@ def decide(state, questions, *, key=None, base=None, model=DEFAULT_MODEL, timeou
         with urllib.request.urlopen(req, timeout=timeout) as r:
             doc = json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
-        print(f"subq: HTTP {e.code} {e.read()[:200]!r}", file=sys.stderr)
+        detail = ""
+        try:
+            detail = json.dumps(json.loads(e.read().decode()).get("detail", {}))[:200]
+        except Exception:  # noqa: BLE001
+            pass
+        # 402 means the account is out of credits: every later request will fail
+        # the same way, so the caller must stop rather than loop politely.
+        if e.code == 402:
+            raise NoCredits(detail or "insufficient credits") from e
+        print(f"subq: HTTP {e.code} {detail}", file=sys.stderr)
         return None
     except Exception as e:  # noqa: BLE001 - a decision service must not break collection
         print(f"subq: {e}", file=sys.stderr)
         return None
     return doc.get("answers")
+
+
+class NoCredits(RuntimeError):
+    """402 from the API: stop asking, every call would fail the same way."""
+
+
+def available_models(*, key=None, base=None, timeout=15):
+    """Model ids this key may use. Docs: a key without a model gets 403."""
+    key = key or os.environ.get("SUBQ_API_KEY", "")
+    if not key:
+        return []
+    base = (base or os.environ.get("SUBQ_BASE_URL") or DEFAULT_BASE).rstrip("/")
+    req = urllib.request.Request(
+        f"{base}/models", headers={"Authorization": f"Bearer {key}", "User-Agent": UA}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            doc = json.loads(r.read().decode())
+    except Exception as e:  # noqa: BLE001
+        print(f"subq: models lookup failed: {e}", file=sys.stderr)
+        return []
+    return [m.get("id") for m in doc.get("data", [])]
 
 
 def noul_p(answers, name):
@@ -124,6 +155,7 @@ def _self_test():
     assert q["type"] == "noul" and "owner/repo" in q["instructions"]
     # no key -> no judgment, never a guess
     assert decide("text", {"a": q}, key="") is None
+    assert available_models(key="") == []
     print("triage self-test: OK")
 
 

@@ -25,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "scripts" / "signals"))
 import triage  # noqa: E402
 
-MIN_P = 0.5
+MIN_P = 0.65  # same accept cutoff as collect.py
 
 
 def main():
@@ -39,19 +39,22 @@ def main():
         answers = triage.decide(it["text"], {"critique": triage.critique_question(it["repo"])})
         p = triage.noul_p(answers, "critique")
         kept = p is not None and p >= MIN_P
+        review = p is not None and 0.35 <= p < MIN_P
         truth = it.get("label", "not_critique") == "critique"
         if kept and not truth:
             fp.append(it["url"])
-        if truth and not kept:
+        # a true critique in the review band is escalated, not lost
+        if truth and not kept and not review:
             fn.append(it["url"])
-        rows.append((p, kept, truth, it["repo"], it["url"]))
-    for p, kept, truth, repo, url in sorted(rows, key=lambda r: -(r[0] or 0)):
-        mark = "KEEP" if kept else "drop"
+        rows.append((p, kept, truth, it["repo"], it["url"], review))
+    for p, kept, truth, repo, url, review in sorted(rows, key=lambda r: -(r[0] or 0)):
+        mark = "KEEP" if kept else ("review" if review else "drop")
         tag = "critique" if truth else "noise"
         print(f'{mark} p={p if p is None else round(p, 2)!s:5} [{tag:8}] {repo:28} {url}')
-    kept_total = sum(1 for _, kept, _, _, _ in rows if kept)
+    kept_total = sum(1 for r in rows if r[1])
+    review_total = sum(1 for r in rows if r[5])
     print(f"\nthreshold {MIN_P}: kept {kept_total}/{len(rows)} "
-          f"| false positives {len(fp)} | false negatives {len(fn)}")
+          f"| in review band {review_total} | false positives {len(fp)} | false negatives {len(fn)}")
     return 1 if fp else 0
 
 
