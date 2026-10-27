@@ -20,6 +20,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: read # counting card-draft PRs is the other half of the funnel
 
 concurrency:
   group: funnel
