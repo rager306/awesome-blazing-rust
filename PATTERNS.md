@@ -104,7 +104,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `speculative-parallel-decode` | flashraw |
 | `statistical-rigor` | hyperfine, criterion |
 | `storage-backend-flag` | oxigraph |
-| `stringview` | apache-arrow-rs |
+| `stringview` | apache-arrow-rs, datafusion |
 | `structural-sharing` | im |
 | `succinct` | sux |
 | `table-driven` | crc32fast |

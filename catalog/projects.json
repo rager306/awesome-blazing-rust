@@ -424,10 +424,10 @@
       "name": "datafusion",
       "url": "https://github.com/apache/datafusion",
       "section": "Data & Analytics",
-      "type": "case-study",
-      "description": "SQL query engine",
-      "blazing": "the engine behind many \"faster than X\" blog posts; StringView and bbtree-grade extensibility.",
-      "arch": ["query-optimization", "columnar", "extensible"]
+      "type": "measured",
+      "description": "extensible, Arrow-native SQL query engine for single-node analytics - the engine many Rust data systems embed",
+      "blazing": "DataFusion 43.0.0 posted the fastest single-node Parquet numbers on ClickBench \"hot\" runs (2024-11-16, partitioned 14 GB Parquet, c6a.4xlarge 16 CPU / 32 GB) - ahead of DuckDB, chDB and ClickHouse on identical hardware, the first Rust engine to hold first place; over 30% faster than DataFusion 34 (Dec 2023) on the same suite, while the authors concede DuckDB stays slightly ahead on \"cold\" runs ([post](https://datafusion.apache.org/blog/2024/11/18/datafusion-fastest-single-node-parquet-clickbench/), scope: component; [bench scripts](https://github.com/ClickHouse/ClickBench/tree/main/datafusion), [raw data](https://github.com/apache/datafusion/issues/13099)).",
+      "arch": ["query-optimization", "columnar", "stringview", "extensible"]
     },
     {
       "name": "moka",

@@ -127,7 +127,7 @@ Well-known algorithms, implemented properly in Rust.
 
 - [polars](https://github.com/pola-rs/polars) - DataFrames. **Blazing:** documented multi-x wins over pandas on groupby/join; query-optimized, lazy, parallel. **Type:** case-study. **Arch:** `columnar`, `query-optimization`, `simd`.
 - [apache-arrow-rs](https://github.com/apache/arrow-rs) - Arrow columnar format. **Blazing:** zero-copy interchange - the "no-serialization" tax advantage. **Type:** case-study. **Arch:** `columnar`, `zero-copy`, `stringview`.
-- [datafusion](https://github.com/apache/datafusion) - SQL query engine. **Blazing:** the engine behind many "faster than X" blog posts; StringView and bbtree-grade extensibility. **Type:** case-study. **Arch:** `query-optimization`, `columnar`, `extensible`.
+- [datafusion](https://github.com/apache/datafusion) - extensible, Arrow-native SQL query engine for single-node analytics - the engine many Rust data systems embed. **Blazing:** DataFusion 43.0.0 posted the fastest single-node Parquet numbers on ClickBench "hot" runs (2024-11-16, partitioned 14 GB Parquet, c6a.4xlarge 16 CPU / 32 GB) - ahead of DuckDB, chDB and ClickHouse on identical hardware, the first Rust engine to hold first place; over 30% faster than DataFusion 34 (Dec 2023) on the same suite, while the authors concede DuckDB stays slightly ahead on "cold" runs ([post](https://datafusion.apache.org/blog/2024/11/18/datafusion-fastest-single-node-parquet-clickbench/), scope: component; [bench scripts](https://github.com/ClickHouse/ClickBench/tree/main/datafusion), [raw data](https://github.com/apache/datafusion/issues/13099)). **Type:** measured. **Arch:** `query-optimization`, `columnar`, `stringview`, `extensible`.
 
 ## Caching & Working Set
 
