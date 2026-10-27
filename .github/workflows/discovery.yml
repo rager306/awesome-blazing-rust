@@ -98,8 +98,23 @@ jobs:
             --max-turns 18 \
             --output-format stream-json --verbose \
             | tee discovery-stream.jsonl | jq -r 'select(.type=="result") | .result' > candidates-raw.txt
-          sed -e 's/^```(json)*//' -e 's/```$//' candidates-raw.txt | sed '/^\s*$/d' > candidates.json
-          jq -e 'type == "array"' candidates.json >/dev/null || { echo "AGENT OUTPUT NOT JSON (or run hit the cap) - see discovery-stream.jsonl artifact"; exit 0; }
+          python3 - <<'PYEOF'
+          import json
+          raw = open('candidates-raw.txt').read()
+          i, j = raw.find('['), raw.rfind(']')
+          ok = False
+          if 0 <= i < j:
+              try:
+                  arr = json.loads(raw[i:j+1], strict=False)
+                  if isinstance(arr, list):
+                      json.dump(arr, open('candidates.json', 'w'), ensure_ascii=False)
+                      ok = True
+              except Exception:
+                  pass
+          if not ok:
+              open('candidates.json', 'w').write('[]')
+              print('AGENT OUTPUT NOT VALID JSON (kept empty) - see discovery-stream.jsonl artifact')
+          PYEOF
       - name: Open intake issues for new candidates
         env:
           GH_TOKEN: ${{ github.token }}
