@@ -4,7 +4,7 @@
 
 ## How to consume this repository
 
-- README.md - the catalog itself (90 entries across sections, `Blazing:` = evidence, `Arch:` = pattern tags).
+- README.md - the catalog itself (91 entries across sections, `Blazing:` = evidence, `Arch:` = pattern tags).
 - catalog/projects.json - machine-readable index: name, url, section, type (measured|tool|case-study|agent-skill), description, claim, arch tags. Best entry point for agents.
 - PATTERNS.md - architecture-patterns index: which technique achieves speed, used by which projects.
 - decisions/ - ADR-style write-ups per pattern: problem, technique, evidence, trade-offs.
@@ -37,7 +37,7 @@
 - Recipes (0 entries)
 - Measured Caveats (0 entries)
 - Fresh (7 entries)
-- Candidates (1 entries)
+- Candidates (2 entries)
 - See also (0 entries)
 - Contributing (0 entries)
 

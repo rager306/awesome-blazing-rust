@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |
 | `copy-on-write` | redb |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc |
 | `datalog` | cozo |
 | `declarative-dsl` | slint |
 | `density-dependent` | roaring-rs |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |
 | `window-tinylfu` | moka |
 | `work-stealing` | tokio, rayon, pingora |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc |
 | `zero-macro-ergonomics` | axum |
 
 ---
