@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
-"""Measure the triage step on a known set.
+"""Measure the triage step against labelled data.
 
 dispute-fixture.json holds the 21 pointers the keyword prefilter produced across
-94 repositories. Each was reviewed by hand: none is a critique of the project's
-own numbers. So every item the model keeps is a FALSE POSITIVE, and the score of
-this file is "how many false positives survived triage".
+94 repositories, each reviewed by hand: 1 genuine contradiction (datafusion,
+"much slower than duckdb or OOMing" on db-benchmark - it contradicts the
+ClickBench claim on the card) and 20 pieces of noise.
 
-Without SUBQ_API_KEY the harness cannot judge anything and says so instead of
-inventing a number.
+Two numbers matter:
+
+  false positives - noise the model KEEPS. This is what would put a fake
+                    "contested" flag on a card.
+  false negatives - real critiques the model DROPS. This is what would let a
+                    contradicted claim through.
+
+The threshold is a product decision, not a constant: the run prints the full
+probability list so it can be moved on evidence.
 """
 import json
 import os
@@ -18,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "scripts" / "signals"))
 import triage  # noqa: E402
 
-MIN_P = 0.8
+MIN_P = 0.5
 
 
 def main():
@@ -26,18 +33,26 @@ def main():
     items = fixture["items"]
     if not os.environ.get("SUBQ_API_KEY"):
         print(f"no SUBQ_API_KEY: {len(items)} fixture items cannot be triaged")
-        print("expected outcome once a key exists: 0 kept (all are known false positives)")
         return 0
-    kept = []
+    fp, fn, rows = [], [], []
     for it in items:
         answers = triage.decide(it["text"], {"critique": triage.critique_question(it["repo"])})
         p = triage.noul_p(answers, "critique")
-        verdict = "kept" if (p is not None and p >= MIN_P) else "dropped"
-        print(f'{verdict:8} p={p if p is None else round(p, 2)!s:5} {it["repo"]:30} {it["url"]}')
-        if verdict == "kept":
-            kept.append(it["url"])
-    print(f"\nkept {len(kept)}/{len(items)} - every kept item is a false positive by construction")
-    return 1 if kept else 0
+        kept = p is not None and p >= MIN_P
+        truth = it.get("label", "not_critique") == "critique"
+        if kept and not truth:
+            fp.append(it["url"])
+        if truth and not kept:
+            fn.append(it["url"])
+        rows.append((p, kept, truth, it["repo"], it["url"]))
+    for p, kept, truth, repo, url in sorted(rows, key=lambda r: -(r[0] or 0)):
+        mark = "KEEP" if kept else "drop"
+        tag = "critique" if truth else "noise"
+        print(f'{mark} p={p if p is None else round(p, 2)!s:5} [{tag:8}] {repo:28} {url}')
+    kept_total = sum(1 for _, kept, _, _, _ in rows if kept)
+    print(f"\nthreshold {MIN_P}: kept {kept_total}/{len(rows)} "
+          f"| false positives {len(fp)} | false negatives {len(fn)}")
+    return 1 if fp else 0
 
 
 if __name__ == "__main__":

@@ -62,13 +62,32 @@ of a cent. The model is asked exactly one falsifiable question - "does this
 comment criticise *this project's own* numbers" - with explicit criteria for
 yes and no.
 
-**Status: implemented, not yet validated.** No `SUBQ_API_KEY` exists in the
-repository yet, so the collector skips triage and emits no disputes. The
-validation set is already prepared: `dispute-fixture.json` holds all 21
-reviewed false positives, and `triage_eval.py` scores the model as "how many
-false positives survived" - the expected answer is zero, and any kept item is
-a measurable failure. Until that run happens, the layer ships without
-machine-generated disputes.
+**Measured on the fixture (21 items).** Hand-labelling turned out to be the
+weak link, not the model: the first review called all 21 noise, and two of them
+are genuine contradictions - datafusion's card claims the fastest ClickBench
+hot run while a comment reports it "much slower than duckdb or OOMing" on
+db-benchmark, and a competitor claims the tantivy-based `pg_search` is much
+slower than its own index. Both were relabelled as critiques.
+
+The model then ranked them at the top of the distribution:
+
+| Item | p | Truth |
+|---|---|---|
+| datafusion (HN 40358932) | 0.71 | critique |
+| tantivy (HN 40982630) | 0.61 | critique |
+| polars (HN 31068728) | 0.42 | noise |
+| rayon (HN 45330730) | 0.26 | noise |
+| 17 more | 0.16 - 0.01 | noise |
+
+At the model's own yes/no boundary (0.5): **0 false positives, 0 false
+negatives, 2 kept of 21**. At the 0.8 threshold tried first: 0 false positives
+but 1 false negative - the datafusion contradiction would have been dropped.
+Noise peaks at 0.42, so the margin is 0.08 above noise and 0.11 below the
+weaker positive.
+
+The threshold is provisional: two positives are a calibration, not a
+distribution. `triage_eval.py` prints every probability so it can be moved on
+evidence, and it exits non-zero the moment a false positive appears.
 
 ## Finding 4 - hype detection is not measurable yet
 

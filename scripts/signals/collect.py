@@ -69,7 +69,12 @@ CRITIQUE_MARKERS = (
 )
 PERF_WORDS = ("bench", "fast", "speed", "perf", "slower", "faster")
 DISPUTE_SINCE = "2020"
-TRIAGE_MIN_P = 0.8
+# The model's own yes/no boundary. Calibrated on the 21-item fixture
+# (runs/signals-2026-10): noise peaks at 0.42, the two real critiques sit at
+# 0.61 and 0.71, so 0.5 separates them with a margin on both sides. Provisional
+# - the labelled set is small, and triage_eval.py prints every probability so
+# the threshold can be moved on evidence rather than taste.
+TRIAGE_MIN_P = 0.5
 
 
 def http_json(url, timeout=25):

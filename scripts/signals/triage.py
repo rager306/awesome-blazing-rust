@@ -31,12 +31,20 @@ def critique_question(slug):
     return {
         "type": "noul",
         "instructions": (
-            f"Does this comment criticise the benchmark numbers of the project "
-            f"github.com/{slug} itself - its own measurements, methodology or speed claims?"
+            f"Does this comment contradict or dispute the performance claims of the project "
+            f"github.com/{slug} - its own benchmark numbers, its methodology, or the speed it advertises?"
         ),
         "criteria": {
-            "true": "The comment disputes this project's own benchmark result, method or claim about its speed",
-            "false": "The comment mentions the project, or criticises something else (another project, a language, a different claim)",
+            "true": (
+                "The comment says this project is slower, wrong or misleading about its speed - its own "
+                "numbers, its benchmark method, or results on another public benchmark that contradict "
+                "what the project claims"
+            ),
+            "false": (
+                "The comment only mentions the project in passing, compares it without disputing its "
+                "claims, criticises a different project or topic, or reports a measurement without "
+                "challenging the project's own"
+            ),
         },
     }
 
