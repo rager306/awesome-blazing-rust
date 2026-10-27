@@ -15,6 +15,7 @@ pub const PATTERNS: &str = "PATTERNS.md";
 pub const CATALOG: &str = "catalog/projects.json";
 pub const UPSTREAM: &str = "catalog/upstream.json";
 pub const STRIKE: &str = "catalog/upstream-state.json";
+pub const SIGNALS: &str = "catalog/signals.json";
 
 pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
     let mut state = State::Boot;
@@ -28,7 +29,8 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
                 let upstream_raw = io.read_opt(UPSTREAM);
                 let model = markdown::parse_readme(&readme);
                 let patterns_index = markdown::parse_patterns(&patterns_raw);
-                State::Loaded(Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw })
+                let signals_raw = io.read_opt(SIGNALS);
+                State::Loaded(Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw, signals_raw })
             }
             // Loaded -> Checked: domain invariants run on every command.
             State::Loaded(ws) => fsm::run_checks(ws),
@@ -81,7 +83,8 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
     let upstream_raw = io.read_opt(UPSTREAM);
     let model = markdown::parse_readme(&readme);
     let patterns_index = markdown::parse_patterns(&patterns_raw);
-    let ws = Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw };
+    let signals_raw = io.read_opt(SIGNALS);
+    let ws = Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw, signals_raw };
     let checked = fsm::run_checks(ws);
 
     let ws = match checked {

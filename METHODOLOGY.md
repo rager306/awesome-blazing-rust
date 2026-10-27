@@ -37,3 +37,12 @@ Every measured entry states its scope. Amdahl applies: a 2× win on a component 
 
 - Author-reported numbers are taken at face value with methodology as stated. Where the claim is central, the catalog reruns the measurement itself (runs/: roaring-rs replicated 2026-10; the rest remain author-reported pending re-checks).
 - Baselines are named because "5× faster" without "than what, on which machine, at which thread count" is marketing, not evidence.
+
+## 7. Context signals are not evidence
+
+`catalog/signals.json` records third-party context per repository - crates.io adoption, RUSTSEC advisories, maintenance state. It is deliberately **one-way**: a signal can hold or demote a card, never raise its `**Type:**`.
+
+- Machine flags are facts only: `security` (an advisory inside a two-year window) and `unmaintained` (archived, or no push in 12 months).
+- Anything requiring judgement is a human `verdict`, preserved across recollects; a `measured` card carrying a contested verdict fails `abr check`.
+- Mention counts (HN, stars) are a loss function for anomaly detection. They are never a score and never appear on a card.
+- Automatic dispute extraction was tried and rejected: 21 pointers across 94 repositories, zero of them a critique of the project's own numbers (runs/signals-2026-10/RESULTS.md).

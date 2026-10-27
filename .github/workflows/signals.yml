@@ -1,0 +1,52 @@
+name: Signals
+
+# Weekly context refresh for every cataloged repository: crates.io adoption,
+# HN mention volume, RUSTSEC advisories, repository health.
+#
+# This is DATA, NOT EVIDENCE. Nothing collected here can raise a card's
+# **Type:** - signals only hold or demote (see cli/src/domain/rules.rs,
+# check_signals). Machine flags are objective facts (an advisory exists, the
+# repo is archived); anything needing judgement is stored as an unverified
+# dispute pointer or as a human verdict that survives recollects.
+#
+# Commits only on a real diff, like the upstream scan. `abr check` runs after
+# collection so a signals-induced violation cannot land silently.
+
+on:
+  schedule:
+    - cron: "43 5 * * 1" # Mondays 05:43 UTC, before the funnel report
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: signals
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Collect signals
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/signals/collect.py
+      - name: Validate
+        run: |
+          cd cli && cargo build --release --quiet && cd ..
+          ./cli/target/release/abr check
+      - name: Commit on change
+        run: |
+          if git diff --quiet -- catalog/signals.json; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add catalog/signals.json
+          git commit -qm "Signals: refresh $(date -u +%F)"
+          git push

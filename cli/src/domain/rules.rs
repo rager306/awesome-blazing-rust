@@ -3,6 +3,107 @@
 use super::model::{Kind, Model, PatternRow, Violation};
 use std::collections::BTreeMap;
 
+/// The closed vocabulary of signal flags. A free-form flag would let a
+/// judgement call enter through the back door as data.
+pub const SIGNAL_FLAGS: &[&str] = &[
+    "security",
+    "unmaintained",
+    "contested",
+    "hype-suspect",
+    "astroturf-suspected",
+    "stale-claim",
+];
+
+/// One row of catalog/signals.json, as far as the gate needs it.
+#[derive(Debug, Default)]
+pub struct SignalRow {
+    pub repo: String,
+    pub flags: Vec<String>,
+    pub verdict: Option<String>,
+}
+
+/// Tolerant scan of the exact layout `scripts/signals/collect.py` writes
+/// (json.dumps(indent=2)). Same contract style as the upstream projection: the
+/// writer owns the format, the reader refuses everything else.
+pub fn parse_signals(raw: &str) -> Vec<SignalRow> {
+    let mut rows: Vec<SignalRow> = Vec::new();
+    let mut in_flags = false;
+    for line in raw.lines() {
+        let t = line.trim();
+        if let Some(rest) = t.strip_prefix("\"repo\": \"") {
+            if let Some(name) = rest.split('"').next() {
+                rows.push(SignalRow { repo: name.to_string(), flags: Vec::new(), verdict: None });
+            }
+            continue;
+        }
+        let Some(row) = rows.last_mut() else { continue };
+        if in_flags {
+            if t == "]," || t == "]" {
+                in_flags = false;
+            } else {
+                let f = t.trim_end_matches(',').trim_matches('"');
+                if !f.is_empty() {
+                    row.flags.push(f.to_string());
+                }
+            }
+            continue;
+        }
+        if let Some(rest) = t.strip_prefix("\"flags\": [") {
+            let rest = rest.trim_end_matches(',').trim();
+            if rest.is_empty() {
+                in_flags = true; // the multi-line form opens here
+            } else if !rest.starts_with(']') {
+                for f in rest.trim_end_matches(']').split(',') {
+                    let f = f.trim().trim_matches('"');
+                    if !f.is_empty() {
+                        row.flags.push(f.to_string());
+                    }
+                }
+            }
+            continue;
+        }
+        if let Some(rest) = t.strip_prefix("\"verdict\": \"") {
+            if let Some(v) = rest.split('"').next() {
+                row.verdict = Some(v.to_string());
+            }
+        }
+    }
+    rows
+}
+
+/// Signals may only hold or demote. A measured card carrying a contested
+/// signal is an unresolved contradiction, not a card to merge.
+pub fn check_signals(model: &Model, signals: &[SignalRow]) -> Vec<Violation> {
+    let mut out = Vec::new();
+    for s in signals {
+        for f in &s.flags {
+            if !SIGNAL_FLAGS.contains(&f.as_str()) {
+                out.push(Violation {
+                    code: "SIGNALS_UNKNOWN_FLAG",
+                    message: format!("signal flag `{f}` on {} is not in the vocabulary", s.repo),
+                });
+            }
+        }
+        let contested =
+            s.flags.iter().any(|f| f == "contested") || s.verdict.as_deref() == Some("contested");
+        if !contested {
+            continue;
+        }
+        for e in model.entries.iter().filter(|e| e.kind() == Kind::Measured) {
+            if normalize_url(&e.url) == format!("https://github.com/{}", s.repo.to_lowercase()) {
+                out.push(Violation {
+                    code: "MEASURED_CONTESTED",
+                    message: format!(
+                        "measured entry '{}' has a contested signal - resolve the dispute or demote the card to case-study",
+                        e.name
+                    ),
+                });
+            }
+        }
+    }
+    out
+}
+
 /// Patterns with a full ADR write-up.
 pub const DECISION_LINKS: &[(&str, &str)] = &[
     ("cost-model-driven", "decisions/001-cost-model-driven.md"),
@@ -312,6 +413,83 @@ mod tests {
         };
         let v = check(&m, &[], Some("x"), "x");
         assert!(!v.iter().any(|x| x.code == "DUPLICATE_ENTRY"));
+    }
+
+    #[test]
+    fn signals_parse_flags_and_verdict() {
+        let raw = r#"{
+  "meta": {"repos": 2},
+  "repos": [
+    {
+      "repo": "a/b",
+      "flags": [
+        "security",
+        "unmaintained"
+      ],
+      "verdict": "contested"
+    },
+    {
+      "repo": "c/d",
+      "flags": []
+    }
+  ]
+}"#;
+        let rows = parse_signals(raw);
+        assert_eq!(rows.len(), 2);
+        assert_eq!(rows[0].repo, "a/b");
+        assert_eq!(rows[0].flags, vec!["security".to_string(), "unmaintained".to_string()]);
+        assert_eq!(rows[0].verdict.as_deref(), Some("contested"));
+        assert!(rows[1].flags.is_empty());
+        assert!(rows[1].verdict.is_none());
+    }
+
+    #[test]
+    fn contested_signal_blocks_a_measured_card() {
+        let m = Model {
+            sections: vec![],
+            entries: vec![super::super::model::Entry {
+                name: "fast thing".into(),
+                url: "https://github.com/Fast/thing".into(),
+                section: "S".into(),
+                description: "d".into(),
+                blazing: "3x vs baseline".into(),
+                arch: vec![],
+                declared: Some(Kind::Measured),
+            }],
+        };
+        let signals = vec![SignalRow {
+            repo: "fast/thing".into(),
+            flags: vec![],
+            verdict: Some("contested".into()),
+        }];
+        let v = check_signals(&m, &signals);
+        assert!(v.iter().any(|x| x.code == "MEASURED_CONTESTED"));
+    }
+
+    #[test]
+    fn contested_signal_does_not_block_a_case_study() {
+        let m = Model {
+            sections: vec![],
+            entries: vec![entry_typed("thing", &[], "claim", Some(Kind::CaseStudy))],
+        };
+        let signals = vec![SignalRow {
+            repo: "example.com".into(),
+            flags: vec!["contested".into()],
+            verdict: None,
+        }];
+        assert!(check_signals(&m, &signals).is_empty());
+    }
+
+    #[test]
+    fn unknown_signal_flag_is_a_violation() {
+        let m = Model { sections: vec![], entries: vec![] };
+        let signals = vec![SignalRow {
+            repo: "a/b".into(),
+            flags: vec!["feels-hypey".into()],
+            verdict: None,
+        }];
+        let v = check_signals(&m, &signals);
+        assert!(v.iter().any(|x| x.code == "SIGNALS_UNKNOWN_FLAG"));
     }
 
     #[test]
