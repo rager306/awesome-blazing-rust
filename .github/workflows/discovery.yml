@@ -1,12 +1,20 @@
 name: Discovery
 
-# Daily candidate discovery for the catalog. The agent searches the web via
-# z.ai MCP servers (web-search-prime / web-reader / zread - same GLM key),
-# verifies that a candidate has primary-source benchmark evidence, and emits
-# a strict JSON array. The PIPELINE (never the agent) opens up to 3 intake
-# issues per run; each issue triggers the Intake workflow -> draft PR ->
-# maintainer merge. Dedup: current catalog + open intake issues are passed
-# in, and the pipeline re-checks repo_url before creating an issue.
+# Daily candidate discovery for the catalog. The agent fans out across up to
+# 4 free-tier search providers (z.ai MCP: web-search-prime / web-reader / zread
+# on the GLM key; exa; keenable; jina), verifies that a candidate has
+# primary-source benchmark evidence, and emits a strict JSON array. The
+# PIPELINE (never the agent) opens up to 3 intake issues per run; each issue
+# triggers the Intake workflow -> draft PR -> maintainer merge. Dedup: the
+# agent gets the catalog + open intake titles + rotation focus, and the
+# pipeline re-checks the NORMALIZED repo_url (lowercased, no trailing slash /
+# .git suffix) against the catalog AND open AND closed intake Repository URLs
+# before creating an issue (closed = already decided, never re-propose).
+#
+# Resilience: a probe step handshakes every MCP server first and builds
+# mcp.json + the tool allow-list from reachable ones only - one dead vendor
+# degrades the run, never fails it. mcp.json holds secrets and is never
+# uploaded as an artifact (only providers.txt with up/down flags is).
 #
 # Guardrails: dontAsk permission mode (everything not allow-listed is auto-
 # denied; read-only-ness comes from the allow-list itself - only search and
@@ -21,6 +29,7 @@ on:
 permissions:
   contents: read
   issues: write
+  actions: write # `gh workflow run intake.yml` is a workflow dispatch (403 without this)
 
 concurrency:
   group: discovery
@@ -39,6 +48,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
           ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+          KEENABLE_API_KEY: ${{ secrets.KEENABLE_API_KEY }}
+          JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
           ANTHROPIC_MODEL: glm-5.3-flash
           ANTHROPIC_SMALL_FAST_MODEL: glm-4.5-air
           ANTHROPIC_DEFAULT_SONNET_MODEL: glm-5.3-flash
@@ -52,13 +64,92 @@ jobs:
           set -o pipefail
           CATALOG_REPOS=$(python3 -c "import json;print('\n'.join(p['url'] for p in json.load(open('catalog/projects.json'))['projects']))")
           OPEN_INTAKES=$(gh issue list --label card-intake --state open --json title --jq '.[].title' || true)
-          cat > mcp.json <<EOF_MCP
-          {"mcpServers":{
-            "web-search-prime":{"type":"http","url":"https://api.z.ai/api/mcp/web_search_prime/mcp","headers":{"Authorization":"Bearer ${ANTHROPIC_AUTH_TOKEN}"}},
-            "web-reader":{"type":"http","url":"https://api.z.ai/api/mcp/web_reader/mcp","headers":{"Authorization":"Bearer ${ANTHROPIC_AUTH_TOKEN}"}},
-            "zread":{"type":"http","url":"https://api.z.ai/api/mcp/zread/mcp","headers":{"Authorization":"Bearer ${ANTHROPIC_AUTH_TOKEN}"}}
-          }}
-          EOF_MCP
+          # Rotation focus by weekday (UTC): spreads queries across domains so
+          # every day does not repeat the same "blazing fast rust" search.
+          case $(date -u +%a) in
+            Mon) ROT_FOCUS='compression, parsing, cli' ;;
+            Tue) ROT_FOCUS='networking, http server, protocols' ;;
+            Wed) ROT_FOCUS='storage, embedded databases, caching' ;;
+            Thu) ROT_FOCUS='data, analytics, search, text processing' ;;
+            Fri) ROT_FOCUS='concurrency, async runtimes, parallelism' ;;
+            Sat) ROT_FOCUS='crypto, verification, observability, benchmarking' ;;
+            *)   ROT_FOCUS='science, ui, web, graphs, algorithms' ;;
+          esac
+          echo "rotation focus: $ROT_FOCUS"
+          # --- Provider probe: handshake every MCP server, keep reachable only.
+          # One dead vendor degrades the run, never fails it. mcp.json is built
+          # from live servers only; MCP_ALLOW lists their tools for Claude.
+          # mcp.json holds secrets - never uploaded as an artifact.
+          : > providers.txt
+          probe() { # name url [header]
+            code=$(curl -s -o /dev/null -w '%{http_code}' -m 15 -X POST \
+              ${3:+-H "$3"} -H 'Content-Type: application/json' \
+              -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' "$2" 2>/dev/null || echo 000)
+            if [ "$code" = 200 ] || [ "$code" = 401 ] || [ "$code" = 403 ]; then
+              echo "UP $1 ($code)"
+            else
+              echo "DOWN $1 ($code)"
+            fi
+          }
+          P_ZAI="Authorization: Bearer ${ANTHROPIC_AUTH_TOKEN}"
+          P_EXA="x-api-key: ${EXA_API_KEY}"
+          P_KEEN="X-API-Key: ${KEENABLE_API_KEY}"
+          P_JINA="Authorization: Bearer ${JINA_API_KEY}"
+          probe zai-search "https://api.z.ai/api/mcp/web_search_prime/mcp" "$P_ZAI" | tee -a providers.txt
+          probe zai-reader "https://api.z.ai/api/mcp/web_reader/mcp" "$P_ZAI" | tee -a providers.txt
+          probe zai-zread  "https://api.z.ai/api/mcp/zread/mcp" "$P_ZAI" | tee -a providers.txt
+          probe exa        "https://mcp.exa.ai/mcp" "$P_EXA" | tee -a providers.txt
+          probe keenable   "https://api.keenable.ai/mcp" "$P_KEEN" | tee -a providers.txt
+          probe jina       "https://mcp.jina.ai/v1?include_tags=search,read" "$P_JINA" | tee -a providers.txt
+          MCP_ALLOW="Read,Grep,Glob"
+          {
+            echo '{"mcpServers":{'
+            comma=''
+            if grep -q '^UP zai-search' providers.txt; then
+              printf '%s"web-search-prime":{"type":"http","url":"https://api.z.ai/api/mcp/web_search_prime/mcp","headers":{"Authorization":"Bearer PLACEHOLDER"}}' "$comma"; comma=','
+              MCP_ALLOW="$MCP_ALLOW,mcp__web-search-prime__web_search_prime"
+            fi
+            if grep -q '^UP zai-reader' providers.txt; then
+              printf '%s"web-reader":{"type":"http","url":"https://api.z.ai/api/mcp/web_reader/mcp","headers":{"Authorization":"Bearer PLACEHOLDER"}}' "$comma"; comma=','
+              MCP_ALLOW="$MCP_ALLOW,mcp__web-reader__web_reader"
+            fi
+            if grep -q '^UP zai-zread' providers.txt; then
+              printf '%s"zread":{"type":"http","url":"https://api.z.ai/api/mcp/zread/mcp","headers":{"Authorization":"Bearer PLACEHOLDER"}}' "$comma"; comma=','
+              MCP_ALLOW="$MCP_ALLOW,mcp__zread__search_doc"
+            fi
+            if grep -q '^UP exa' providers.txt; then
+              printf '%s"exa":{"type":"http","url":"https://mcp.exa.ai/mcp","headers":{"x-api-key":"EXAKEY"}}' "$comma"; comma=','
+              MCP_ALLOW="$MCP_ALLOW,mcp__exa__web_search_exa,mcp__exa__web_fetch_exa"
+            fi
+            if grep -q '^UP keenable' providers.txt; then
+              printf '%s"keenable":{"type":"http","url":"https://api.keenable.ai/mcp","headers":{"X-API-Key":"KEENKEY"}}' "$comma"; comma=','
+              MCP_ALLOW="$MCP_ALLOW,mcp__keenable__search_web_pages,mcp__keenable__fetch_page_content"
+            fi
+            if grep -q '^UP jina' providers.txt; then
+              printf '%s"jina-search-read":{"type":"http","url":"https://mcp.jina.ai/v1?include_tags=search,read","headers":{"Authorization":"Bearer JINAKEY"}}' "$comma"; comma=','
+              MCP_ALLOW="$MCP_ALLOW,mcp__jina-search-read__search_web,mcp__jina-search-read__read_url"
+            fi
+            echo '}}'
+          } > mcp.json.tpl
+          # substitute secrets (kept out of logs/echo)
+          python3 - <<'PYEOF'
+          t = open('mcp.json.tpl').read()
+          import os
+          t = t.replace('PLACEHOLDER', os.environ['ANTHROPIC_AUTH_TOKEN'])
+          t = t.replace('EXAKEY', os.environ.get('EXA_API_KEY', ''))
+          t = t.replace('KEENKEY', os.environ.get('KEENABLE_API_KEY', ''))
+          t = t.replace('JINAKEY', os.environ.get('JINA_API_KEY', ''))
+          open('mcp.json', 'w').write(t)
+          PYEOF
+          rm -f mcp.json.tpl
+          echo "MCP tools allow-list: $MCP_ALLOW"
+          echo "$MCP_ALLOW" > mcp-allow.txt
+          if ! grep -q '^UP ' providers.txt; then
+            echo '[]' > candidates.json
+            echo 'NO PROVIDERS UP - kept empty, see providers.txt'
+            exit 0
+          fi
+          echo "--- providers.txt ---"; cat providers.txt
           SYSTEM=$(cat <<'EOF'
           You are the candidate-discovery agent of a catalog of measurably fast Rust projects.
           House rules:
@@ -66,9 +157,10 @@ jobs:
           - Only propose projects whose benchmark evidence you actually saw in a primary source (the repo's own benchmarks, a methodology page, a published results file). Never invent numbers, never fabricate URLs.
           - Rust or Rust-core projects only. No abandoned repos (no commit in 12+ months) without an explicit note.
           - Output format is strict: ONLY a JSON array, no markdown fences, no prose before or after.
-          - Available MCP tools (call them directly, do not search for tools): mcp__web-search-prime__web_search_prime, mcp__web-reader__web_reader, mcp__zread__search_doc.
+          - Use the reachable MCP search tools listed below (call them directly, do not search for tools). Fan out: one cheap broad query per provider first (keenable realtime / z.ai web_search_prime / exa / jina search_web), then verify only the top hits with a reader (web_reader, keenable fetch_page_content, exa web_fetch_exa, or jina read_url with a question).
           EOF
           )
+          PROVIDER_TOOLS=$(grep -o 'mcp__[^ ,]*' mcp-allow.txt | tr '\n' ' ')
           PROMPT=$(cat <<EOF_TASK
           Find up to 5 NEW candidate projects for the catalog: measurably fast Rust projects with public, verifiable benchmark evidence.
 
@@ -78,14 +170,21 @@ jobs:
           Already suggested (open issues, do NOT propose):
           ${OPEN_INTAKES}
 
-          Method (budget: at most 10 tool calls total - 3-4 searches, then verify only the top hits):
-          1. Run 3-4 web searches with the webSearchPrime tool, e.g.:
-             - "blazing fast" rust benchmark 2026
-             - fastest rust <domain> benchmark for domains: compression, parsing, http server, database, json, cli, search
-             - rust benchmark results blog post 2026 github
-          2. For each promising hit, use webReader or zread search_doc to verify the benchmark actually exists at a primary source. Discard anything you cannot verify.
+          Reachable search/reader MCP tools for this run (use ONLY these; others are down):
+          ${PROVIDER_TOOLS}
+
+          Today's rotation focus (bias queries here; one off-focus query allowed): ${ROT_FOCUS}
+
+          Method (hard per-provider budget: EXACTLY 1 search per reachable search provider, then at most 4 verifications total = max 8 calls):
+          1. Fan out (1 call each, no exceptions): run ONE broad query per reachable search provider (keenable search_web_pages in realtime mode where available; z.ai web_search_prime; exa web_search_exa with a one-line objective; jina search_web). Bias toward the rotation focus, e.g.:
+             - focus compression: fastest rust compression library benchmark MB/s 2026 github
+             - focus parsing: fastest rust json parser benchmark 2026 github
+             - focus network: fastest rust http server benchmark requests per second 2026 github
+             - focus storage: fastest rust embedded database benchmark 2026 github
+             Dedup across providers: the same repo found twice is ONE candidate.
+          2. Verify (at most 4 calls): for the top hits only, verify with a reachable reader (z.ai web_reader, keenable fetch_page_content, exa web_fetch_exa, or jina read_url with a question) that the benchmark actually exists at a primary source. Discard anything you cannot verify.
           3. Return ONLY this JSON array (no fences, no prose):
-          [{"name":"...","repo_url":"https://github.com/owner/repo","benchmark_url":"https://...","what":"one line","why":"why it fits a speed-focused catalog, with the numbers you saw","source_url":"where you found it"}]
+          [{"name":"...","repo_url":"https://github.com/owner/repo","benchmark_url":"https://...","what":"one line","why":"why it fits a speed-focused catalog, with the numbers you saw","source_url":"where you found it","provider":"which provider found it (zai|exa|keenable|jina)"}]
 
           0 to 5 items. Quality over quantity: an empty array is a valid answer.
           EOF_TASK
@@ -94,8 +193,8 @@ jobs:
             --append-system-prompt "$SYSTEM" \
             --permission-mode dontAsk \
             --strict-mcp-config --mcp-config mcp.json \
-            --allowedTools "Read,Grep,Glob,mcp__web-search-prime__web_search_prime,mcp__web-reader__web_reader,mcp__zread__search_doc" \
-            --max-turns 18 \
+            --allowedTools "$MCP_ALLOW" \
+            --max-turns 20 \
             --output-format stream-json --verbose \
             | tee discovery-stream.jsonl | jq -r 'select(.type=="result") | .result' > candidates-raw.txt
           python3 - <<'PYEOF'
@@ -119,13 +218,32 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          norm() { # lowercase, strip trailing slash and .git suffix
+            tr '[:upper:]' '[:lower:]' <<<"$1" | sed -e 's#/$##' -e 's#\.git$##'
+          }
           CATALOG_REPOS=$(python3 -c "import json;print('\n'.join(p['url'] for p in json.load(open('catalog/projects.json'))['projects']))")
-          mapfile -t ITEMS < <(jq -c '.[0:3][]' candidates.json)
+          repo_urls_from_bodies() { # $1 = gh issue JSON; prints only the Repository URL field
+            jq -r '.[].body' <<<"$1" | awk '/^\*\*Repository URL\*\*$/{getline; print}' | grep -o 'https://github.com/[^ )]*' || true
+          }
+          OPEN_JSON=$(gh issue list --label card-intake --state open --json body || echo '[]')
+          CLOSED_JSON=$(gh issue list --label card-intake --state closed --json body || echo '[]')
+          OPEN_URLS=$(repo_urls_from_bodies "$OPEN_JSON")
+          CLOSED_URLS=$(repo_urls_from_bodies "$CLOSED_JSON")
+          echo "open intakes: $(wc -l <<<"$OPEN_URLS"), closed intakes: $(wc -l <<<"$CLOSED_URLS")"
+          mapfile -t ITEMS < <(jq -c '.[0:5][]' candidates.json)
           CREATED=0
           for c in "${ITEMS[@]}"; do
+            [ "$CREATED" -ge 3 ] && { echo 'cap: 3 intake issues per run'; break; }
             REPO=$(jq -r '.repo_url' <<<"$c")
+            NREPO=$(norm "$REPO")
             NAME=$(jq -r '.name' <<<"$c")
-            grep -qF "$REPO" <<<"$CATALOG_REPOS" && { echo "skip (in catalog): $REPO"; continue; }
+            DUP=0
+            while IFS= read -r u; do [ "$(norm "$u")" = "$NREPO" ] && DUP=1 && break; done <<<"$CATALOG_REPOS"
+            [ "$DUP" = 1 ] && { echo "skip (in catalog): $REPO"; continue; }
+            while IFS= read -r u; do [ "$(norm "$u")" = "$NREPO" ] && DUP=1 && break; done <<<"$OPEN_URLS"
+            [ "$DUP" = 1 ] && { echo "skip (open intake): $REPO"; continue; }
+            while IFS= read -r u; do [ "$(norm "$u")" = "$NREPO" ] && DUP=1 && break; done <<<"$CLOSED_URLS"
+            [ "$DUP" = 1 ] && { echo "skip (decided intake): $REPO"; continue; }
             {
               echo "**Repository URL**"
               echo "$REPO"
@@ -141,6 +259,9 @@ jobs:
               echo
               echo "**Source**"
               echo "$(jq -r '.source_url' <<<"$c")"
+              echo
+              echo "**Found via**"
+              echo "$(jq -r '.provider // "unknown"' <<<"$c")"
               echo
               echo "_Auto-discovered by the discovery agent on $(date -u +%F). The intake agent drafts a card; a maintainer merges._"
             } > issue-body.md
@@ -160,3 +281,4 @@ jobs:
           path: |
             discovery-stream.jsonl
             candidates.json
+            providers.txt

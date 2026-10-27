@@ -1,6 +1,7 @@
 //! Domain invariants: pure functions Model + documents -> violations.
 
 use super::model::{Kind, Model, PatternRow, Violation};
+use std::collections::BTreeMap;
 
 /// Patterns with a full ADR write-up.
 pub const DECISION_LINKS: &[(&str, &str)] = &[
@@ -10,6 +11,17 @@ pub const DECISION_LINKS: &[(&str, &str)] = &[
     ("memory-bounded-streaming", "decisions/004-memory-bounded-streaming.md"),
     ("skills-in-repo", "decisions/005-skills-in-repo.md"),
 ];
+
+fn normalize_url(url: &str) -> String {
+    let mut u = url.trim().to_lowercase();
+    if let Some(s) = u.strip_suffix('/') {
+        u = s.to_string();
+    }
+    if let Some(s) = u.strip_suffix(".git") {
+        u = s.to_string();
+    }
+    u
+}
 
 pub fn check(
     model: &Model,
@@ -107,6 +119,23 @@ pub fn check(
                     e.name
                 ),
             });
+        }
+    }
+
+    // 7. one entry per project (CONTRIBUTING): cross-posting the same project
+    // into a second section is not allowed. Upper-cased by an author, with or
+    // without a trailing slash or a .git suffix - same repository.
+    let mut first_seen: BTreeMap<String, &str> = BTreeMap::new();
+    for e in &model.entries {
+        let key = normalize_url(&e.url);
+        match first_seen.get(&key) {
+            Some(first) => out.push(Violation {
+                code: "DUPLICATE_ENTRY",
+                message: format!("entry '{}' duplicates '{}' ({})", e.name, first, key),
+            }),
+            None => {
+                first_seen.insert(key, &e.name);
+            }
         }
     }
 
@@ -229,6 +258,60 @@ mod tests {
         }];
         let v = check(&m, &patterns, Some("OLD"), "FRESH");
         assert!(v.iter().any(|x| x.code == "CATALOG_STALE"));
+    }
+
+    #[test]
+    fn duplicate_repo_url_is_a_violation() {
+        let mk = |name: &str, url: &str| super::super::model::Entry {
+            name: name.to_string(),
+            url: url.to_string(),
+            section: "S".to_string(),
+            description: "d".to_string(),
+            blazing: "10x vs baseline".to_string(),
+            arch: vec![],
+            declared: Some(Kind::CaseStudy),
+        };
+        // same repository spelled differently: case, trailing slash, .git
+        for (second_name, second_url) in [
+            ("b", "https://github.com/apache/datafusion"),
+            ("b", "https://github.com/Apache/datafusion/"),
+            ("b", "https://github.com/apache/datafusion.git"),
+        ] {
+            let m = Model {
+                sections: vec![],
+                entries: vec![
+                    mk("a", "https://github.com/apache/datafusion"),
+                    mk(second_name, second_url),
+                ],
+            };
+            let v = check(&m, &[], Some("x"), "x");
+            assert!(
+                v.iter().any(|x| x.code == "DUPLICATE_ENTRY"),
+                "expected DUPLICATE_ENTRY for {second_url}"
+            );
+        }
+    }
+
+    #[test]
+    fn distinct_repos_are_not_duplicates() {
+        let mk = |name: &str, url: &str| super::super::model::Entry {
+            name: name.to_string(),
+            url: url.to_string(),
+            section: "S".to_string(),
+            description: "d".to_string(),
+            blazing: "10x vs baseline".to_string(),
+            arch: vec![],
+            declared: Some(Kind::CaseStudy),
+        };
+        let m = Model {
+            sections: vec![],
+            entries: vec![
+                mk("a", "https://github.com/apache/datafusion"),
+                mk("b", "https://github.com/apache/datafusion-cli"),
+            ],
+        };
+        let v = check(&m, &[], Some("x"), "x");
+        assert!(!v.iter().any(|x| x.code == "DUPLICATE_ENTRY"));
     }
 
     #[test]

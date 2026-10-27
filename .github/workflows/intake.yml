@@ -6,6 +6,13 @@ name: Intake
 # never the agent - commits the result to an agent/* branch and opens a draft
 # PR; CI gates (awesome-lint + abr check) verify it and a maintainer merges.
 #
+# Gates run in the pipeline too, before the PR exists: `abr check` plus
+# `awesome-lint` are executed at the exact commit the PR would carry, and a
+# card that fails them never becomes a PR (the issue gets the failure output).
+# Their results are pasted into the PR body, so a reviewer never depends on a
+# pull_request run that may sit in action_required waiting for an approval
+# click (bot-authored PRs count as first-time contributors here).
+#
 # Guardrails: dontAsk permission mode (everything not allow-listed is denied),
 # narrow Bash prefix allow-list, turn cap, wall-clock timeout, JSON output.
 
@@ -25,7 +32,10 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: intake
+  # One group per issue: a shared group makes GitHub cancel the older PENDING
+  # run when discovery dispatches several intakes at once (issue #4 was lost
+  # that way). Card drafting for different issues is independent work.
+  group: intake-${{ github.event.issue.number || inputs.issue_number }}
   cancel-in-progress: false
 
 jobs:
@@ -35,6 +45,9 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Build abr CLI
         run: cd cli && cargo build --release
       - name: Install Claude Code
@@ -72,13 +85,19 @@ jobs:
 
           Steps:
           1. Study 2-3 existing cards in README.md first - the house format is a dense one-liner: [name](url) - what it is ... **Blazing:** evidence with real numbers and a methodology link ... **Type:** measured|tool|case-study. **Arch:** tags.
-          2. Research the suggested repository: gh api repos/<owner>/<repo> for license, stars, pushed_at, language; fetch its README and benchmark docs to verify the evidence yourself.
-          3. If the benchmark evidence checks out with real numbers and a methodology, set Type: measured; if evidence is weak or missing, set Type: case-study and name what is missing.
-          4. Insert the card at the end of the "## Candidates" section of README.md (that is the draft zone - existing entries there show the tone). Match the section's existing style exactly.
-          5. Run ./cli/target/release/abr catalog to sync catalog/projects.json from README, then ./cli/target/release/abr check - it must pass; fix the card until it does.
-          6. Do NOT touch any other file. Do NOT git commit or push.
+          2. FRESHNESS GATE (do this before writing anything). Run:
+               gh api repos/<owner>/<repo> --jq '{pushed_at, archived, stargazers_count, license: .license.spdx_id}'
+             Compare pushed_at with today's date:
+               - archived == true, or pushed_at older than 12 months -> DO NOT draft a card.
+                 Output exactly one line: `SKIP: <owner>/<repo> is archived|stale (pushed_at <date>)` and stop.
+               - pushed_at within 12 months -> continue; carry the date into the card text.
+          3. Research the suggested repository: gh api repos/<owner>/<repo> for license, stars, pushed_at, language; fetch its README and benchmark docs to verify the evidence yourself.
+          4. If the benchmark evidence checks out with real numbers and a methodology, set Type: measured; if evidence is weak or missing, set Type: case-study and name what is missing.
+          5. Insert the card at the end of the "## Candidates" section of README.md (that is the draft zone - existing entries there show the tone). Match the section's existing style exactly.
+          6. Run ./cli/target/release/abr catalog to sync catalog/projects.json from README, then ./cli/target/release/abr check - it must pass; fix the card until it does.
+          7. Do NOT touch any other file. Do NOT git commit or push.
 
-          Output: the card text, then a verdict line: fits / fits-with-caveats / does-not-fit + one sentence why.
+          Output: the card text (or the single SKIP line), then a verdict line: fits / fits-with-caveats / does-not-fit + one sentence why.
           EOF_ISSUE
           )
           timeout 900 claude -p "$PROMPT" \
@@ -88,13 +107,56 @@ jobs:
             --max-turns 30 \
             --output-format json \
             | tee intake-run.json | jq -r '.result' > intake-result.md
+      - name: Run the gates on the drafted card
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+        run: |
+          # The PR is opened by github-actions[bot], and this repository requires
+          # approval for first-time contributors, so the pull_request workflow
+          # run sits in action_required until a human clicks approve. The gate
+          # therefore runs HERE, deterministically, at the exact commit that
+          # the PR carries - and a card that fails it never becomes a PR.
+          echo "### Gates (run in the pipeline at this commit)" > gates.md
+          FAIL=0
+          if ./cli/target/release/abr check > gate-abr.log 2>&1; then
+            echo "- \`abr check\` - pass" >> gates.md
+          else
+            echo "- \`abr check\` - **FAIL** (output below)" >> gates.md
+            FAIL=1
+          fi
+          if npx -y awesome-lint readme.md > gate-awesome.log 2>&1; then
+            echo "- \`awesome-lint\` - pass" >> gates.md
+          else
+            echo "- \`awesome-lint\` - **FAIL** (output below)" >> gates.md
+            FAIL=1
+          fi
+          if [ "$FAIL" != 0 ]; then
+            {
+              echo "The card failed a deterministic gate, so no PR was opened."
+              echo
+              cat gates.md
+              echo
+              echo '```'
+              tail -n 40 gate-abr.log gate-awesome.log 2>/dev/null
+              echo '```'
+            } > gate-comment.md
+            gh issue comment "$ISSUE_NUMBER" --body-file gate-comment.md
+            exit 1
+          fi
+          cat gates.md
       - name: Open draft PR
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
         run: |
           if git diff --quiet -- README.md catalog/projects.json; then
-            gh issue comment "$ISSUE_NUMBER" --body "No card produced this run - see the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+            if head -n 1 intake-result.md | grep -q '^SKIP:'; then
+              gh issue comment "$ISSUE_NUMBER" --body "$(head -n 1 intake-result.md) - no card drafted by the freshness gate; closing."
+              gh issue close "$ISSUE_NUMBER"
+            else
+              gh issue comment "$ISSUE_NUMBER" --body "No card produced this run - see the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+            fi
             exit 0
           fi
           BRANCH="agent/card-${ISSUE_NUMBER}-${{ github.run_id }}"
@@ -113,7 +175,9 @@ jobs:
             echo
             echo "Closes #${ISSUE_NUMBER}"
             echo
-            echo "Gates: \`abr check\` passed in-run; awesome-lint + abr check run on merge to main."
+            cat gates.md
+            echo
+            echo "Gates: \`abr check\` and \`awesome-lint\` ran in the pipeline at this commit (see above). The pull_request workflow run needs one approval click, or rely on the pipeline result."
           } > pr-body.md
           gh pr create --title "Card draft from issue #${ISSUE_NUMBER}" \
             --body-file pr-body.md --head "$BRANCH" --label card-draft

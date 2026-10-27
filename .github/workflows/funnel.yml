@@ -1,0 +1,106 @@
+name: Funnel
+
+# Weekly discovery funnel: who found what, and what survived the gates.
+# Deterministic pipeline (no LLM): reads the GitHub API only, so the numbers
+# are reproducible and cheap. Posts a single "Discovery funnel" issue that is
+# updated in place instead of a new one each week.
+#
+# Columns answer one question: which search provider earns its free tier?
+#   found   = candidates the discovery agent returned (labelled per provider
+#             in the intake issue body, "Found via")
+#   drafted = intake opened a card PR
+#   merged  = a maintainer merged it
+# A provider that never passes drafted/merged is noise, not discovery.
+
+on:
+  schedule:
+    - cron: "23 8 * * 1" # Mondays 08:23 UTC, after the daily discovery run
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: funnel
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the funnel table
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -o pipefail
+          gh issue list --label card-intake --state all --limit 500 \
+            --json number,title,state,body,createdAt,closedAt > intakes.json
+          gh pr list --label card-draft --state all --limit 500 \
+            --json number,title,state,mergedAt > drafts.json
+          python3 - <<'PYEOF'
+          import json, re, collections, datetime
+          intakes = json.load(open('intakes.json'))
+          drafts = json.load(open('drafts.json'))
+
+          def provider(body):
+              m = re.search(r'\*\*Found via\*\*\s*\n\s*(\S+)', body or '')
+              return m.group(1).strip().lower() if m else 'unknown'
+
+          found = collections.Counter(provider(i['body']) for i in intakes)
+
+          # An intake issue is "drafted" if a card-draft PR references it.
+          drafted_by = collections.Counter()
+          merged_by = collections.Counter()
+          issue_provider = {}
+          for i in intakes:
+              issue_provider[str(i['number'])] = provider(i['body'])
+          for p in drafts:
+              m = re.search(r'issue #(\d+)', p['title'])
+              if not m:
+                  continue
+              prov = issue_provider.get(m.group(1), 'unknown')
+              drafted_by[prov] += 1
+              if p['mergedAt']:
+                  merged_by[prov] += 1
+
+          rows = []
+          for prov in sorted(found, key=lambda p: (-found[p], p)):
+              f, d, g = found[prov], drafted_by[prov], merged_by[prov]
+              rows.append(f'| {prov} | {f} | {d} | {g} | '
+                          f'{(100 * d // f) if f else 0}% |'
+                          f' {(100 * g // f) if f else 0}% |')
+
+          total = len(intakes)
+          body = [
+              '## Discovery funnel',
+              '',
+              f'Generated {datetime.datetime.now(datetime.UTC):%Y-%m-%d} from '
+              f'{total} intake issues and {len(drafts)} card-draft PRs.',
+              '',
+              '| Provider | found | drafted | merged | draft rate | merge rate |',
+              '| --- | --- | --- | --- | --- | --- |',
+              *rows,
+              '',
+              'A provider with a high `found` count and a low draft rate is '
+              'producing hits that do not survive verification. Close it down '
+              'or tighten its queries before renewing any paid tier.',
+              '',
+              '_Deterministic report: numbers come from issue bodies and PR '
+              'titles only._',
+          ]
+          open('funnel.md', 'w').write('\n'.join(body) + '\n')
+          print('\n'.join(body))
+          PYEOF
+      - name: Update or open the funnel issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          EXISTING=$(gh issue list --label discovery-funnel --state open --json number --jq '.[0].number' || true)
+          if [ -n "$EXISTING" ]; then
+            gh issue edit "$EXISTING" --body-file funnel.md
+          else
+            gh issue create --title "Discovery funnel" --body-file funnel.md --label discovery-funnel
+          fi
