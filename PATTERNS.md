@@ -7,7 +7,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `aes-ni` | ahash |
 | `alloc-tracking` | divan, dhat |
 | `arrangement-indexing` | differential-dataflow |
-| `async-native` | quinn, hyper |
+| `async-native` | quinn, hyper, plumbrs |
 | `automata-compilation` | regex, aho-corasick |
 | `backend-trait` | candle, burn |
 | `batching` | io-uring |
@@ -60,7 +60,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `invariants-as-tests` | nachalnik |
 | `inverted-index` | tantivy |
 | `io-driver` | tokio |
-| `io-uring` | glommio, monoio, io-uring |
+| `io-uring` | glommio, monoio, io-uring, plumbrs |
 | `jit` | wasmtime, blaze |
 | `join-split` | rayon |
 | `kernel-fusion` | burn |

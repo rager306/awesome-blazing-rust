@@ -806,6 +806,15 @@
       "description": "collaborative text editing on the Eg-walker event-graph lineage (plain index-based operations, CRDT-like state built only during concurrent merges); reverse piece table with a finger search (8-byte pieces stay in L1/L2, surviving text copied exactly once, deleted text never copied), cheap-path-first merging (non-overlapping concurrent edits just shift by the net length change; CRDT fallback only inside conflicting spans), run/causality planning maintained incrementally on append, lazy sectioned files (header/text/history, history cut at linear boundaries so reopen reads header+text only), struct-of-arrays layouts (16-byte runs vs 64), zstd on text and history",
       "blazing": "author benchmarks vs diamond-types, Yjs, Loro and Automerge (median of 100 runs, libraries cycling through traces so the branch predictor cannot overfit one trace, merge times include appending since wins moved work out of the merge): merge 2.45-10x vs diamond-types and up to 1091x vs Automerge, reopen ~25x vs whole-file load (0.03-0.08 ms), steady-state memory more than halved; honest losses published - Automerge snapshots are smaller on some traces (C1: 116 vs 141 KiB). Research-grade: no input validation, a single invalid event panics; a validating server in front is the proposed fix ([post](https://jzhao.xyz/posts/eg-strider)).",
       "arch": ["incremental-view-maintenance", "cache-conscious-layout"]
+    },
+    {
+      "name": "plumbrs",
+      "url": "https://github.com/awgn/plumbrs",
+      "section": "Candidates",
+      "type": "case-study",
+      "description": "HTTP/1.1+HTTP/2 load generator and Rust HTTP-client benchmarking harness (hyper, reqwest, tokio-uring, monoio, compio backends) with coordinated-omission-corrected latency per Gil Tene's HdrHistogram method",
+      "blazing": "self-run in-repo charts: tokio-uring client 382K RPS on one thread scaling to 1.1M at 4 and hyper 198K -> 724K, reported above wrk on HTTP/1.1; hyper-h2 187K -> 689K RPS above rewrk on HTTP/2 ([numbers and charts](https://github.com/awgn/plumbrs#performance)) - no hardware, server, or competitor-version methodology published, so author-claim until replicated.",
+      "arch": ["io-uring", "async-native"]
     }
   ]
 }
