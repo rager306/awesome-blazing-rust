@@ -16,7 +16,7 @@
       "astroturf-suspected",
       "stale-claim"
     ],
-    "generated_at": "2026-10-27T18:28:00Z",
+    "generated_at": "2026-10-27T18:34:19Z",
     "repos": 94
   },
   "repos": [
@@ -252,7 +252,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:08:07Z",
+        "pushed_at": "2026-10-27T18:21:21Z",
         "stars": 12069,
         "license": "Apache-2.0"
       },
@@ -339,7 +339,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T15:27:49Z",
-        "stars": 561,
+        "stars": 562,
         "license": "GPL-3.0"
       },
       "crate": null,
@@ -402,7 +402,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T06:26:33Z",
-        "stars": 578,
+        "stars": 579,
         "license": "NOASSERTION"
       },
       "crate": {
@@ -426,7 +426,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:15:54Z",
+        "pushed_at": "2026-10-27T18:22:49Z",
         "stars": 3647,
         "license": "Apache-2.0"
       },
@@ -444,7 +444,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:06:15Z",
+        "pushed_at": "2026-10-27T18:22:39Z",
         "stars": 9539,
         "license": "Apache-2.0"
       },
@@ -475,7 +475,7 @@
       },
       "crate": {
         "name": "ruff",
-        "downloads": 12501,
+        "downloads": 12506,
         "recent_downloads": 1224,
         "versions": 21,
         "yanked": false,
@@ -545,7 +545,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T03:21:18Z",
-        "stars": 1107,
+        "stars": 1108,
         "license": "Apache-2.0"
       },
       "crate": {
@@ -607,13 +607,13 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T17:48:39Z",
+        "pushed_at": "2026-10-27T18:26:35Z",
         "stars": 18786,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "wasmtime",
-        "downloads": 41826600,
+        "downloads": 41826824,
         "recent_downloads": 11945718,
         "versions": 234,
         "yanked": false,
@@ -853,12 +853,12 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-26T03:34:06Z",
-        "stars": 4871,
+        "stars": 4872,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "redb",
-        "downloads": 14448114,
+        "downloads": 14448213,
         "recent_downloads": 6299487,
         "versions": 78,
         "yanked": false,
@@ -908,7 +908,7 @@
       },
       "crate": {
         "name": "sonic-rs",
-        "downloads": 8272584,
+        "downloads": 8272723,
         "recent_downloads": 3628702,
         "versions": 48,
         "yanked": false,
@@ -955,12 +955,12 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-01T12:41:25Z",
-        "stars": 8629,
+        "stars": 8630,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "crossbeam",
-        "downloads": 153135117,
+        "downloads": 153135265,
         "recent_downloads": 29789009,
         "versions": 37,
         "yanked": false,
@@ -995,7 +995,7 @@
       },
       "crate": {
         "name": "nalgebra",
-        "downloads": 97976076,
+        "downloads": 97976204,
         "recent_downloads": 17055874,
         "versions": 124,
         "yanked": false,
@@ -1037,12 +1037,12 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-26T16:13:59Z",
-        "stars": 31806,
+        "stars": 31807,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "egui",
-        "downloads": 28540732,
+        "downloads": 28540956,
         "recent_downloads": 7977224,
         "versions": 67,
         "yanked": false,
@@ -1067,7 +1067,7 @@
       },
       "crate": {
         "name": "fjall",
-        "downloads": 1973173,
+        "downloads": 1973296,
         "recent_downloads": 688804,
         "versions": 103,
         "yanked": false,
@@ -1092,7 +1092,7 @@
       },
       "crate": {
         "name": "flamegraph",
-        "downloads": 1023591,
+        "downloads": 1023597,
         "recent_downloads": 54222,
         "versions": 33,
         "yanked": false,
@@ -1117,7 +1117,7 @@
       },
       "crate": {
         "name": "foyer",
-        "downloads": 13614111,
+        "downloads": 13614128,
         "recent_downloads": 3868699,
         "versions": 69,
         "yanked": false,
@@ -1142,7 +1142,7 @@
       },
       "crate": {
         "name": "gungraun",
-        "downloads": 1223740,
+        "downloads": 1224086,
         "recent_downloads": 829642,
         "versions": 13,
         "yanked": false,
@@ -1203,7 +1203,7 @@
       },
       "crate": {
         "name": "hyper",
-        "downloads": 1053558833,
+        "downloads": 1053559160,
         "recent_downloads": 252475161,
         "versions": 253,
         "yanked": false,
@@ -1250,7 +1250,7 @@
       },
       "crate": {
         "name": "papaya",
-        "downloads": 14381147,
+        "downloads": 14381152,
         "recent_downloads": 6836522,
         "versions": 17,
         "yanked": false,
@@ -1287,8 +1287,8 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:16:12Z",
-        "stars": 1366,
+        "pushed_at": "2026-10-27T18:30:00Z",
+        "stars": 1375,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -1379,7 +1379,7 @@
       },
       "crate": {
         "name": "gpui-kit",
-        "downloads": 185345,
+        "downloads": 185457,
         "recent_downloads": 185345,
         "versions": 13,
         "yanked": false,
@@ -1404,7 +1404,7 @@
       },
       "crate": {
         "name": "moka",
-        "downloads": 148569571,
+        "downloads": 148569729,
         "recent_downloads": 44257186,
         "versions": 68,
         "yanked": false,
@@ -1449,7 +1449,7 @@
       },
       "crate": {
         "name": "ntex",
-        "downloads": 1126858,
+        "downloads": 1127263,
         "recent_downloads": 120523,
         "versions": 275,
         "yanked": false,
@@ -1474,7 +1474,7 @@
       },
       "crate": {
         "name": "divan",
-        "downloads": 10213138,
+        "downloads": 10213141,
         "recent_downloads": 4305551,
         "versions": 23,
         "yanked": false,
@@ -1517,7 +1517,7 @@
       },
       "crate": {
         "name": "oxc",
-        "downloads": 1845258,
+        "downloads": 1845560,
         "recent_downloads": 598624,
         "versions": 212,
         "yanked": false,
@@ -1560,7 +1560,7 @@
       },
       "crate": {
         "name": "petgraph",
-        "downloads": 576869606,
+        "downloads": 576869715,
         "recent_downloads": 130367578,
         "versions": 78,
         "yanked": false,
@@ -1580,12 +1580,12 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T17:18:34Z",
-        "stars": 40217,
+        "stars": 40218,
         "license": "MIT"
       },
       "crate": {
         "name": "polars",
-        "downloads": 16518239,
+        "downloads": 16518755,
         "recent_downloads": 3233801,
         "versions": 126,
         "yanked": false,
@@ -1593,7 +1593,7 @@
       },
       "attention": {
         "stories": 205,
-        "comments": 3105
+        "comments": 1884
       },
       "advisories": [],
       "disputes": [],
@@ -1610,7 +1610,7 @@
       },
       "crate": {
         "name": "lz4_flex",
-        "downloads": 160446042,
+        "downloads": 160446207,
         "recent_downloads": 43513489,
         "versions": 43,
         "yanked": false,
@@ -1636,7 +1636,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T17:38:16Z",
-        "stars": 35278,
+        "stars": 35279,
         "license": "Apache-2.0"
       },
       "crate": {
@@ -1666,7 +1666,7 @@
       },
       "crate": {
         "name": "tantivy",
-        "downloads": 20975756,
+        "downloads": 20975852,
         "recent_downloads": 5011097,
         "versions": 64,
         "yanked": false,
@@ -1691,7 +1691,7 @@
       },
       "crate": {
         "name": "quinn",
-        "downloads": 379199972,
+        "downloads": 379200099,
         "recent_downloads": 135448421,
         "versions": 41,
         "yanked": false,
@@ -1720,7 +1720,7 @@
       },
       "crate": {
         "name": "rayon",
-        "downloads": 625194786,
+        "downloads": 625194938,
         "recent_downloads": 151313005,
         "versions": 40,
         "yanked": false,
@@ -1781,7 +1781,7 @@
       },
       "crate": {
         "name": "rkyv",
-        "downloads": 176955803,
+        "downloads": 176956224,
         "recent_downloads": 41946926,
         "versions": 95,
         "yanked": false,
@@ -1845,7 +1845,7 @@
       },
       "crate": {
         "name": "itertools",
-        "downloads": 1722316265,
+        "downloads": 1722316290,
         "recent_downloads": 409806404,
         "versions": 131,
         "yanked": false,
@@ -1870,7 +1870,7 @@
       },
       "crate": {
         "name": "hashbrown",
-        "downloads": 2862235453,
+        "downloads": 2862235833,
         "recent_downloads": 804786957,
         "versions": 56,
         "yanked": false,
@@ -1917,7 +1917,7 @@
       },
       "crate": {
         "name": "regex",
-        "downloads": 1309305496,
+        "downloads": 1309305913,
         "recent_downloads": 297629819,
         "versions": 169,
         "yanked": false,
@@ -1946,7 +1946,7 @@
       },
       "crate": {
         "name": "ndarray",
-        "downloads": 138291980,
+        "downloads": 138292161,
         "recent_downloads": 32640047,
         "versions": 93,
         "yanked": false,
@@ -1971,7 +1971,7 @@
       },
       "crate": {
         "name": "num-bigint",
-        "downloads": 688501365,
+        "downloads": 688501567,
         "recent_downloads": 182565974,
         "versions": 35,
         "yanked": false,
@@ -2032,7 +2032,7 @@
       },
       "crate": {
         "name": "pulp",
-        "downloads": 33602161,
+        "downloads": 33602240,
         "recent_downloads": 16492504,
         "versions": 84,
         "yanked": false,
@@ -2075,7 +2075,7 @@
       },
       "crate": {
         "name": "hyperfine",
-        "downloads": 760559,
+        "downloads": 760865,
         "recent_downloads": 129480,
         "versions": 31,
         "yanked": false,
@@ -2100,7 +2100,7 @@
       },
       "crate": {
         "name": "simd-json",
-        "downloads": 23542479,
+        "downloads": 23542867,
         "recent_downloads": 6143263,
         "versions": 119,
         "yanked": false,
@@ -2124,12 +2124,12 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T18:00:33Z",
-        "stars": 3594,
+        "stars": 3595,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "slatedb",
-        "downloads": 2125562,
+        "downloads": 2131244,
         "recent_downloads": 1516383,
         "versions": 34,
         "yanked": false,
@@ -2154,7 +2154,7 @@
       },
       "crate": {
         "name": "slint",
-        "downloads": 2219161,
+        "downloads": 2219459,
         "recent_downloads": 822566,
         "versions": 52,
         "yanked": false,
@@ -2179,7 +2179,7 @@
       },
       "crate": {
         "name": "sled",
-        "downloads": 17435815,
+        "downloads": 17435843,
         "recent_downloads": 3829287,
         "versions": 105,
         "yanked": false,
@@ -2222,7 +2222,7 @@
       },
       "crate": {
         "name": "ahash",
-        "downloads": 861320650,
+        "downloads": 861323782,
         "recent_downloads": 176112304,
         "versions": 95,
         "yanked": false,
@@ -2247,7 +2247,7 @@
       },
       "crate": {
         "name": "axum",
-        "downloads": 547383900,
+        "downloads": 547385529,
         "recent_downloads": 143252143,
         "versions": 94,
         "yanked": false,
@@ -2272,7 +2272,7 @@
       },
       "crate": {
         "name": "io-uring",
-        "downloads": 65032559,
+        "downloads": 65032693,
         "recent_downloads": 15855236,
         "versions": 51,
         "yanked": false,
@@ -2297,7 +2297,7 @@
       },
       "crate": {
         "name": "tokio",
-        "downloads": 1113843976,
+        "downloads": 1113851649,
         "recent_downloads": 276433428,
         "versions": 201,
         "yanked": false,
@@ -2340,13 +2340,13 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:19:19Z",
+        "pushed_at": "2026-10-27T18:33:04Z",
         "stars": 16178,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "burn",
-        "downloads": 1974694,
+        "downloads": 1975919,
         "recent_downloads": 814825,
         "versions": 49,
         "yanked": false,
@@ -2366,7 +2366,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T18:17:49Z",
-        "stars": 3478,
+        "stars": 3479,
         "license": "MIT"
       },
       "crate": {
@@ -2414,7 +2414,7 @@
       },
       "crate": {
         "name": "winnow",
-        "downloads": 1076992982,
+        "downloads": 1076997936,
         "recent_downloads": 331882934,
         "versions": 111,
         "yanked": false,
@@ -2439,7 +2439,7 @@
       },
       "crate": {
         "name": "dashmap",
-        "downloads": 427355275,
+        "downloads": 427358674,
         "recent_downloads": 97458210,
         "versions": 85,
         "yanked": false,
@@ -2463,12 +2463,12 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-25T13:45:41Z",
-        "stars": 82,
+        "stars": 83,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "flashraw",
-        "downloads": 50,
+        "downloads": 82,
         "recent_downloads": 50,
         "versions": 2,
         "yanked": false,
