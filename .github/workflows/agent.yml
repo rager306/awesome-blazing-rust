@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
+        run: npm install -g @anthropic-ai/claude-code@2.1.311 # pinned: tool surface must not drift
       - name: Nightly curator digest
         env:
           ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
