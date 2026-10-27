@@ -22,6 +22,7 @@ at 5/s; both sleeps are unconditional so a rerun is reproducible.
 """
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -30,6 +31,9 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import triage  # noqa: E402 - sibling module, same directory
 
 ROOT = Path(__file__).resolve().parents[2]
 CATALOG = ROOT / "catalog" / "projects.json"
@@ -50,8 +54,22 @@ SECURITY_WINDOW_YEARS = 2
 # be a critique of the project's own numbers (they were comments that mention
 # the project and criticise something else). A stricter rule - the comment must
 # link the repository and carry the criticism in the project's own sentence -
-# returned zero. See runs/signals-2026-10/RESULTS.md. Disputes therefore stay a
-# human/agent input, and the collector never fills the field.
+# returned zero. See runs/signals-2026-10/RESULTS.md.
+#
+# The split that remains: keywords are a cheap RECALL step that is deliberately
+# over-inclusive, a small typed-decision model (scripts/signals/triage.py) buys
+# PRECISION, and a human owns the verdict. Without SUBQ_API_KEY the middle step
+# is skipped and the collector emits no dispute at all - a missing signal is
+# safer than a wrong one.
+CRITIQUE_MARKERS = (
+    "misleading", "not reproducible", "cherry-pick", "cherry pick",
+    "benchmark is wrong", "benchmarks are wrong", "slower than",
+    "does not scale", "doesn't scale", "gamed the benchmark",
+    "unfair comparison", "apples to oranges",
+)
+PERF_WORDS = ("bench", "fast", "speed", "perf", "slower", "faster")
+DISPUTE_SINCE = "2020"
+TRIAGE_MIN_P = 0.8
 
 
 def http_json(url, timeout=25):
@@ -138,6 +156,57 @@ def hn_mentions(name, slug):
     }
 
 
+def hn_candidates(name, slug):
+    """Recall step: over-inclusive by design, precision comes from triage."""
+    q = urllib.parse.quote(f'"{name}" benchmark')
+    try:
+        hits = http_json(f"https://hn.algolia.com/api/v1/search?query={q}&tags=comment&hitsPerPage=20")
+    except Exception:  # noqa: BLE001
+        return []
+    found = []
+    slug_l = slug.lower()
+    for h in hits.get("hits") or []:
+        text = (h.get("comment_text") or "")
+        low = text.lower()
+        if not low or (slug_l not in low and name.lower() not in low):
+            continue
+        if (h.get("created_at") or "")[:4] < DISPUTE_SINCE:
+            continue
+        if not any(w in low for w in PERF_WORDS):
+            continue
+        marker = next((m for m in CRITIQUE_MARKERS if m in low), None)
+        if not marker:
+            continue
+        found.append({
+            "source": "hn",
+            "url": f"https://news.ycombinator.com/item?id={h.get('objectID')}",
+            "marker": marker,
+            "created_at": h.get("created_at"),
+            "text": text,
+        })
+        if len(found) >= 3:
+            break
+    return found
+
+
+def triage_disputes(candidates, slug):
+    """Keep only candidates a small typed-decision model calls a real critique."""
+    kept = []
+    for c in candidates:
+        answers = triage.decide(c["text"], {"critique": triage.critique_question(slug)})
+        p = triage.noul_p(answers, "critique")
+        if p is None or p < TRIAGE_MIN_P:
+            continue
+        kept.append({
+            "source": c["source"],
+            "url": c["url"],
+            "created_at": c["created_at"],
+            "status": "machine-triaged",
+            "p": round(p, 2),
+        })
+    return kept
+
+
 def machine_flags(github, advisories):
     """Objective facts only: an advisory inside the window, or a dead repo."""
     flags = []
@@ -204,6 +273,8 @@ def main():
     ap.add_argument("--only", default="")
     ap.add_argument("--refresh-flags", action="store_true",
                     help="recompute machine flags from the stored file, no network")
+    ap.add_argument("--triage", action="store_true",
+                    help="ask the SubQ decision model which keyword candidates are real critiques (needs SUBQ_API_KEY)")
     args = ap.parse_args()
 
     if args.refresh_flags:
@@ -242,7 +313,10 @@ def main():
         # Disputes are a human/agent input: keyword extraction was measured and
         # rejected (runs/signals-2026-10). The field stays in the schema so a
         # maintainer can record a real one.
-        disputes = []
+        if args.triage and os.environ.get("SUBQ_API_KEY"):
+            disputes = triage_disputes(hn_candidates(name, slug), slug)
+        else:
+            disputes = []
 
         advisories = []
         if index is not None and name in index:

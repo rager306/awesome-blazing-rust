@@ -34,7 +34,10 @@ jobs:
       - name: Collect signals
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/signals/collect.py
+          # Optional: without it the triage step is skipped and the collector
+          # emits no dispute at all (a missing signal beats a wrong one).
+          SUBQ_API_KEY: ${{ secrets.SUBQ_API_KEY }}
+        run: python3 scripts/signals/collect.py --triage
       - name: Validate
         run: |
           cd cli && cargo build --release --quiet && cd ..

@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""Typed decisions for the signals layer, on a small model instead of a big one.
+
+SubQ's Decisions API returns probabilities for noul (yes/no), choice and score
+questions - the shape this repository actually needs. A judgment like "is this
+HN comment a critique of *this project's own numbers*" is one noul question,
+not a chat completion, so it costs a fraction of a cent and cannot produce
+prose that has to be parsed twice.
+
+Contract: https://docs.subq.ai/markdown/endpoints/decisions-api.md
+  POST https://api.subq.ai/v1/systemone
+  {"model": "subq-snap-1.1", "state": "...", "questions": {...}}
+  -> {"answers": {"key": {"noul": 0.93, "confidence": 0.8}}}
+
+No key means no judgment: `decide()` returns None and every caller degrades to
+"no signal", which is the safe direction (signals can only hold or demote).
+"""
+import json
+import os
+import sys
+import urllib.error
+import urllib.request
+
+DEFAULT_BASE = "https://api.subq.ai/v1"
+DEFAULT_MODEL = "subq-snap-1.1"
+UA = "abr-signals/1.0 (+https://github.com/rager306/awesome-blazing-rust)"
+
+# Decisions the catalog asks. Keep them few, narrow and falsifiable: a question
+# whose criteria cannot be written down is not a decision, it is an opinion.
+def critique_question(slug):
+    return {
+        "type": "noul",
+        "instructions": (
+            f"Does this comment criticise the benchmark numbers of the project "
+            f"github.com/{slug} itself - its own measurements, methodology or speed claims?"
+        ),
+        "criteria": {
+            "true": "The comment disputes this project's own benchmark result, method or claim about its speed",
+            "false": "The comment mentions the project, or criticises something else (another project, a language, a different claim)",
+        },
+    }
+
+
+def hype_question(slug, window_days=7, baseline_days=90):
+    return {
+        "type": "noul",
+        "instructions": (
+            f"Is the recent surge of mentions of github.com/{slug} explained by a release, "
+            f"a benchmark result or a talk - rather than by coordinated promotion?"
+        ),
+        "criteria": {
+            "true": "A concrete artifact explains the attention: a release, a published benchmark, a conference talk",
+            "false": "No artifact; the attention looks promoted, repeated or paid for",
+        },
+    }
+
+
+def scope_question():
+    return {
+        "type": "noul",
+        "instructions": (
+            "Is this repository a Rust project whose speed claim can be checked against "
+            "a primary source - a benchmark, a methodology page or a published result?"
+        ),
+        "criteria": {
+            "true": "Rust or Rust-core, with a benchmark or methodology that can be inspected",
+            "false": "Not Rust, or no checkable speed claim at all",
+        },
+    }
+
+
+def decide(state, questions, *, key=None, base=None, model=DEFAULT_MODEL, timeout=30):
+    """Return the answers dict, or None when there is no key or the call fails."""
+    key = key or os.environ.get("SUBQ_API_KEY", "")
+    if not key:
+        return None
+    base = (base or os.environ.get("SUBQ_BASE_URL") or DEFAULT_BASE).rstrip("/")
+    body = json.dumps({"model": model, "state": state, "questions": questions}).encode()
+    req = urllib.request.Request(
+        f"{base}/systemone",
+        data=body,
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json", "User-Agent": UA},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            doc = json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:
+        print(f"subq: HTTP {e.code} {e.read()[:200]!r}", file=sys.stderr)
+        return None
+    except Exception as e:  # noqa: BLE001 - a decision service must not break collection
+        print(f"subq: {e}", file=sys.stderr)
+        return None
+    return doc.get("answers")
+
+
+def noul_p(answers, name):
+    """Probability of yes for one question, or None when the model was not asked."""
+    if not answers or name not in answers:
+        return None
+    v = answers[name]
+    if isinstance(v, dict):
+        v = v.get("noul")
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _self_test():
+    sample = {"answers": {"critique": {"noul": 0.93, "confidence": 0.81}}}
+    assert noul_p(sample["answers"], "critique") == 0.93
+    assert noul_p(sample["answers"], "missing") is None
+    assert noul_p(None, "critique") is None
+    q = critique_question("owner/repo")
+    assert q["type"] == "noul" and "owner/repo" in q["instructions"]
+    # no key -> no judgment, never a guess
+    assert decide("text", {"a": q}, key="") is None
+    print("triage self-test: OK")
+
+
+if __name__ == "__main__":
+    if "--self-test" in sys.argv:
+        _self_test()
+    else:
+        print(__doc__.strip().splitlines()[0])
+        print("usage: triage.py --self-test   (called as a module by collect.py)")

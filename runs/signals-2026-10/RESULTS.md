@@ -45,7 +45,32 @@ So the automatic dispute layer is removed. The `disputes` field stays in the
 schema as a **human/agent input**: a maintainer or the intake agent records a
 real critique with its URL, and only then can it become a `verdict`.
 
-## Finding 3 - hype detection is not measurable yet
+## Finding 3 - a small typed-decision model, not a big one, does the judgement
+
+Rejecting keyword extraction did not remove the need for judgement; it moved
+it. The split that remains:
+
+| Step | Cost | Job |
+|---|---|---|
+| keyword prefilter | free | recall, deliberately over-inclusive (21 hits / 94 repos) |
+| typed decision (`scripts/signals/triage.py`, SubQ Snap) | $0.04 per 1M input tokens, output free | precision: one noul question per candidate, keep `p >= 0.8` |
+| human verdict | attention | authority: only a person turns a pointer into a `contested` flag |
+
+A yes/no probability is the right shape here: no prose to parse, no chat
+session, and the cost of triaging the whole catalog's candidates is fractions
+of a cent. The model is asked exactly one falsifiable question - "does this
+comment criticise *this project's own* numbers" - with explicit criteria for
+yes and no.
+
+**Status: implemented, not yet validated.** No `SUBQ_API_KEY` exists in the
+repository yet, so the collector skips triage and emits no disputes. The
+validation set is already prepared: `dispute-fixture.json` holds all 21
+reviewed false positives, and `triage_eval.py` scores the model as "how many
+false positives survived" - the expected answer is zero, and any kept item is
+a measurable failure. Until that run happens, the layer ships without
+machine-generated disputes.
+
+## Finding 4 - hype detection is not measurable yet
 
 `hype-suspect` needs a mention baseline: 7-day volume against a 90-day median
 per repository. This is the first collection, so there is no baseline and the
