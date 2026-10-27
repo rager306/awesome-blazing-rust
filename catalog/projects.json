@@ -833,6 +833,15 @@
       "description": "framework for composable async network services (HTTP, WebSockets) on selectable tokio/compio/neon runtimes (Apache-2.0/MIT, active, MSRV 1.88)",
       "blazing": "third-party rewrk hello-world bench (Ryzen 9 5900X, `rewrk -t 24 -c 500 -d 30s`): 843,766 req/s at 4.5 MB peak memory vs hyper 768,859 req/s at 12.4 MB and axum 768,607 req/s - about 10% under actix-web's 933,297 req/s at a third of its 13.6 MB memory ([results and method](https://github.com/programatik29/rust-web-benchmarks/blob/master/result/hello-world.md)).",
       "arch": ["async-native", "combinators"]
+    },
+    {
+      "name": "statico",
+      "url": "https://github.com/awgn/statico",
+      "section": "Candidates",
+      "type": "measured",
+      "description": "minimal benchmark-grade HTTP server that serves a single configurable static response from memory, built as a runtime testbed: stock tokio, smol and four io_uring runtimes (monoio, compio, tokio-uring, glommio) behind a `--runtime` flag, with per-worker single-threaded runtimes, SO_REUSEPORT load balancing and pre-encoded zero-allocation responses on io_uring",
+      "blazing": "author benchmark, 1024 connections, minimal static in-memory responses, no logging, CPU pinning where applicable ([README table](https://github.com/awgn/statico#performance)): statico (monoio) 1,436,420 req/s at 4 threads (656,517 at 1) vs nginx (return) 832,082, actix-web 798,809, Go fasthttp 605,603 at 4 threads - 1.7-2.4x ahead; all four io_uring runtimes land 1.14-1.44M req/s at 4 threads vs 1,071,433 for stock tokio; load generator and hardware are not named in the README.",
+      "arch": ["io-uring", "thread-per-core", "zero-copy"]
     }
   ]
 }
