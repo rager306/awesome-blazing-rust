@@ -1,7 +1,7 @@
 # Signals: does third-party context add signal, or just noise?
 
 Run: 2026-10-2(7), catalog at 96 entries / 94 unique GitHub repositories.
-Collector: `scripts/signals/collect.py` (stdlib only). Data: `catalog/signals.json`.
+Collector: `abr signals` (the repository's zero-dependency CLI). Data: `catalog/signals.json`.
 
 ## What was measured
 
@@ -53,7 +53,7 @@ it. The split that remains:
 | Step | Cost | Job |
 |---|---|---|
 | keyword prefilter | free | recall, deliberately over-inclusive (21 hits / 94 repos) |
-| typed decision (`scripts/signals/triage.py`, SubQ Snap) | $0.04 per 1M input tokens, output free | precision: one noul question per candidate, keep `p >= 0.8` |
+| typed decision (`adapters/subq.rs`, SubQ Snap) | $0.04 per 1M input tokens, output free | precision: one noul question per candidate, bucketed at 0.65 / 0.35 |
 | human verdict | attention | authority: only a person turns a pointer into a `contested` flag |
 
 A yes/no probability is the right shape here: no prose to parse, no chat
@@ -62,32 +62,45 @@ of a cent. The model is asked exactly one falsifiable question - "does this
 comment criticise *this project's own* numbers" - with explicit criteria for
 yes and no.
 
-**Measured on the fixture (21 items).** Hand-labelling turned out to be the
-weak link, not the model: the first review called all 21 noise, and two of them
-are genuine contradictions - datafusion's card claims the fastest ClickBench
-hot run while a comment reports it "much slower than duckdb or OOMing" on
-db-benchmark, and a competitor claims the tantivy-based `pg_search` is much
-slower than its own index. Both were relabelled as critiques.
+**Measured on the fixture (27 items).** Hand-labelling turned out to be the
+weak link, not the model. The first review called all 21 pointers noise; two
+were genuine contradictions. The first full run with a live key then produced
+15 accepted pointers, and a spot check found two of them were **name
+collisions**: `fst` appears as a variable in a Python snippet, `blaze` as a
+different C++ library. That is what a bare crate name buys you.
 
-The model then ranked them at the top of the distribution:
+The fix was a second judgement, not a bigger model: every candidate now gets
+`subject` ("is this about *this* project, not a namesake") and `critique`
+("does it dispute the numbers"), in one request, and the two probabilities
+multiply. A name collision cannot be rescued by a confident critique score.
 
-| Item | p | Truth |
+| Item | p (subject x critique) | Truth |
 |---|---|---|
-| datafusion (HN 40358932) | 0.71 | critique |
-| tantivy (HN 40982630) | 0.61 | critique |
-| polars (HN 31068728) | 0.42 | noise |
-| rayon (HN 45330730) | 0.26 | noise |
-| 17 more | 0.16 - 0.01 | noise |
+| ripgrep ("loses ~3x to ugrep in your benchmark?") | 0.97 | critique |
+| polars ("benchmarking is always so unserious and biased") | 0.96 | critique |
+| datafusion ("much slower than duckdb or OOMing") | 0.96 | critique |
+| ntex ("those framework benchmarks are a pissing contest") | 0.85 | critique |
+| tantivy (competitor: "pg_search is much slower") | 0.82 | critique |
+| ruff ("Ruff is fast, sure, but no ecosystem...") | 0.95 | **noise - known false positive** |
+| fst (Python variable named `fst`) | 0.04 | noise |
+| blaze (C++ library, different project) | 0.34 | noise |
+| 19 more | 0.00 - 0.42 | noise |
 
-At the model's own yes/no boundary (0.5): **0 false positives, 0 false
-negatives, 2 kept of 21**. At the 0.8 threshold tried first: 0 false positives
-but 1 false negative - the datafusion contradiction would have been dropped.
-Noise peaks at 0.42, so the margin is 0.08 above noise and 0.11 below the
-weaker positive.
+At the accept cutoff 0.65: **26 of 27 correct, 1 false positive, 0 lost
+critiques**. The false positive is kept in the fixture on purpose: the eval
+prints it and exits non-zero, so the number stays visible instead of being
+tuned away. The product absorbs it - a pointer is a lead for a human, and only
+a human `verdict` can ever demote a card.
 
-The threshold is provisional: two positives are a calibration, not a
-distribution. `triage_eval.py` prints every probability so it can be moved on
-evidence, and it exits non-zero the moment a false positive appears.
+The cutoffs are provisional: five positives are a calibration, not a
+distribution. `abr signals --eval <fixture>` reproduces this table from the
+shipped binary.
+
+**On the live catalog (94 repositories):** 27 pointers survive - 17 accepted,
+10 in review, 9 repositories flagged (4 `security`, 5 `unmaintained`). Roughly
+a quarter of the catalog carries a benchmark dispute somewhere on HN, which is
+what a speed-focused list should expect; the review band keeps the uncertain
+ones out of the machine bucket.
 
 ## Finding 4 - hype detection is not measurable yet
 

@@ -26,8 +26,9 @@ use domain::fsm::Cmd;
 use std::process::exit;
 
 fn main() {
-    let arg = std::env::args().nth(1).unwrap_or_else(|| {
-        eprintln!("usage: abr <catalog|patterns|llms|check|stats|upstream>");
+    let args: Vec<String> = std::env::args().collect();
+    let arg = args.get(1).cloned().unwrap_or_else(|| {
+        eprintln!("usage: abr <catalog|patterns|llms|check|stats|upstream|signals>");
         exit(2);
     });
     let cmd = match Cmd::from_arg(&arg) {
@@ -42,6 +43,35 @@ fn main() {
     // and is never part of the CI determinism gate.
     let report = if cmd == Cmd::Upstream {
         app::run_upstream(&io, &adapters::gh_curl::GhCli)
+    } else if cmd == Cmd::Signals {
+        // Signals reach the network through three ports, so the command takes
+        // options of its own: --triage, --limit N, --only owner/name.
+        let mut opts = app::SignalOpts::default();
+        let mut i = 2;
+        while i < args.len() {
+            match args[i].as_str() {
+                "--triage" => opts.triage = true,
+                "--limit" => {
+                    i += 1;
+                    opts.limit = args.get(i).and_then(|v| v.parse().ok()).unwrap_or(0);
+                }
+                "--only" => {
+                    i += 1;
+                    opts.only = args.get(i).cloned();
+                }
+                "--eval" => {
+                    i += 1;
+                    opts.eval = args.get(i).cloned();
+                }
+                other => {
+                    eprintln!("abr signals: unknown option '{other}'");
+                    exit(2);
+                }
+            }
+            i += 1;
+        }
+        let mut source = adapters::web::WebSignals::new();
+        app::run_signals(&io, &mut source, &adapters::subq::Subq::from_env(), &opts)
     } else {
         app::run(cmd, &io)
     };

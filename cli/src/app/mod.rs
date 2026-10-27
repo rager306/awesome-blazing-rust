@@ -5,7 +5,9 @@
 
 use crate::adapters::markdown;
 use crate::domain::fsm::{self, Cmd, Report, State, Workspace};
+use crate::domain::signals::{self, Bucket, Crate, Dispute, SignalRow};
 use crate::domain::upstream::{self, UpstreamRow};
+use crate::ports::signals::DecisionSource;
 use crate::ports::sink::Sink;
 use crate::ports::source::Source;
 use crate::ports::upstream::{TagState, UpstreamSource};
@@ -16,6 +18,19 @@ pub const CATALOG: &str = "catalog/projects.json";
 pub const UPSTREAM: &str = "catalog/upstream.json";
 pub const STRIKE: &str = "catalog/upstream-state.json";
 pub const SIGNALS: &str = "catalog/signals.json";
+
+/// Options for `abr signals`.
+#[derive(Default)]
+pub struct SignalOpts {
+    /// Score a labelled fixture instead of collecting: `--eval <path>`.
+    pub eval: Option<String>,
+    /// Ask the decision model which keyword candidates are real critiques.
+    pub triage: bool,
+    /// Take only the first N repositories (smoke test).
+    pub limit: usize,
+    /// Take one repository by `owner/name`.
+    pub only: Option<String>,
+}
 
 pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
     let mut state = State::Boot;
@@ -69,6 +84,205 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
             }
             State::Done(r) | State::Failed(r) => return r,
         };
+    }
+}
+
+
+
+/// Signals: third-party context about every cataloged repository.
+///
+/// Same shape as `run_upstream` - reuse the Boot -> Loaded -> Checked prefix so
+/// the invariants run, then do the I/O behind ports and commit one projection.
+pub fn run_signals(
+    io: &(impl Source + Sink),
+    source: &mut impl crate::ports::signals::SignalsSource,
+    decisions: &impl DecisionSource,
+    opts: &SignalOpts,
+) -> Report {
+    if let Some(path) = &opts.eval {
+        return eval_triage(io, decisions, path);
+    }
+    let readme = io.read(README);
+    let model = markdown::parse_readme(&readme);
+
+    let mut slugs: Vec<String> = model.entries.iter().filter_map(|e| upstream::repo_slug(&e.url)).collect();
+    slugs.sort();
+    slugs.dedup();
+    if let Some(only) = &opts.only {
+        slugs.retain(|s| s.eq_ignore_ascii_case(only));
+    }
+    if opts.limit > 0 {
+        slugs.truncate(opts.limit);
+    }
+
+    let previous = io.read_opt(SIGNALS).unwrap_or_default();
+    let (verdicts, notes) = signals::parse_previous(&previous);
+    let triage_on = opts.triage && decisions.model_available();
+    let today = signals::today_days();
+    let observed = signals::today_utc();
+
+    let mut rows = Vec::new();
+    let mut triaged = 0usize;
+    let mut review = 0usize;
+    for (i, slug) in slugs.iter().enumerate() {
+        let name = slug.split('/').nth(1).unwrap_or(slug.as_str()).to_string();
+        let health = source.health(slug);
+        let krate = source.crate_info(&name, slug);
+        let attention = source.attention(&name);
+        let advisories = source.advisories(&name);
+
+        let (archived, pushed_at) = match &health {
+            Some(h) => (h.archived, h.pushed_at.clone()),
+            None => (None, None),
+        };
+        let flags = signals::machine_flags(archived, pushed_at.as_deref(), &advisories, today);
+
+        let mut disputes = Vec::new();
+        if triage_on {
+            for c in source.dispute_candidates(&name, slug) {
+                let p = decisions.critique_p(slug, &c.text);
+                match signals::bucket(p) {
+                    Bucket::Accept => triaged += 1,
+                    Bucket::Review => review += 1,
+                    Bucket::Drop => continue,
+                }
+                disputes.push(Dispute {
+                    source: c.source,
+                    url: c.url,
+                    created_at: c.created_at,
+                    status: match signals::bucket(p) {
+                        Bucket::Accept => "machine-triaged".to_string(),
+                        _ => "needs-review".to_string(),
+                    },
+                    p,
+                });
+            }
+        }
+
+        eprintln!(
+            "[{}/{}] {}: crate={} flags={:?} disputes={}",
+            i + 1,
+            slugs.len(),
+            slug,
+            if krate.is_some() { "yes" } else { "no" },
+            flags,
+            disputes.len()
+        );
+
+        rows.push(SignalRow {
+            repo: slug.clone(),
+            observed_at: observed.clone(),
+            archived,
+            pushed_at,
+            stars: health.as_ref().and_then(|h| h.stars),
+            license: health.as_ref().and_then(|h| h.license.clone()),
+            krate: krate.map(|c| Crate {
+                name: c.name,
+                downloads: c.downloads,
+                recent_downloads: c.recent_downloads,
+                versions: c.versions,
+                yanked: c.yanked,
+                updated_at: c.updated_at,
+            }),
+            attention: signals::Attention { stories: attention.stories, comments: attention.comments },
+            advisories,
+            disputes,
+            flags,
+            verdict: verdicts.get(slug).cloned(),
+            notes: notes.get(slug).cloned(),
+        });
+    }
+
+    let generated_at = format!("{}T00:00:00Z", observed);
+    let doc = signals::json(&rows, &generated_at, triage_on);
+    io.write(SIGNALS, &doc);
+
+    let flagged = rows.iter().filter(|r| !r.flags.is_empty()).count();
+    let with_crate = rows.iter().filter(|r| r.krate.is_some()).count();
+    let mut summary = format!(
+        "signals: {} repos, {} with a crate, {} flagged; triage {}; wrote {SIGNALS}",
+        rows.len(),
+        with_crate,
+        flagged,
+        if triage_on { format!("on ({triaged} accepted, {review} for review)") } else { "off".to_string() }
+    );
+    let failures = rows
+        .iter()
+        .filter(|r| !r.flags.is_empty())
+        .map(|r| format!("FLAG {} {:?}", r.repo, r.flags))
+        .collect();
+    summary.push_str(&format!("\n{} flag lines follow", rows.iter().filter(|r| !r.flags.is_empty()).count()));
+    Report { ok: true, summary, failures, artifacts_written: 1 }
+}
+
+/// Score triage against a labelled fixture: `items[] = {repo, label, text}`.
+///
+/// The measurement the threshold rests on. False positives (noise the model
+/// keeps) fail the command; false negatives (a real critique dropped without
+/// review) are reported, because they are the failure that lets a contradicted
+/// claim through.
+fn eval_triage(io: &impl Source, decisions: &impl DecisionSource, path: &str) -> Report {
+    if !decisions.model_available() {
+        return Report {
+            ok: false,
+            summary: "signals --eval: no decision model available (set SUBQ_API_KEY)".to_string(),
+            failures: vec![],
+            artifacts_written: 0,
+        };
+    }
+    let raw = io.read(path);
+    let rows = crate::adapters::net::jq(
+        &raw,
+        ".items[] | [.repo, .label, .text] | @tsv",
+    )
+    .map(|out| crate::adapters::net::tsv_lines(&out))
+    .unwrap_or_default();
+    let mut kept = 0usize;
+    let mut review = 0usize;
+    let mut fp = 0usize;
+    let mut lost = 0usize;
+    let mut lines = Vec::new();
+    for f in &rows {
+        if f.len() < 3 {
+            continue;
+        }
+        let (repo, label, text) = (&f[0], &f[1], &f[2]);
+        let p = decisions.critique_p(repo, text);
+        let truth = label == "critique";
+        let bucket = signals::bucket(p);
+        let mark = match bucket {
+            Bucket::Accept => {
+                kept += 1;
+                "KEEP"
+            }
+            Bucket::Review => {
+                review += 1;
+                "review"
+            }
+            Bucket::Drop => "drop",
+        };
+        if mark == "KEEP" && !truth {
+            fp += 1;
+        }
+        if truth && mark == "drop" {
+            lost += 1;
+        }
+        let shown = match p {
+            Some(p) => format!("{p:.2}"),
+            None => "-".to_string(),
+        };
+        lines.push(format!("{mark:6} p={shown:5} [{}] {repo}", if truth { "critique" } else { "noise" }));
+    }
+    let report = format!(
+        "signals --eval: {} items, {kept} accepted, {review} in review, {fp} false positives, {lost} lost\n{}",
+        lines.len(),
+        lines.join("\n")
+    );
+    Report {
+        ok: fp == 0 && lost == 0,
+        summary: report,
+        failures: Vec::new(),
+        artifacts_written: 0,
     }
 }
 

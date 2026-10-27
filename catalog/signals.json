@@ -2,21 +2,10 @@
   "meta": {
     "format": "awesome-blazing-rust signals v1",
     "rule": "data, not evidence: signals can only hold or demote a card, never raise its Type",
-    "sources": [
-      "crates.io",
-      "hn.algolia.com",
-      "rustsec/advisory-db",
-      "api.github.com via gh"
-    ],
-    "flag_vocabulary": [
-      "security",
-      "unmaintained",
-      "contested",
-      "hype-suspect",
-      "astroturf-suspected",
-      "stale-claim"
-    ],
-    "generated_at": "2026-10-27T18:34:19Z",
+    "sources": ["crates.io", "hn.algolia.com", "rustsec/advisory-db", "api.github.com via gh"],
+    "sources_note": "triage via subq.ai decisions",
+    "flag_vocabulary": ["security", "unmaintained", "contested", "hype-suspect", "astroturf-suspected", "stale-claim"],
+    "generated_at": "2026-10-27T00:00:00Z",
     "repos": 94
   },
   "repos": [
@@ -31,10 +20,10 @@
       },
       "crate": {
         "name": "jaq",
-        "downloads": 124434,
-        "recent_downloads": 5728,
+        "downloads": 124446,
+        "recent_downloads": 5740,
         "versions": 37,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-21T11:37:21.993965Z"
       },
       "attention": {
@@ -42,7 +31,15 @@
         "comments": 88
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=38464181",
+          "created_at": "2023-11-29T19:39:40Z",
+          "status": "machine-triaged",
+          "p": 0.88
+        }
+      ],
       "flags": []
     },
     {
@@ -56,10 +53,10 @@
       },
       "crate": {
         "name": "blake3",
-        "downloads": 211381853,
-        "recent_downloads": 55487615,
+        "downloads": 211642959,
+        "recent_downloads": 55748721,
         "versions": 46,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-20T09:09:56.903547Z"
       },
       "attention": {
@@ -81,10 +78,10 @@
       },
       "crate": {
         "name": "aho-corasick",
-        "downloads": 1297732897,
-        "recent_downloads": 304662265,
+        "downloads": 1299174991,
+        "recent_downloads": 306104359,
         "versions": 63,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-03T11:44:11.111398Z"
       },
       "attention": {
@@ -106,10 +103,10 @@
       },
       "crate": {
         "name": "fst",
-        "downloads": 32042950,
-        "recent_downloads": 8256793,
+        "downloads": 32083646,
+        "recent_downloads": 8297489,
         "versions": 54,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2021-06-06T11:00:31.172403Z"
       },
       "attention": {
@@ -133,10 +130,10 @@
       },
       "crate": {
         "name": "memchr",
-        "downloads": 1626227445,
-        "recent_downloads": 424812655,
+        "downloads": 1628071460,
+        "recent_downloads": 426656670,
         "versions": 47,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-07-08T00:49:54.408285Z"
       },
       "attention": {
@@ -144,7 +141,15 @@
         "comments": 180
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=40431289",
+          "created_at": "2024-05-21T17:25:32Z",
+          "status": "needs-review",
+          "p": 0.52
+        }
+      ],
       "flags": []
     },
     {
@@ -152,16 +157,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:13:02Z",
-        "stars": 69494,
+        "pushed_at": "2026-10-27T18:31:31Z",
+        "stars": 69495,
         "license": "Unlicense"
       },
       "crate": {
         "name": "ripgrep",
-        "downloads": 1629771,
-        "recent_downloads": 123919,
+        "downloads": 1630425,
+        "recent_downloads": 124573,
         "versions": 59,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-07-15T16:28:46.152381Z"
       },
       "attention": {
@@ -169,7 +174,15 @@
         "comments": 3382
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=48043271",
+          "created_at": "2026-05-06T23:31:47Z",
+          "status": "machine-triaged",
+          "p": 0.97
+        }
+      ],
       "flags": []
     },
     {
@@ -183,10 +196,10 @@
       },
       "crate": {
         "name": "glommio",
-        "downloads": 173871,
-        "recent_downloads": 23716,
+        "downloads": 173882,
+        "recent_downloads": 23727,
         "versions": 11,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2024-03-25T20:49:41.570451Z"
       },
       "attention": {
@@ -208,10 +221,10 @@
       },
       "crate": {
         "name": "taffy",
-        "downloads": 17723546,
-        "recent_downloads": 7604218,
+        "downloads": 17759234,
+        "recent_downloads": 7639906,
         "versions": 65,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-25T16:23:56.807191Z"
       },
       "attention": {
@@ -233,10 +246,10 @@
       },
       "crate": {
         "name": "xxhash-rust",
-        "downloads": 126792255,
-        "recent_downloads": 41212251,
+        "downloads": 127031184,
+        "recent_downloads": 41451180,
         "versions": 26,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-28T13:16:18.201165Z"
       },
       "attention": {
@@ -252,16 +265,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:21:21Z",
-        "stars": 12069,
+        "pushed_at": "2026-10-27T19:18:54Z",
+        "stars": 12070,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "gitoxide",
-        "downloads": 111421,
-        "recent_downloads": 1443,
+        "downloads": 111426,
+        "recent_downloads": 1448,
         "versions": 69,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-22T13:59:52.026211Z"
       },
       "attention": {
@@ -283,10 +296,10 @@
       },
       "crate": {
         "name": "cargo-pgo",
-        "downloads": 73853,
-        "recent_downloads": 8240,
+        "downloads": 73902,
+        "recent_downloads": 8289,
         "versions": 13,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-01-25T14:23:32.000777Z"
       },
       "attention": {
@@ -339,7 +352,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T15:27:49Z",
-        "stars": 562,
+        "stars": 563,
         "license": "GPL-3.0"
       },
       "crate": null,
@@ -376,16 +389,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-26T13:46:53Z",
-        "stars": 3025,
+        "pushed_at": "2026-10-27T18:59:41Z",
+        "stars": 3026,
         "license": "MIT"
       },
       "crate": {
         "name": "differential-dataflow",
-        "downloads": 531869,
-        "recent_downloads": 107842,
+        "downloads": 532441,
+        "recent_downloads": 108414,
         "versions": 44,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-07-15T20:56:23.895455Z"
       },
       "attention": {
@@ -402,15 +415,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T06:26:33Z",
-        "stars": 579,
+        "stars": 580,
         "license": "NOASSERTION"
       },
       "crate": {
         "name": "bbtree",
-        "downloads": 847,
-        "recent_downloads": 847,
+        "downloads": 923,
+        "recent_downloads": 923,
         "versions": 6,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-27T06:26:26.748069Z"
       },
       "attention": {
@@ -426,7 +439,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:22:49Z",
+        "pushed_at": "2026-10-27T19:06:07Z",
         "stars": 3647,
         "license": "Apache-2.0"
       },
@@ -444,16 +457,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:22:39Z",
+        "pushed_at": "2026-10-27T18:55:17Z",
         "stars": 9539,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "datafusion",
-        "downloads": 30443718,
-        "recent_downloads": 6866049,
+        "downloads": 30484594,
+        "recent_downloads": 6906925,
         "versions": 123,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-07T23:12:24.023Z"
       },
       "attention": {
@@ -461,7 +474,15 @@
         "comments": 476
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=40358932",
+          "created_at": "2024-05-14T19:10:15Z",
+          "status": "machine-triaged",
+          "p": 0.95
+        }
+      ],
       "flags": []
     },
     {
@@ -469,16 +490,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T17:48:41Z",
+        "pushed_at": "2026-10-27T19:29:29Z",
         "stars": 50316,
         "license": "MIT"
       },
       "crate": {
         "name": "ruff",
-        "downloads": 12506,
-        "recent_downloads": 1224,
+        "downloads": 12510,
+        "recent_downloads": 1233,
         "versions": 21,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-27T00:35:20.735225Z"
       },
       "attention": {
@@ -486,24 +507,46 @@
         "comments": 1206
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=39395076",
+          "created_at": "2024-02-16T09:52:56Z",
+          "status": "needs-review",
+          "p": 0.61
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=35618672",
+          "created_at": "2023-04-18T19:17:29Z",
+          "status": "machine-triaged",
+          "p": 0.92
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=35617467",
+          "created_at": "2023-04-18T17:59:50Z",
+          "status": "machine-triaged",
+          "p": 0.93
+        }
+      ],
       "flags": []
     },
     {
       "repo": "awgn/plumbrs",
       "observed_at": "2026-10-27",
       "github": {
-        "archived": false,
-        "pushed_at": "2026-10-21T10:32:25Z",
-        "stars": 3,
+        "archived": null,
+        "pushed_at": null,
+        "stars": null,
         "license": null
       },
       "crate": {
         "name": "plumbrs",
-        "downloads": 1329,
-        "recent_downloads": 336,
+        "downloads": 1333,
+        "recent_downloads": 340,
         "versions": 72,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-21T10:32:51.863823Z"
       },
       "attention": {
@@ -518,17 +561,17 @@
       "repo": "awgn/statico",
       "observed_at": "2026-10-27",
       "github": {
-        "archived": false,
-        "pushed_at": "2026-10-17T13:27:00Z",
-        "stars": 1,
+        "archived": null,
+        "pushed_at": null,
+        "stars": null,
         "license": null
       },
       "crate": {
         "name": "statico",
-        "downloads": 916,
-        "recent_downloads": 161,
+        "downloads": 919,
+        "recent_downloads": 164,
         "versions": 56,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-17T13:27:13.840833Z"
       },
       "attention": {
@@ -550,10 +593,10 @@
       },
       "crate": {
         "name": "shuttle",
-        "downloads": 6852915,
-        "recent_downloads": 2152955,
+        "downloads": 6868773,
+        "recent_downloads": 2168813,
         "versions": 29,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-20T18:44:05.956166Z"
       },
       "attention": {
@@ -607,16 +650,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:26:35Z",
+        "pushed_at": "2026-10-27T19:06:52Z",
         "stars": 18786,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "wasmtime",
-        "downloads": 41826824,
-        "recent_downloads": 11945718,
+        "downloads": 41872360,
+        "recent_downloads": 11991478,
         "versions": 234,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-20T16:16:02.876548Z"
       },
       "attention": {
@@ -817,7 +860,15 @@
           "id": "RUSTSEC-2026-0380"
         }
       ],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=32921643",
+          "created_at": "2022-09-21T07:00:15Z",
+          "status": "machine-triaged",
+          "p": 0.83
+        }
+      ],
       "flags": [
         "security"
       ]
@@ -833,10 +884,10 @@
       },
       "crate": {
         "name": "monoio",
-        "downloads": 1649140,
-        "recent_downloads": 424281,
+        "downloads": 1649616,
+        "recent_downloads": 424757,
         "versions": 26,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2024-08-20T08:39:14.705845Z"
       },
       "attention": {
@@ -858,10 +909,10 @@
       },
       "crate": {
         "name": "redb",
-        "downloads": 14448213,
-        "recent_downloads": 6299487,
+        "downloads": 14476192,
+        "recent_downloads": 6327565,
         "versions": 78,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-13T22:28:27.191131Z"
       },
       "attention": {
@@ -878,15 +929,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-24T20:24:47Z",
-        "stars": 27708,
+        "stars": 27709,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "pingora",
-        "downloads": 9787275,
-        "recent_downloads": 1045580,
+        "downloads": 9792703,
+        "recent_downloads": 1051008,
         "versions": 12,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-09T23:32:29.604429Z"
       },
       "attention": {
@@ -908,10 +959,10 @@
       },
       "crate": {
         "name": "sonic-rs",
-        "downloads": 8272723,
-        "recent_downloads": 3628702,
+        "downloads": 8280030,
+        "recent_downloads": 3636148,
         "versions": 48,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-11T08:34:33.860840Z"
       },
       "attention": {
@@ -933,10 +984,10 @@
       },
       "crate": {
         "name": "cozo",
-        "downloads": 119374,
-        "recent_downloads": 20980,
+        "downloads": 119407,
+        "recent_downloads": 21013,
         "versions": 20,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2023-12-11T08:13:14.019443Z"
       },
       "attention": {
@@ -944,7 +995,15 @@
         "comments": 58
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=43982297",
+          "created_at": "2025-05-14T08:41:02Z",
+          "status": "machine-triaged",
+          "p": 0.66
+        }
+      ],
       "flags": [
         "unmaintained"
       ]
@@ -960,10 +1019,10 @@
       },
       "crate": {
         "name": "crossbeam",
-        "downloads": 153135265,
-        "recent_downloads": 29789009,
+        "downloads": 153272368,
+        "recent_downloads": 29926260,
         "versions": 37,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-05T17:47:37.499898Z"
       },
       "attention": {
@@ -995,10 +1054,10 @@
       },
       "crate": {
         "name": "nalgebra",
-        "downloads": 97976204,
-        "recent_downloads": 17055874,
+        "downloads": 98047275,
+        "recent_downloads": 17127073,
         "versions": 124,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-05-24T16:12:14.939059Z"
       },
       "attention": {
@@ -1010,7 +1069,15 @@
           "id": "RUSTSEC-2021-0070"
         }
       ],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=43286605",
+          "created_at": "2025-03-07T01:04:33Z",
+          "status": "needs-review",
+          "p": 0.54
+        }
+      ],
       "flags": []
     },
     {
@@ -1019,7 +1086,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-10T12:08:59Z",
-        "stars": 5970,
+        "stars": 5971,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -1037,15 +1104,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-26T16:13:59Z",
-        "stars": 31807,
+        "stars": 31808,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "egui",
-        "downloads": 28540956,
-        "recent_downloads": 7977224,
+        "downloads": 28589774,
+        "recent_downloads": 8026266,
         "versions": 67,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-15T14:49:16.159284Z"
       },
       "attention": {
@@ -1067,10 +1134,10 @@
       },
       "crate": {
         "name": "fjall",
-        "downloads": 1973296,
-        "recent_downloads": 688804,
+        "downloads": 1977701,
+        "recent_downloads": 693332,
         "versions": 103,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-25T21:18:52.196587Z"
       },
       "attention": {
@@ -1092,10 +1159,10 @@
       },
       "crate": {
         "name": "flamegraph",
-        "downloads": 1023597,
-        "recent_downloads": 54222,
+        "downloads": 1023746,
+        "recent_downloads": 54377,
         "versions": 33,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-12T10:10:54.656242Z"
       },
       "attention": {
@@ -1117,10 +1184,10 @@
       },
       "crate": {
         "name": "foyer",
-        "downloads": 13614128,
-        "recent_downloads": 3868699,
+        "downloads": 13631840,
+        "recent_downloads": 3886428,
         "versions": 69,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-09T08:25:17.182151Z"
       },
       "attention": {
@@ -1142,10 +1209,10 @@
       },
       "crate": {
         "name": "gungraun",
-        "downloads": 1224086,
-        "recent_downloads": 829642,
+        "downloads": 1230392,
+        "recent_downloads": 836294,
         "versions": 13,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-26T17:18:08.711102Z"
       },
       "attention": {
@@ -1203,15 +1270,15 @@
       },
       "crate": {
         "name": "hyper",
-        "downloads": 1053559160,
-        "recent_downloads": 252475161,
+        "downloads": 1054773811,
+        "recent_downloads": 253690139,
         "versions": 253,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-06T15:57:18.927904Z"
       },
       "attention": {
         "stories": 1811,
-        "comments": 34144
+        "comments": 34145
       },
       "advisories": [
         {
@@ -1250,10 +1317,10 @@
       },
       "crate": {
         "name": "papaya",
-        "downloads": 14381152,
-        "recent_downloads": 6836522,
+        "downloads": 14407346,
+        "recent_downloads": 6862721,
         "versions": 17,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-21T22:03:50.199574Z"
       },
       "attention": {
@@ -1287,8 +1354,8 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:30:00Z",
-        "stars": 1375,
+        "pushed_at": "2026-10-27T19:25:42Z",
+        "stars": 1406,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -1311,10 +1378,10 @@
       },
       "crate": {
         "name": "indexmap",
-        "downloads": 1765491021,
-        "recent_downloads": 434401063,
+        "downloads": 1767483753,
+        "recent_downloads": 436393795,
         "versions": 57,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-05T01:53:48.019655Z"
       },
       "attention": {
@@ -1331,7 +1398,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-23T08:36:03Z",
-        "stars": 36,
+        "stars": 37,
         "license": "MIT"
       },
       "crate": null,
@@ -1354,10 +1421,10 @@
       },
       "crate": {
         "name": "nachalnik",
-        "downloads": 694,
-        "recent_downloads": 694,
+        "downloads": 696,
+        "recent_downloads": 696,
         "versions": 24,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-21T09:27:24.581694Z"
       },
       "attention": {
@@ -1379,10 +1446,10 @@
       },
       "crate": {
         "name": "gpui-kit",
-        "downloads": 185457,
-        "recent_downloads": 185345,
+        "downloads": 187625,
+        "recent_downloads": 187625,
         "versions": 13,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-26T08:36:31.575634Z"
       },
       "attention": {
@@ -1404,10 +1471,10 @@
       },
       "crate": {
         "name": "moka",
-        "downloads": 148569729,
-        "recent_downloads": 44257186,
+        "downloads": 148798289,
+        "recent_downloads": 44485904,
         "versions": 68,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-09T23:29:26.591998Z"
       },
       "attention": {
@@ -1415,7 +1482,15 @@
         "comments": 714
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=49728253",
+          "created_at": "2026-09-16T15:09:49Z",
+          "status": "machine-triaged",
+          "p": 0.87
+        }
+      ],
       "flags": []
     },
     {
@@ -1443,16 +1518,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T14:51:56Z",
+        "pushed_at": "2026-10-27T18:51:41Z",
         "stars": 2546,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "ntex",
-        "downloads": 1127263,
-        "recent_downloads": 120523,
+        "downloads": 1127690,
+        "recent_downloads": 121355,
         "versions": 275,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-27T14:57:23.226821Z"
       },
       "attention": {
@@ -1460,7 +1535,15 @@
         "comments": 13
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=37310700",
+          "created_at": "2023-08-29T16:58:10Z",
+          "status": "machine-triaged",
+          "p": 0.90
+        }
+      ],
       "flags": []
     },
     {
@@ -1474,10 +1557,10 @@
       },
       "crate": {
         "name": "divan",
-        "downloads": 10213141,
-        "recent_downloads": 4305551,
+        "downloads": 10230958,
+        "recent_downloads": 4323371,
         "versions": 23,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2025-04-10T03:02:21.356522Z"
       },
       "attention": {
@@ -1511,16 +1594,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T16:39:00Z",
-        "stars": 23251,
+        "pushed_at": "2026-10-27T19:15:06Z",
+        "stars": 23252,
         "license": "MIT"
       },
       "crate": {
         "name": "oxc",
-        "downloads": 1845560,
-        "recent_downloads": 598624,
+        "downloads": 1848788,
+        "recent_downloads": 602154,
         "versions": 212,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-27T03:25:15.462456Z"
       },
       "attention": {
@@ -1560,10 +1643,10 @@
       },
       "crate": {
         "name": "petgraph",
-        "downloads": 576869715,
-        "recent_downloads": 130367578,
+        "downloads": 577500438,
+        "recent_downloads": 130998410,
         "versions": 78,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2025-09-30T13:16:04.011947Z"
       },
       "attention": {
@@ -1580,15 +1663,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T17:18:34Z",
-        "stars": 40218,
+        "stars": 40219,
         "license": "MIT"
       },
       "crate": {
         "name": "polars",
-        "downloads": 16518755,
-        "recent_downloads": 3233801,
+        "downloads": 16540725,
+        "recent_downloads": 3256287,
         "versions": 126,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-06T09:11:43.305236Z"
       },
       "attention": {
@@ -1596,7 +1679,22 @@
         "comments": 1884
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=44225163",
+          "created_at": "2025-06-09T14:57:06Z",
+          "status": "machine-triaged",
+          "p": 0.96
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=49979697",
+          "created_at": "2026-10-06T15:11:23Z",
+          "status": "needs-review",
+          "p": 0.58
+        }
+      ],
       "flags": []
     },
     {
@@ -1610,10 +1708,10 @@
       },
       "crate": {
         "name": "lz4_flex",
-        "downloads": 160446207,
-        "recent_downloads": 43513489,
+        "downloads": 160669326,
+        "recent_downloads": 43736773,
         "versions": 43,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-07-14T10:34:14.120407Z"
       },
       "attention": {
@@ -1644,7 +1742,7 @@
         "downloads": 3164,
         "recent_downloads": 150,
         "versions": 1,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2024-04-18T09:32:08.578958Z"
       },
       "attention": {
@@ -1652,7 +1750,22 @@
         "comments": 617
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=37696094",
+          "created_at": "2023-09-28T21:24:09Z",
+          "status": "needs-review",
+          "p": 0.53
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=36946800",
+          "created_at": "2023-07-31T18:27:19Z",
+          "status": "machine-triaged",
+          "p": 0.94
+        }
+      ],
       "flags": []
     },
     {
@@ -1661,15 +1774,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T15:22:06Z",
-        "stars": 16348,
+        "stars": 16349,
         "license": "MIT"
       },
       "crate": {
         "name": "tantivy",
-        "downloads": 20975852,
-        "recent_downloads": 5011097,
+        "downloads": 21003947,
+        "recent_downloads": 5039288,
         "versions": 64,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-17T11:17:43.527897Z"
       },
       "attention": {
@@ -1691,10 +1804,10 @@
       },
       "crate": {
         "name": "quinn",
-        "downloads": 379200099,
-        "recent_downloads": 135448421,
+        "downloads": 379896223,
+        "recent_downloads": 136144672,
         "versions": 41,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-14T10:08:47.662258Z"
       },
       "attention": {
@@ -1720,10 +1833,10 @@
       },
       "crate": {
         "name": "rayon",
-        "downloads": 625194938,
-        "recent_downloads": 151313005,
+        "downloads": 625878809,
+        "recent_downloads": 151997028,
         "versions": 40,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-04-14T00:56:56.454086Z"
       },
       "attention": {
@@ -1781,10 +1894,10 @@
       },
       "crate": {
         "name": "rkyv",
-        "downloads": 176956224,
-        "recent_downloads": 41946926,
+        "downloads": 177114634,
+        "recent_downloads": 42105757,
         "versions": 95,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-05T12:01:41.931822Z"
       },
       "attention": {
@@ -1845,10 +1958,10 @@
       },
       "crate": {
         "name": "itertools",
-        "downloads": 1722316290,
-        "recent_downloads": 409806404,
+        "downloads": 1724379580,
+        "recent_downloads": 411869719,
         "versions": 131,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-06-16T15:09:28.880416Z"
       },
       "attention": {
@@ -1870,10 +1983,10 @@
       },
       "crate": {
         "name": "hashbrown",
-        "downloads": 2862235833,
-        "recent_downloads": 804786957,
+        "downloads": 2866077167,
+        "recent_downloads": 808628671,
         "versions": 56,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-13T12:28:45.005326Z"
       },
       "attention": {
@@ -1893,7 +2006,7 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T14:31:28Z",
+        "pushed_at": "2026-10-27T19:28:54Z",
         "stars": 6693,
         "license": "Apache-2.0"
       },
@@ -1917,10 +2030,10 @@
       },
       "crate": {
         "name": "regex",
-        "downloads": 1309305913,
-        "recent_downloads": 297629819,
+        "downloads": 1310651028,
+        "recent_downloads": 298975351,
         "versions": 169,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-07-15T20:19:35.162139Z"
       },
       "attention": {
@@ -1941,15 +2054,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T14:54:56Z",
-        "stars": 4334,
+        "stars": 4335,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "ndarray",
-        "downloads": 138292161,
-        "recent_downloads": 32640047,
+        "downloads": 138451602,
+        "recent_downloads": 32799669,
         "versions": 93,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-01-10T23:19:18.256265Z"
       },
       "attention": {
@@ -1957,7 +2070,15 @@
         "comments": 304
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=41681642",
+          "created_at": "2024-09-28T17:26:47Z",
+          "status": "needs-review",
+          "p": 0.51
+        }
+      ],
       "flags": []
     },
     {
@@ -1971,10 +2092,10 @@
       },
       "crate": {
         "name": "num-bigint",
-        "downloads": 688501567,
-        "recent_downloads": 182565974,
+        "downloads": 689485003,
+        "recent_downloads": 183549612,
         "versions": 35,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-07-05T01:20:47.603095Z"
       },
       "attention": {
@@ -1989,9 +2110,9 @@
       "repo": "samueltardieu/pathfinding",
       "observed_at": "2026-10-27",
       "github": {
-        "archived": false,
-        "pushed_at": "2026-10-23T12:50:36Z",
-        "stars": 1082,
+        "archived": null,
+        "pushed_at": null,
+        "stars": null,
         "license": null
       },
       "crate": null,
@@ -2018,7 +2139,15 @@
         "comments": 5
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=40144543",
+          "created_at": "2024-04-24T14:03:59Z",
+          "status": "machine-triaged",
+          "p": 0.85
+        }
+      ],
       "flags": []
     },
     {
@@ -2032,10 +2161,10 @@
       },
       "crate": {
         "name": "pulp",
-        "downloads": 33602240,
-        "recent_downloads": 16492504,
+        "downloads": 33683703,
+        "recent_downloads": 16574046,
         "versions": 84,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-06-20T00:52:15.348522Z"
       },
       "attention": {
@@ -2070,15 +2199,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-12T08:33:48Z",
-        "stars": 29160,
+        "stars": 29159,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "hyperfine",
-        "downloads": 760865,
-        "recent_downloads": 129480,
+        "downloads": 760868,
+        "recent_downloads": 129789,
         "versions": 31,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-07T21:17:20.921878Z"
       },
       "attention": {
@@ -2100,10 +2229,10 @@
       },
       "crate": {
         "name": "simd-json",
-        "downloads": 23542867,
-        "recent_downloads": 6143263,
+        "downloads": 23570082,
+        "recent_downloads": 6170866,
         "versions": 119,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-08-23T17:34:34.604871Z"
       },
       "attention": {
@@ -2123,16 +2252,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:00:33Z",
+        "pushed_at": "2026-10-27T19:26:30Z",
         "stars": 3595,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "slatedb",
-        "downloads": 2131244,
-        "recent_downloads": 1516383,
+        "downloads": 2135431,
+        "recent_downloads": 1526252,
         "versions": 34,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-29T15:59:49.636719Z"
       },
       "attention": {
@@ -2148,16 +2277,16 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:10:59Z",
-        "stars": 24297,
+        "pushed_at": "2026-10-27T19:32:25Z",
+        "stars": 24298,
         "license": "NOASSERTION"
       },
       "crate": {
         "name": "slint",
-        "downloads": 2219459,
-        "recent_downloads": 822566,
+        "downloads": 2223929,
+        "recent_downloads": 827334,
         "versions": 52,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-21T08:52:15.993358Z"
       },
       "attention": {
@@ -2179,10 +2308,10 @@
       },
       "crate": {
         "name": "sled",
-        "downloads": 17435843,
-        "recent_downloads": 3829287,
+        "downloads": 17443317,
+        "recent_downloads": 3836789,
         "versions": 105,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2024-10-11T14:17:55.198028Z"
       },
       "attention": {
@@ -2222,10 +2351,10 @@
       },
       "crate": {
         "name": "ahash",
-        "downloads": 861323782,
-        "recent_downloads": 176112304,
+        "downloads": 862174959,
+        "recent_downloads": 176966613,
         "versions": 95,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2025-05-08T05:05:32.999746Z"
       },
       "attention": {
@@ -2242,15 +2371,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T15:20:01Z",
-        "stars": 27633,
+        "stars": 27634,
         "license": "MIT"
       },
       "crate": {
         "name": "axum",
-        "downloads": 547385529,
-        "recent_downloads": 143252143,
+        "downloads": 548097362,
+        "recent_downloads": 143965605,
         "versions": 94,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-04-14T07:55:20.258398Z"
       },
       "attention": {
@@ -2258,7 +2387,15 @@
         "comments": 741
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=31611713",
+          "created_at": "2022-06-03T18:06:42Z",
+          "status": "machine-triaged",
+          "p": 0.75
+        }
+      ],
       "flags": []
     },
     {
@@ -2272,10 +2409,10 @@
       },
       "crate": {
         "name": "io-uring",
-        "downloads": 65032693,
-        "recent_downloads": 15855236,
+        "downloads": 65100348,
+        "recent_downloads": 15923025,
         "versions": 51,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-09-07T15:48:45.032143Z"
       },
       "attention": {
@@ -2283,7 +2420,15 @@
         "comments": 2785
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=27889889",
+          "created_at": "2021-07-20T03:52:23Z",
+          "status": "needs-review",
+          "p": 0.61
+        }
+      ],
       "flags": []
     },
     {
@@ -2292,15 +2437,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T13:20:10Z",
-        "stars": 33530,
+        "stars": 33531,
         "license": "MIT"
       },
       "crate": {
         "name": "tokio",
-        "downloads": 1113851649,
-        "recent_downloads": 276433428,
+        "downloads": 1115115565,
+        "recent_downloads": 277705017,
         "versions": 201,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-21T21:05:43.950213Z"
       },
       "attention": {
@@ -2330,7 +2475,22 @@
           "id": "RUSTSEC-2026-0386"
         }
       ],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=45403731",
+          "created_at": "2025-09-28T12:06:39Z",
+          "status": "machine-triaged",
+          "p": 0.97
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=27905289",
+          "created_at": "2021-07-21T12:19:58Z",
+          "status": "machine-triaged",
+          "p": 0.68
+        }
+      ],
       "flags": [
         "security"
       ]
@@ -2340,21 +2500,21 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:33:04Z",
-        "stars": 16178,
+        "pushed_at": "2026-10-27T19:35:47Z",
+        "stars": 16179,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "burn",
-        "downloads": 1975919,
-        "recent_downloads": 814825,
+        "downloads": 1982988,
+        "recent_downloads": 823119,
         "versions": 49,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-20T18:13:17.146606Z"
       },
       "attention": {
         "stories": 2203,
-        "comments": 67788
+        "comments": 67791
       },
       "advisories": [],
       "disputes": [],
@@ -2365,8 +2525,8 @@
       "observed_at": "2026-10-27",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-27T18:17:49Z",
-        "stars": 3479,
+        "pushed_at": "2026-10-27T19:28:06Z",
+        "stars": 3480,
         "license": "MIT"
       },
       "crate": {
@@ -2374,7 +2534,7 @@
         "downloads": 2776,
         "recent_downloads": 111,
         "versions": 1,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2024-03-13T18:59:33.987196Z"
       },
       "attention": {
@@ -2414,10 +2574,10 @@
       },
       "crate": {
         "name": "winnow",
-        "downloads": 1076997936,
-        "recent_downloads": 331882934,
+        "downloads": 1078602201,
+        "recent_downloads": 333492153,
         "versions": 111,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-07-13T14:31:41.405838Z"
       },
       "attention": {
@@ -2439,10 +2599,10 @@
       },
       "crate": {
         "name": "dashmap",
-        "downloads": 427358674,
-        "recent_downloads": 97458210,
+        "downloads": 427807882,
+        "recent_downloads": 97910817,
         "versions": 85,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-05-17T21:28:34.356251Z"
       },
       "attention": {
@@ -2454,7 +2614,22 @@
           "id": "RUSTSEC-2022-0002"
         }
       ],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=42054376",
+          "created_at": "2024-11-05T19:16:38Z",
+          "status": "needs-review",
+          "p": 0.56
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=42054313",
+          "created_at": "2024-11-05T19:08:48Z",
+          "status": "needs-review",
+          "p": 0.62
+        }
+      ],
       "flags": []
     },
     {
@@ -2463,15 +2638,15 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-25T13:45:41Z",
-        "stars": 83,
+        "stars": 86,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "flashraw",
-        "downloads": 82,
-        "recent_downloads": 50,
+        "downloads": 83,
+        "recent_downloads": 83,
         "versions": 2,
-        "yanked": false,
+        "yanked": 0,
         "updated_at": "2026-10-25T13:46:24.273835Z"
       },
       "attention": {
@@ -2488,7 +2663,7 @@
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T17:53:16Z",
-        "stars": 92286,
+        "stars": 92287,
         "license": "NOASSERTION"
       },
       "crate": null,
@@ -2497,7 +2672,29 @@
         "comments": 10394
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=42875139",
+          "created_at": "2025-01-30T05:21:06Z",
+          "status": "machine-triaged",
+          "p": 0.90
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=42867494",
+          "created_at": "2025-01-29T16:50:49Z",
+          "status": "needs-review",
+          "p": 0.64
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=39134526",
+          "created_at": "2024-01-25T20:10:33Z",
+          "status": "machine-triaged",
+          "p": 0.99
+        }
+      ],
       "flags": []
     }
   ]

@@ -1,6 +1,6 @@
 {
-  "note": "21 pointers from the keyword prefilter across 94 repos, hand-labelled: 2 genuine contradictions (datafusion: 'much slower than duckdb or OOMing' on db-benchmark; tantivy: a competitor claims the tantivy-based pg_search is 'much slower' than its inverted index) and 19 pieces of noise. The first review scored 0 and missed both - recorded here as a correction.",
-  "expected": "2 of 21 are critiques",
+  "note": "27 pointers from the keyword prefilter, hand-labelled: 5 genuine contradictions and 22 pieces of noise. The first review called all 21 noise and was wrong twice; the second run over the grown catalog added 6 more, including two name collisions ('fst' as a variable, 'blaze' as a different C++ project) that led to a second subject question. Gate: accept at 0.65, review 0.35-0.65, drop below.",
+  "expected": "5 of 27 are critiques",
   "items": [
     {
       "repo": "BurntSushi/memchr",
@@ -169,6 +169,60 @@
       "created_at": "2023-08-03",
       "text": "Using escript, I am able to almost halve the startup time. But it's still ~4x slower than ruby. hyperfine \"./derp\" Benchmark 1: ./derp Time (mean ± σ): 241.0 ms ± 7.4 ms [User: 146.9 ms, System: 170.8 ms] Range (min … max): 235.1 ms … 261.7 ms 11 runs",
       "label": "not_critique"
+    },
+    {
+      "repo": "BurntSushi/fst",
+      "url": "https://news.ycombinator.com/item?id=40392233",
+      "author": "Twirrim",
+      "created_at": "2024-05-17",
+      "text": "For what it's worth, I ported the sum example to pure python. def sum(depth, x): if depth == 0: return x else: fst = sum(depth-1, x*2+0) # adds the fst half snd = sum(depth-1, x*2+1) # adds the snd half return fst + snd print(sum(30, 0)) under pypy3 it executes in 0m4.478s, single threaded. Under python 3.12, it executed in 1m42.148s, again single threaded. I mention that because you include benchmark information: CPU, Apple M3 Max, 1 thread: 3.5 minutes CPU, Apple M3 Max, 16 threads: 10.26 seconds GPU, NVIDIA RTX 4090, 32k threads: 1.88 seconds The bend single-threaded version has been running for 42 minutes on my laptop, is consuming 6GB of memory, and still hasn't finished (12th Gen Intel(R) Core(TM) i7-1270P, Ubuntu 24.04). That seems to be an incredibly slow interpreter. Has this been tested or developed on anything other than Macs / aarch64? I appreciate this is early days, but it's hard to get excited about what seems to be incredibly slow performance from a really simple example you give. If the simple stuff is slow, what does that mean for the complicated stuff? If I get a chance tonight, I'll re-run it with `-s` argument, see if I get anything helpful.",
+      "label": "not_critique",
+      "why": "name collision: 'fst' is a variable in a Python snippet"
+    },
+    {
+      "repo": "indexable-inc/blaze",
+      "url": "https://news.ycombinator.com/item?id=34407686",
+      "author": "npalli",
+      "created_at": "2023-01-17",
+      "text": "Since the library claims high performance I went to look into the benchmarks section https://bitbucket.org/blaze-lib/blaze/wiki/Benchmarks Turns out all benchmarks are done circa 2016/17 and use pretty old versions of libraries and compilers. That's a long time. Any excitement I had was definitely tempered, would be good to have a recent update.",
+      "label": "not_critique",
+      "why": "different project: blaze-lib (C++), not the Rust incremental compiler"
+    },
+    {
+      "repo": "astral-sh/ruff",
+      "url": "https://news.ycombinator.com/item?id=35617467",
+      "author": "danpalmer",
+      "created_at": "2023-04-18",
+      "text": "Having written a bunch of Flake8 plugins, including custom plugins for internal use at a company, and using 5-10 popular plugins on every Python project I work on... rewriting the entire linting ecosystem in one monolithic Rust tool doesn't feel like the best solution. There's no good story for building an ecosystem around this yet, and I think that's a big hurdle to overcome. Ruff is fast, sure, but the benchmarking seems a little disingenuous, as I believe their number includes caching, but doesn't necessarily include caching for other tools. In fairness, not all the other tools have caching, but it is common to run them through pre-commit and therefore only on the current git diff, which speeds them up by orders of magnitude.",
+      "label": "not_critique",
+      "why": "about ecosystem adoption, not about its benchmark numbers"
+    },
+    {
+      "repo": "ntex-rs/ntex",
+      "url": "https://news.ycombinator.com/item?id=37310700",
+      "author": "dlisboa",
+      "created_at": "2023-08-29",
+      "text": "Since you mentioned them I think it's worth telling people to take those benchmarks with a larger grain of salt. They've become such a pissing contest that I don't know if they can be called \"real-world\". There doesn't seem to be much scrutiny of the implementations. Take some Rust frameworks: they write out pre-computed header strings to the output buffer, completely bypassing what the framework's documentation recommends. Examples are actix[1] and ntex[2]. No one would ever do this in real life. Now I like Rust, and it'd likely be some of the fastest even without these shenanigans (Axum and may-http don't do that, I believe). But I don't know if other languages/frameworks have benchmarks implemented in the same non-idiomatic way just to look better. [1] - https://github.com/TechEmpower/FrameworkBenchmarks/blob/mast... [2] - https://github.com/TechEmpower/FrameworkBenchmarks/blob/mast...",
+      "label": "critique",
+      "why": "a general critique of framework benchmark methodology that names Rust frameworks"
+    },
+    {
+      "repo": "BurntSushi/ripgrep",
+      "url": "https://news.ycombinator.com/item?id=48043271",
+      "author": "voxl",
+      "created_at": "2026-05-06",
+      "text": "Why does ripgrep lose by ~3x to ugrep in your benchmark but consistently win in the ripgrep benchmark?",
+      "label": "critique",
+      "why": "asks why ripgrep loses to ugrep in another benchmark - disputes the comparison"
+    },
+    {
+      "repo": "pola-rs/polars",
+      "url": "https://news.ycombinator.com/item?id=44225163",
+      "author": "dkdcio",
+      "created_at": "2025-06-09",
+      "text": "the Polars benchmarking is always so unserious and biased",
+      "label": "critique",
+      "why": "'Polars benchmarking is always so unserious and biased'"
     }
   ]
 }

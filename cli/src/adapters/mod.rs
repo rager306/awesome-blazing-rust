@@ -4,3 +4,6 @@
 pub mod fs_io;
 pub mod gh_curl;
 pub mod markdown;
+pub mod net;
+pub mod subq;
+pub mod web;

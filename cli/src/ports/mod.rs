@@ -2,4 +2,5 @@
 
 pub mod sink;
 pub mod source;
+pub mod signals;
 pub mod upstream;

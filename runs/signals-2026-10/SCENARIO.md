@@ -13,8 +13,11 @@ never computes a score.
 
 **Design under test.**
 
-1. `scripts/signals/collect.py` - stdlib only, four sources (crates.io, HN
-   Algolia, RUSTSEC advisory-db, GitHub via `gh`), output `catalog/signals.json`.
+1. `abr signals` - a command of the repository's own CLI, zero crates: the
+   domain (`cli/src/domain/signals.rs`) owns the model, the flags and the
+   projection; `adapters/` reach crates.io, HN Algolia, RUSTSEC and GitHub
+   (the last through `gh`) with curl + jq, and `adapters/subq.rs` asks the
+   decision model. Output: `catalog/signals.json`.
 2. Machine flags are limited to two objective facts: `security` (an advisory
    exists) and `unmaintained` (archived, or no push in 12 months).
 3. Anything requiring judgement is an **unverified dispute pointer** with a URL;

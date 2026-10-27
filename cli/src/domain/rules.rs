@@ -5,14 +5,7 @@ use std::collections::BTreeMap;
 
 /// The closed vocabulary of signal flags. A free-form flag would let a
 /// judgement call enter through the back door as data.
-pub const SIGNAL_FLAGS: &[&str] = &[
-    "security",
-    "unmaintained",
-    "contested",
-    "hype-suspect",
-    "astroturf-suspected",
-    "stale-claim",
-];
+pub const SIGNAL_FLAGS: &[&str] = super::signals::ALL_FLAGS;
 
 /// One row of catalog/signals.json, as far as the gate needs it.
 #[derive(Debug, Default)]

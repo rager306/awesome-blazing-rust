@@ -8,4 +8,5 @@ pub mod fsm;
 pub mod model;
 pub mod projection;
 pub mod rules;
+pub mod signals;
 pub mod upstream;
