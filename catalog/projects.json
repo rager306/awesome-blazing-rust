@@ -891,6 +891,16 @@
       "description": "Python linter and code formatter written in Rust with drop-in Black parity, replacing flake8, isort, pyupgrade, pydocstyle and autoflake in one tool",
       "blazing": "README benchmark chart lints the whole CPython codebase from scratch at a claimed '10-100x faster than existing linters (like Flake8) and formatters (like Black)' (methodology: chart image in [README Performance section](https://github.com/astral-sh/ruff#performance) only - no written methodology reachable this session, so the range is vendor-claimed, not replicated).",
       "arch": ["work-stealing", "zero-copy"]
+    },
+    {
+      "name": "SurrealKV",
+      "url": "https://github.com/surrealdb/surrealkv",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "versioned embedded LSM key-value engine (SurrealDB's RocksDB replacement) built around a concurrent radix-tree memtable and a commit ring that amortizes one WAL fsync across a burst of committers",
+      "blazing": "with synchronous durability via crud-bench (500k keys, 48 threads, 128 clients, Threadripper 9970X, single runs, one-command repro): 7.95× RocksDB point reads, 8.24× deletes, 26.8× creates, 73.7× SlateDB point reads, 2,313,942 keys-only scans/sec (best of 7 engines); honestly reports the flip side - without sync it is 1.88× slower than RocksDB on creates and LMDB leads several scan shapes ([methodology](https://surrealdb.com/blog/we-are-replacing-rocksdb-with-surrealkv-1-0)).",
+      "arch": ["lsm", "batching", "embedded"]
     }
   ]
 }
