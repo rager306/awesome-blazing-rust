@@ -28,7 +28,7 @@ use std::process::exit;
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let arg = args.get(1).cloned().unwrap_or_else(|| {
-        eprintln!("usage: abr <catalog|patterns|llms|check|stats|upstream|signals>");
+        eprintln!("usage: abr <catalog|patterns|llms|check|stats|upstream|signals|verify>");
         exit(2);
     });
     let cmd = match Cmd::from_arg(&arg) {
@@ -43,6 +43,18 @@ fn main() {
     // and is never part of the CI determinism gate.
     let report = if cmd == Cmd::Upstream {
         app::run_upstream(&io, &adapters::gh_curl::GhCli)
+    } else if cmd == Cmd::Verify {
+        let mut opts = app::VerifyOpts::default();
+        let mut i = 2;
+        while i < args.len() {
+            match args[i].as_str() {
+                "--limit" => { i += 1; opts.limit = args.get(i).and_then(|v| v.parse().ok()).unwrap_or(0); }
+                "--only" => { i += 1; opts.only = args.get(i).cloned(); }
+                other => { eprintln!("abr verify: unknown option '{other}'"); exit(2); }
+            }
+            i += 1;
+        }
+        app::run_verify(&io, &adapters::page::WebPage, &opts)
     } else if cmd == Cmd::Signals {
         // Signals reach the network through three ports, so the command takes
         // options of its own: --triage, --limit N, --only owner/name.

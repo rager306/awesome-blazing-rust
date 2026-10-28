@@ -10,3 +10,4 @@ pub mod projection;
 pub mod rules;
 pub mod signals;
 pub mod upstream;
+pub mod verify;

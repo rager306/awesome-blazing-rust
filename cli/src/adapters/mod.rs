@@ -7,3 +7,4 @@ pub mod markdown;
 pub mod net;
 pub mod subq;
 pub mod web;
+pub mod page;

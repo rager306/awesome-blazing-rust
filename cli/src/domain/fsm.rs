@@ -19,6 +19,7 @@ pub enum Cmd {
     Stats,
     Upstream,
     Signals,
+    Verify,
 }
 
 impl Cmd {
@@ -31,6 +32,7 @@ impl Cmd {
             "stats" => Cmd::Stats,
             "upstream" => Cmd::Upstream,
             "signals" => Cmd::Signals,
+            "verify" => Cmd::Verify,
             _ => return None,
         })
     }
@@ -87,7 +89,7 @@ pub fn plan(cmd: Cmd, ws: Workspace) -> Result<State, String> {
         Cmd::Llms => vec![super::projection::llms(&ws.model)],
         // Check/Stats are terminal observations; Upstream is handled in the
         // driver at Checked (the fetch is I/O and lives behind a port).
-        Cmd::Check | Cmd::Stats | Cmd::Upstream | Cmd::Signals => Vec::new(),
+        Cmd::Check | Cmd::Stats | Cmd::Upstream | Cmd::Signals | Cmd::Verify => Vec::new(),
     };
     Ok(State::Planned(ws, artifacts))
 }

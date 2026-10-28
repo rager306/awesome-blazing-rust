@@ -6,6 +6,7 @@
 use crate::adapters::markdown;
 use crate::domain::fsm::{self, Cmd, Report, State, Workspace};
 use crate::domain::signals::{self, Bucket, Crate, Dispute, SignalRow};
+use crate::domain::verify;
 use crate::domain::upstream::{self, UpstreamRow};
 use crate::ports::signals::DecisionSource;
 use crate::ports::sink::Sink;
@@ -20,6 +21,14 @@ pub const STRIKE: &str = "catalog/upstream-state.json";
 pub const SIGNALS: &str = "catalog/signals.json";
 
 /// Options for `abr signals`.
+#[derive(Default)]
+pub struct VerifyOpts {
+    /// Take only the first N cards (smoke test).
+    pub limit: usize,
+    /// Take one card by name.
+    pub only: Option<String>,
+}
+
 #[derive(Default)]
 pub struct SignalOpts {
     /// Score a labelled fixture instead of collecting: `--eval <path>`.
@@ -88,6 +97,73 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
 }
 
 
+
+
+
+/// Provenance check: does each measured card's number appear at its source?
+///
+/// Advisory by design. A pass means the figure was not invented or transposed;
+/// a miss means the text match failed, which also happens for charts, PDFs and
+/// prose. Entailment - whether the source supports the claim - is a separate
+/// question and is not answered here.
+pub fn run_verify(
+    io: &impl Source,
+    page: &impl crate::ports::verify::PageSource,
+    opts: &VerifyOpts,
+) -> Report {
+    let readme = io.read(README);
+    let model = markdown::parse_readme(&readme);
+    let mut cards: Vec<_> = model.entries.iter().filter(|e| e.kind() == crate::domain::model::Kind::Measured).collect();
+    if let Some(only) = &opts.only {
+        cards.retain(|e| e.name.eq_ignore_ascii_case(only));
+    }
+    if opts.limit > 0 {
+        cards.truncate(opts.limit);
+    }
+
+    let mut lines = Vec::new();
+    let mut checked = 0usize;
+    let mut clean = 0usize;
+    let mut unlinked = 0usize;
+    let mut unfetched = 0usize;
+    for e in &cards {
+        let Some(url) = verify::first_link(&e.blazing) else {
+            unlinked += 1;
+            lines.push(format!("NOLINK {:<22} claim cites no URL", e.name));
+            continue;
+        };
+        let Some(text) = page.page(url) else {
+            unfetched += 1;
+            lines.push(format!("NOFETCH {:<21} {}", e.name, url));
+            continue;
+        };
+        checked += 1;
+        let (present, missing) = verify::coverage(&e.blazing, &text);
+        if missing.is_empty() {
+            clean += 1;
+            lines.push(format!("OK {:<26} {}/{} numbers found", e.name, present.len(), present.len()));
+        } else {
+            lines.push(format!(
+                "MISS {:<24} {}/{} found; missing: {}",
+                e.name,
+                present.len(),
+                present.len() + missing.len(),
+                missing.join(", ")
+            ));
+        }
+    }
+
+    let summary = format!(
+        "verify: {} measured cards, {} checked against their source, {} fully present, {} unlinked, {} unfetched\n{}",
+        cards.len(),
+        checked,
+        clean,
+        unlinked,
+        unfetched,
+        lines.join("\n")
+    );
+    Report { ok: true, summary, failures: Vec::new(), artifacts_written: 0 }
+}
 
 /// Signals: third-party context about every cataloged repository.
 ///
