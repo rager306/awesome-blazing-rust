@@ -143,6 +143,13 @@
               },
               "comments": {
                 "type": "integer"
+              },
+              "stars_per_day": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "stars gained per day since creation; attention, never a score (StarScout, ICSE 2026)"
               }
             }
           },
@@ -185,7 +192,15 @@
                   "type": "string"
                 },
                 "status": {
-                  "const": "unverified"
+                  "enum": [
+                    "machine-triaged",
+                    "needs-review",
+                    "unverified"
+                  ]
+                },
+                "p": {
+                  "type": "number",
+                  "description": "triage probability (subject x critique)"
                 }
               }
             }
