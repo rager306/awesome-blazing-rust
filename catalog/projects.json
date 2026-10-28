@@ -891,6 +891,16 @@
       "description": "Python linter and code formatter written in Rust with drop-in Black parity, replacing flake8, isort, pyupgrade, pydocstyle and autoflake in one tool",
       "blazing": "README benchmark chart lints the whole CPython codebase from scratch at a claimed '10-100x faster than existing linters (like Flake8) and formatters (like Black)' (methodology: chart image in [README Performance section](https://github.com/astral-sh/ruff#performance) only - no written methodology reachable this session, so the range is vendor-claimed, not replicated).",
       "arch": ["work-stealing", "zero-copy"]
+    },
+    {
+      "name": "lkv",
+      "url": "https://github.com/nuskey8/lkv",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "single-writer embedded key-value store pairing an immutable on-disk open-addressing hash table with an append-only overlay, built for zero-copy point reads",
+      "blazing": "author benchmark on MacBook Pro M2/24GB - Read 100k in 3.29 ms vs redb 38.24 ms, LMDB/heed 50.12 ms, RocksDB 77.89 ms (in-memory std::HashMap baseline: 2.74 ms), 9.44 MiB compacted vs redb 16.70 MiB; concedes bulk load to LMDB, 79.94 vs 56.79 ms ([methodology](https://github.com/nuskey8/lkv#benchmark)).",
+      "arch": ["zero-copy", "read-optimized", "cache-conscious-layout"]
     }
   ]
 }
