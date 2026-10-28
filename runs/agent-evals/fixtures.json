@@ -1,20 +1,20 @@
 {
-  "note": "Five fixtures, chosen so both branches of the agent are exercised: three must produce a card, two must be refused (archived, not Rust).",
+  "note": "Fixtures must NOT be in the catalog: a real intake never re-adds a cataloged repo (the pipeline refuses duplicates), and a duplicate would fail the scratch check for the wrong reason. Three must produce a card, two must be refused.",
   "fixtures": [
     {
-      "repo": "BurntSushi/ripgrep",
+      "repo": "astral-sh/uv",
       "expect": "card",
-      "why": "canonical: public benchmarks, active, Rust"
+      "why": "Rust, active, publishes benchmark comparisons"
     },
     {
-      "repo": "tokio-rs/axum",
+      "repo": "nushell/nushell",
       "expect": "card",
-      "why": "framework with a published benchmark story"
+      "why": "Rust, active, performance notes in-tree"
     },
     {
-      "repo": "sarah-quinones/faer-rs",
+      "repo": "serde-rs/serde",
       "expect": "card",
-      "why": "numeric library, benchmarks in-tree"
+      "why": "Rust, active, benchmark suite in-tree"
     },
     {
       "repo": "bodil/im-rs",

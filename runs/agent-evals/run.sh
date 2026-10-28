@@ -33,9 +33,10 @@ scratch_check() { # $1 = card line
     /^## See also/ && !done { print card; print ""; done=1 }
     { print }
   ' "$tmp/README.md" > "$tmp/README.new" && mv "$tmp/README.new" "$tmp/README.md"
-  # Regenerate the catalog (it is a projection of the README) but NOT PATTERNS:
-  # a card that invents a new Arch tag must still fail the check.
-  ( cd "$tmp" && "$ABR" catalog >/dev/null 2>&1 && "$ABR" check >/dev/null 2>&1 )
+  # Mirror what the intake pipeline does: regenerate every projection, then
+  # check. A new Arch tag is legitimate for a new project - the pipeline indexes
+  # it - so the scratch check must not reject it.
+  ( cd "$tmp" && "$ABR" catalog >/dev/null 2>&1       && "$ABR" patterns >/dev/null 2>&1       && "$ABR" llms >/dev/null 2>&1       && "$ABR" check 2>&1 )
   local rc=$?
   rm -rf "$tmp"
   return $rc
@@ -53,7 +54,10 @@ for fixture in $(jq -r --arg f "$FILTER" '.fixtures[] | select($f == "" or (.rep
     --allowedTools "Read,Grep,Glob,Bash(gh api *)" \
     --max-turns 20 --output-format json 2>/dev/null | jq -r '.result // empty')
 
-  json=$(sed -n '/^{/,/}$/p' <<< "$out" | head -80)
+  # The agent may wrap the object in prose or a fence: keep the last flat
+  # object that carries a "card" key. The object has no nested braces, which is
+  # what makes the cheap extractor safe.
+  json=$(tr '\n' ' ' <<< "$out" | grep -oE '\{[^{}]*"card"[^{}]*\}' | tail -1)
   if ! jq -e . >/dev/null 2>&1 <<< "$json"; then
     echo "  INCONCLUSIVE: no parsable JSON in the agent output"
     inconclusive=$((inconclusive+1)); continue
@@ -84,10 +88,11 @@ for fixture in $(jq -r --arg f "$FILTER" '.fixtures[] | select($f == "" or (.rep
     url_ok "$url" || { echo "  FAIL: link does not resolve: $url"; bad=1; }
   done < <(grep -oE 'https?://[^) ]+' <<< "$card" | sort -u)
 
-  if [ "$bad" = 0 ] && scratch_check "$card"; then
+  diag=$(scratch_check "$card"); rc=$?
+  if [ "$bad" = 0 ] && [ "$rc" = 0 ]; then
     echo "  PASS"; pass=$((pass+1))
   else
-    [ "$bad" = 0 ] && echo "  FAIL: abr check rejected the card"
+    [ "$bad" = 0 ] && { echo "  FAIL: abr check rejected the card:"; sed 's/^/    /' <<< "$diag" | head -5; }
     fail=$((fail+1))
   fi
 done
