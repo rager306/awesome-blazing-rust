@@ -38,7 +38,7 @@ impl SignalsSource for WebSignals {
                 "api",
                 &format!("repos/{repo}"),
                 "--jq",
-                "[.archived, .pushed_at, .stargazers_count, .license.spdx_id] | @tsv",
+                "[.archived, .pushed_at, .stargazers_count, .license.spdx_id, .created_at] | @tsv",
             ])
             .output()
             .ok()?;
@@ -59,6 +59,7 @@ impl SignalsSource for WebSignals {
             pushed_at: (f[1] != "null").then(|| f[1].to_string()),
             stars: f[2].parse().ok(),
             license: (f[3] != "null").then(|| f[3].to_string()),
+            created_at: f.get(4).filter(|v| **v != "null").map(|v| v.to_string()),
         })
     }
 

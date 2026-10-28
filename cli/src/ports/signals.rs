@@ -4,6 +4,7 @@
 pub struct Health {
     pub archived: Option<bool>,
     pub pushed_at: Option<String>,
+    pub created_at: Option<String>,
     pub stars: Option<u64>,
     pub license: Option<String>,
 }

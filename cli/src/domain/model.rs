@@ -34,6 +34,36 @@ impl Kind {
     pub const VALID: &'static str = "measured | tool | case-study | agent-skill";
 }
 
+/// Who produced the number a `measured` card carries. METHODOLOGY §2: a claim
+/// without a named measurer is not evidence, it is a retelling.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Provenance {
+    Author,
+    ThirdParty,
+    Catalog,
+}
+
+impl Provenance {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Provenance::Author => "author",
+            Provenance::ThirdParty => "third-party",
+            Provenance::Catalog => "catalog",
+        }
+    }
+
+    pub fn parse(s: &str) -> Option<Provenance> {
+        match s.trim() {
+            "author" => Some(Provenance::Author),
+            "third-party" => Some(Provenance::ThirdParty),
+            "catalog" => Some(Provenance::Catalog),
+            _ => None,
+        }
+    }
+
+    pub const VALID: &'static str = "author | third-party | catalog";
+}
+
 #[derive(Clone, Debug)]
 pub struct Entry {
     pub name: String,
@@ -48,6 +78,8 @@ pub struct Entry {
     /// when its claim text changes (an emptied claim would flip the type
     /// instead of raising an error).
     pub declared: Option<Kind>,
+    /// Explicit `**Measured by:**` marker; only meaningful for `measured`.
+    pub measured_by: Option<Provenance>,
 }
 
 impl Entry {

@@ -27,12 +27,13 @@ The `Blazing:` line should, at minimum, carry: the claim, the baseline it was co
 2. Use this exact format:
 
    ```markdown
-   - [name](url) — what it is, one line. **Blazing:** <the measurement with units and context>. **Arch:** `pattern-one`, `pattern-two`
+   - [name](url) — what it is, one line. **Blazing:** <the measurement with units and context>. **Measured by:** author | third-party | catalog. **Type:** measured | tool | case-study. **Arch:** `pattern-one`, `pattern-two`
    ```
 
-3. `Blazing:` must contain *numbers with context* — "12× vs crossbeam-skiplist at 96 threads", not "very fast".
-4. `Arch:` tags must exist in [PATTERNS.md](PATTERNS.md) — if you coin a new one, add it to the index with a 2-3 line explanation.
-5. One entry per project; cross-posting the same project into multiple sections is not allowed — pick the primary home.
+3. `Blazing:` must contain *numbers with context* — "12× vs crossbeam-skiplist at 96 threads", not "very fast". Process counts ("247 sites studied", "24 questions asked", "N stars") are not measurements and never qualify a card as `measured`.
+4. `**Measured by:**` is required on every `measured` card: `author` for the project's own benchmarks, `third-party` for someone else's run, `catalog` only when a `runs/` artifact from this repository is the source (the card must link it). `abr check` rejects a measured card without it.
+5. `Arch:` tags must exist in [PATTERNS.md](PATTERNS.md) — if you coin a new one, add it to the index with a 2-3 line explanation.
+6. One entry per project; cross-posting the same project into multiple sections is not allowed — pick the primary home.
 
 ## Fresh process
 

@@ -1,6 +1,6 @@
 //! Domain invariants: pure functions Model + documents -> violations.
 
-use super::model::{Kind, Model, PatternRow, Violation};
+use super::model::{Kind, Model, PatternRow, Provenance, Violation};
 use std::collections::BTreeMap;
 
 /// The closed vocabulary of signal flags. A free-form flag would let a
@@ -216,7 +216,42 @@ pub fn check(
         }
     }
 
-    // 7. one entry per project (CONTRIBUTING): cross-posting the same project
+    // 7. a measured claim names who measured it (METHODOLOGY §5): an author
+    // counting their own sessions and an independent rerun are different
+    // evidence, and the card must say which one it is.
+    for e in &model.entries {
+        if e.kind() == Kind::Measured && e.measured_by.is_none() {
+            out.push(Violation {
+                code: "MEASURED_NO_PROVENANCE",
+                message: format!(
+                    "measured entry '{}' has no **Measured by:** marker - one of: {}",
+                    e.name,
+                    Provenance::VALID
+                ),
+            });
+        }
+        if e.kind() != Kind::Measured && e.measured_by.is_some() {
+            out.push(Violation {
+                code: "PROVENANCE_ON_UNMEASURED",
+                message: format!(
+                    "entry '{}' declares **Measured by:** but is not measured",
+                    e.name
+                ),
+            });
+        }
+        // A claim this catalog made itself must link the run that made it.
+        if e.measured_by == Some(Provenance::Catalog) && !e.blazing.contains("runs/") {
+            out.push(Violation {
+                code: "CATALOG_RUN_UNLINKED",
+                message: format!(
+                    "entry '{}' is measured by the catalog but its claim links no runs/ artifact",
+                    e.name
+                ),
+            });
+        }
+    }
+
+    // 8. one entry per project (CONTRIBUTING): cross-posting the same project
     // into a second section is not allowed. Upper-cased by an author, with or
     // without a trailing slash or a .git suffix - same repository.
     let mut first_seen: BTreeMap<String, &str> = BTreeMap::new();
@@ -258,6 +293,7 @@ mod tests {
             blazing: blazing.to_string(),
             arch: arch.iter().map(|s| s.to_string()).collect(),
             declared,
+            measured_by: None,
         }
     }
 
@@ -355,6 +391,39 @@ mod tests {
     }
 
     #[test]
+    fn measured_needs_a_named_measurer() {
+        let m = Model {
+            sections: vec![],
+            entries: vec![entry_typed("x", &[], "3x vs baseline", Some(Kind::Measured))],
+        };
+        let v = check(&m, &[], Some("x"), "x");
+        assert!(v.iter().any(|x| x.code == "MEASURED_NO_PROVENANCE"));
+    }
+
+    #[test]
+    fn provenance_on_a_case_study_is_a_violation() {
+        let mut e = entry_typed("x", &[], "claim", Some(Kind::CaseStudy));
+        e.measured_by = Some(Provenance::Author);
+        let m = Model { sections: vec![], entries: vec![e] };
+        let v = check(&m, &[], Some("x"), "x");
+        assert!(v.iter().any(|x| x.code == "PROVENANCE_ON_UNMEASURED"));
+    }
+
+    #[test]
+    fn a_catalog_claim_must_link_its_run() {
+        let mut e = entry_typed("x", &[], "2.5 ms vs 1879 ms, see the run", Some(Kind::Measured));
+        e.measured_by = Some(Provenance::Catalog);
+        let m = Model { sections: vec![], entries: vec![e] };
+        let v = check(&m, &[], Some("x"), "x");
+        assert!(v.iter().any(|x| x.code == "CATALOG_RUN_UNLINKED"));
+
+        let mut linked = entry_typed("x", &[], "see runs/x/RESULTS.md", Some(Kind::Measured));
+        linked.measured_by = Some(Provenance::Catalog);
+        let m = Model { sections: vec![], entries: vec![linked] };
+        assert!(check(&m, &[], Some("x"), "x").iter().all(|v| v.code != "CATALOG_RUN_UNLINKED"));
+    }
+
+    #[test]
     fn duplicate_repo_url_is_a_violation() {
         let mk = |name: &str, url: &str| super::super::model::Entry {
             name: name.to_string(),
@@ -364,6 +433,7 @@ mod tests {
             blazing: "10x vs baseline".to_string(),
             arch: vec![],
             declared: Some(Kind::CaseStudy),
+                measured_by: None,
         };
         // same repository spelled differently: case, trailing slash, .git
         for (second_name, second_url) in [
@@ -396,6 +466,7 @@ mod tests {
             blazing: "10x vs baseline".to_string(),
             arch: vec![],
             declared: Some(Kind::CaseStudy),
+                measured_by: None,
         };
         let m = Model {
             sections: vec![],
@@ -448,6 +519,7 @@ mod tests {
                 blazing: "3x vs baseline".into(),
                 arch: vec![],
                 declared: Some(Kind::Measured),
+                measured_by: None,
             }],
         };
         let signals = vec![SignalRow {

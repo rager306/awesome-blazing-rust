@@ -19,6 +19,14 @@ Different project classes have different comparability requirements; a claim tha
 
 Distinguish explicitly: index build vs query time; first run vs warm state; steady-state size vs peak build memory; one-shot operation vs long-running updates. A prepared-cache setup (see paramo1d in the README) is a different measurement than a cold start.
 
+Write down three things a reader needs to use the number outside this repository:
+
+- **The version measured** - a tag or commit, not a branch. A number attached to "main" has no meaning a month later.
+- **The limits** - where the result stops applying: hardware class, dataset shape, thread count, cache state. Unknown fields are written as unknown, never guessed.
+- **A correction is a new run**, never a silent edit of the old one. History is the value; a rewritten claim has none.
+
+**Outcome versus process.** A number that describes the artifact is evidence; a number that describes the author's effort is not. "2.5 ms vs 1879 ms on 10M ids" is an outcome. "247 sites studied", "24 questions asked", "316 stars", "12 months of work" are process counts: the author can produce them alone in an afternoon, and no reader can use them to predict anything about their own workload. Process counts never qualify a card as `measured`.
+
 ## 3. More than one metric
 
 No universal "fastest". Practical claims should say which of these they improve, and which they may worsen: throughput, median and tail latency, working vs peak memory, build/preparation time, update cost, correctness and portability limits. A structure whose win is memory (fitting a bigger working set) is a different claim than one whose win is lookup speed.
@@ -29,7 +37,7 @@ Every measured entry states its scope. Amdahl applies: a 2× win on a component 
 
 ## 5. Who measured, what is reproducible, when
 
-- **Who:** the project author, a third party, or this catalog's own runs.
+- **Who:** the project author, a third party, or this catalog's own runs. Every `measured` card states it in a `**Measured by:**` marker - `author`, `third-party` or `catalog` - because the three are different evidence and a reader must be able to tell them apart without following the link. A `catalog` claim must link its run under `runs/`; `abr check` enforces both.
 - **What:** published result only / benchmark code and data available / independently replicated.
 - **When:** measurement date. Reading this README is not a re-confirmation; old results remain useful if honestly tied to their historical versions.
 

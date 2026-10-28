@@ -44,12 +44,17 @@ pub fn catalog(model: &Model) -> Artifact {
         .iter()
         .map(|e| {
             let tags: Vec<String> = e.arch.iter().map(|t| format!("\"{}\"", json_escape(t))).collect();
+            let measured_by = match e.measured_by {
+                Some(p) => format!(",\n      \"measured_by\": \"{}\"", p.as_str()),
+                None => String::new(),
+            };
             format!(
-                "    {{\n      \"name\": \"{}\",\n      \"url\": \"{}\",\n      \"section\": \"{}\",\n      \"type\": \"{}\",\n      \"description\": \"{}\",\n      \"blazing\": \"{}\",\n      \"arch\": [{}]\n    }}",
+                "    {{\n      \"name\": \"{}\",\n      \"url\": \"{}\",\n      \"section\": \"{}\",\n      \"type\": \"{}\"{},\n      \"description\": \"{}\",\n      \"blazing\": \"{}\",\n      \"arch\": [{}]\n    }}",
                 json_escape(&e.name),
                 json_escape(&e.url),
                 json_escape(&e.section),
                 e.kind().as_str(),
+                measured_by,
                 json_escape(&e.description),
                 json_escape(&e.blazing),
                 tags.join(", ")
@@ -88,7 +93,7 @@ pub fn patterns_doc(model: &Model, current: &str) -> Result<Artifact, String> {
 pub fn llms(model: &Model) -> Artifact {
     let mut out = String::from("# awesome-blazing-rust\n\n> Rust projects that prove their speed. Every entry ships measured numbers; every trick is named. Rule: no numbers, no entry.\n\n");
     out.push_str(&format!(
-        "## How to consume this repository\n\n- README.md - the catalog itself ({} entries across sections, `Blazing:` = evidence, `Arch:` = pattern tags).\n- catalog/projects.json - machine-readable index: name, url, section, type (measured|tool|case-study|agent-skill), description, claim, arch tags. Best entry point for agents.\n- PATTERNS.md - architecture-patterns index: which technique achieves speed, used by which projects.\n- decisions/ - ADR-style write-ups per pattern: problem, technique, evidence, trade-offs.\n- recipes/ - symptom-driven guides: from a developer problem to patterns, projects and their limits.\n- CONTRIBUTING.md - entry rules: types, measurement passport, evidence requirements.\n- METHODOLOGY.md - evidence comparability rules.\n\n## Sections\n\n",
+        "## How to consume this repository\n\n- README.md - the catalog itself ({} entries across sections, `Blazing:` = evidence, `Arch:` = pattern tags).\n- catalog/projects.json - machine-readable index: name, url, section, type (measured|tool|case-study|agent-skill), description, claim, arch tags. Best entry point for agents.\n- PATTERNS.md - architecture-patterns index: which technique achieves speed, used by which projects.\n- decisions/ - ADR-style write-ups per pattern: problem, technique, evidence, trade-offs.\n- recipes/ - symptom-driven guides: from a developer problem to patterns, projects and their limits.\n- CONTRIBUTING.md - entry rules: types, measurement passport, evidence requirements.\n- METHODOLOGY.md - evidence comparability rules.\n- docs/agents/ - the system prompts of the repository's own agents (discovery, intake, curator): house rules, the instruction-versus-data boundary, and the ban on running a research subject's code.\n- runs/ - replication artifacts and experiments; a `catalog` claim links one.\n- catalog/signals.json - third-party context (adoption, advisories, disputes). Data, not evidence: it can hold or demote a card, never raise its Type.\n\n## Sections\n\n",
         model.entries.len()
     ));
     for s in &model.sections {
@@ -108,6 +113,7 @@ mod tests {
             sections: vec!["S".into()],
             entries: vec![Entry {
                 declared: None,
+                measured_by: None,
                 name: "x".into(),
                 url: "https://e.com".into(),
                 section: "S".into(),

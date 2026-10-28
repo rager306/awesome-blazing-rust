@@ -40,14 +40,7 @@ jobs:
           API_TIMEOUT_MS: "3000000"
         run: |
           set -o pipefail
-          SYSTEM=$(cat <<'EOF'
-          You are the nightly curator of this repository. House rules:
-          - Report facts with file paths and numbers you actually saw; never invent numbers.
-          - Say "not found" instead of guessing.
-          - You propose, deterministic gates decide. Read-only by default.
-          - Public repo: English only. Output is markdown under 25 lines.
-          EOF
-          )
+          SYSTEM=$(cat docs/agents/curator.md)
           PROMPT=$(cat <<'EOF'
           Nightly curator digest. Read-only analysis of this catalog repository.
 

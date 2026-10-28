@@ -31,10 +31,14 @@ pub struct Crate {
     pub updated_at: String,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct Attention {
     pub stories: u64,
     pub comments: u64,
+    /// Stars gained per day since the repository was created. Attention, not a
+    /// score: fake stars have a promotion effect under two months and become a
+    /// liability after (StarScout, ICSE 2026). Never shown on a card.
+    pub stars_per_day: Option<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -63,6 +67,13 @@ pub struct SignalRow {
     pub flags: Vec<String>,
     pub verdict: Option<String>,
     pub notes: Option<String>,
+}
+
+pub fn stars_per_day(stars: Option<u64>, created_at: Option<&str>, today: i64) -> Option<f64> {
+    let stars = stars? as f64;
+    let created = parse_date_days(created_at?)?;
+    let days = (today - created).max(1) as f64;
+    Some((stars / days * 10.0).round() / 10.0)
 }
 
 /// Days since 1970-01-01 for a civil date (Howard Hinnant's algorithm).
@@ -269,8 +280,13 @@ pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> S
         out.push_str("      },\n");
         out.push_str(&format!("      \"crate\": {},\n", crate_block(&r.krate, "      ")));
         out.push_str(&format!(
-            "      \"attention\": {{\n        \"stories\": {},\n        \"comments\": {}\n      }},\n",
-            r.attention.stories, r.attention.comments
+            "      \"attention\": {{\n        \"stories\": {},\n        \"comments\": {},\n        \"stars_per_day\": {}\n      }},\n",
+            r.attention.stories,
+            r.attention.comments,
+            match r.attention.stars_per_day {
+                Some(v) => format!("{v:.1}"),
+                None => "null".to_string(),
+            }
         ));
         if r.advisories.is_empty() {
             out.push_str("      \"advisories\": [],\n");
@@ -352,6 +368,18 @@ mod tests {
         assert_eq!(machine_flags(Some(true), Some("2026-10-01"), &[], today), vec!["unmaintained".to_string()]);
         assert_eq!(machine_flags(Some(false), Some("2024-01-01"), &[], today), vec!["unmaintained".to_string()]);
         assert!(machine_flags(Some(false), Some("2026-09-01"), &[], today).is_empty());
+    }
+
+    #[test]
+    fn stars_per_day_is_attention_not_a_score() {
+        let today = days_from_civil(2026, 10, 27);
+        // 316 stars in 8 days: a burst, recorded and never shown on a card
+        assert_eq!(stars_per_day(Some(316), Some("2026-10-19T03:05:36Z"), today), Some(39.5));
+        assert_eq!(stars_per_day(Some(0), Some("2026-10-19"), today), Some(0.0));
+        // a same-day repository divides by one, not by zero
+        assert_eq!(stars_per_day(Some(5), Some("2026-10-27"), today), Some(5.0));
+        assert_eq!(stars_per_day(None, Some("2026-10-19"), today), None);
+        assert_eq!(stars_per_day(Some(5), None, today), None);
     }
 
     #[test]

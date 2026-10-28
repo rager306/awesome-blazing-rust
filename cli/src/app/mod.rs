@@ -128,7 +128,16 @@ pub fn run_signals(
         let name = slug.split('/').nth(1).unwrap_or(slug.as_str()).to_string();
         let health = source.health(slug);
         let krate = source.crate_info(&name, slug);
-        let attention = source.attention(&name);
+        let mentions = source.attention(&name);
+        let attention = signals::Attention {
+            stories: mentions.stories,
+            comments: mentions.comments,
+            stars_per_day: signals::stars_per_day(
+                health.as_ref().and_then(|h| h.stars),
+                health.as_ref().and_then(|h| h.created_at.as_deref()),
+                today,
+            ),
+        };
         let advisories = source.advisories(&name);
 
         let (archived, pushed_at) = match &health {
@@ -184,7 +193,7 @@ pub fn run_signals(
                 yanked: c.yanked,
                 updated_at: c.updated_at,
             }),
-            attention: signals::Attention { stories: attention.stories, comments: attention.comments },
+            attention,
             advisories,
             disputes,
             flags,

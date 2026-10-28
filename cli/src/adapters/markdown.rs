@@ -3,7 +3,7 @@
 //! These parsers are pure (text in, domain objects out) so they are unit
 //! testable without any filesystem.
 
-use crate::domain::model::{Entry, Kind, Model, PatternRow};
+use crate::domain::model::{Entry, Kind, Model, PatternRow, Provenance};
 
 /// A tag token must be lowercase alnum or '-', otherwise it is prose that
 /// leaked out of a backtick pair - never a tag.
@@ -78,12 +78,16 @@ pub fn parse_readme(readme: &str) -> Model {
                 .find("**Type:**")
                 .map(|i| field_end(&body[i + "**Type:**".len()..]).trim().trim_end_matches('.'))
                 .and_then(Kind::parse);
+            let measured_by = body
+                .find("**Measured by:**")
+                .map(|i| field_end(&body[i + "**Measured by:**".len()..]).trim().trim_end_matches('.'))
+                .and_then(Provenance::parse);
             let arch = body
                 .split("**Arch:**")
                 .nth(1)
                 .map(parse_arch_tags)
                 .unwrap_or_default();
-            model.entries.push(Entry { name, url, section: section.clone(), description, blazing, arch, declared });
+            model.entries.push(Entry { name, url, section: section.clone(), description, blazing, arch, declared, measured_by });
         }
     }
     model

@@ -1,0 +1,30 @@
+{
+  "note": "Five fixtures, chosen so both branches of the agent are exercised: three must produce a card, two must be refused (archived, not Rust).",
+  "fixtures": [
+    {
+      "repo": "BurntSushi/ripgrep",
+      "expect": "card",
+      "why": "canonical: public benchmarks, active, Rust"
+    },
+    {
+      "repo": "tokio-rs/axum",
+      "expect": "card",
+      "why": "framework with a published benchmark story"
+    },
+    {
+      "repo": "sarah-quinones/faer-rs",
+      "expect": "card",
+      "why": "numeric library, benchmarks in-tree"
+    },
+    {
+      "repo": "bodil/im-rs",
+      "expect": "skip",
+      "why": "archived - the freshness gate must refuse it"
+    },
+    {
+      "repo": "facebook/react",
+      "expect": "skip",
+      "why": "not Rust - scope must refuse it"
+    }
+  ]
+}

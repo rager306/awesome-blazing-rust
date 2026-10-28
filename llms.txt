@@ -11,6 +11,9 @@
 - recipes/ - symptom-driven guides: from a developer problem to patterns, projects and their limits.
 - CONTRIBUTING.md - entry rules: types, measurement passport, evidence requirements.
 - METHODOLOGY.md - evidence comparability rules.
+- docs/agents/ - the system prompts of the repository's own agents (discovery, intake, curator): house rules, the instruction-versus-data boundary, and the ban on running a research subject's code.
+- runs/ - replication artifacts and experiments; a `catalog` claim links one.
+- catalog/signals.json - third-party context (adoption, advisories, disputes). Data, not evidence: it can hold or demote a card, never raise its Type.
 
 ## Sections
 
