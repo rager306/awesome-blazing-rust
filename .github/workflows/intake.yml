@@ -136,9 +136,13 @@ jobs:
           Then return ONLY this JSON object (no fences, no prose around it):
           {"skip": null or "short reason the project does not fit the catalog",
            "card": "the single card line, or empty when skip is set",
-           "notes": "one sentence for the PR body: what the evidence is and where it is weakest"}
+           "what": "2 short sentences: what the project is, in words a reader who has never seen it understands",
+           "why": "2 short sentences: which numbers convinced you, and what they were compared against",
+           "weak": "2 short sentences: what a reviewer should double-check, and what the evidence does not cover"}
 
           Quality bar: if the benchmark evidence is weak or missing, still draft the card with **Type:** case-study and say what is missing in the Blazing line. Skip only when the project is not Rust or has no verifiable speed claim at all.
+
+          Write the three prose fields for a reviewer who is tired and in a hurry: short sentences, plain words, no jargon, no abbreviations you have not explained. Say what a thing is before saying whether it is fast.
 
           Budget: at most 8 tool calls. Read the repo README and ONE benchmark document, then write the card - a large repository is not a reason to keep reading.
           EOF_ISSUE
@@ -181,7 +185,7 @@ jobs:
               except Exception:
                   data = None
           if not isinstance(data, dict):
-              open('card.json','w').write('{"skip": null, "card": "", "notes": "agent returned no parsable JSON"}')
+              open('card.json','w').write('{"skip": null, "card": "", "what": "", "why": "", "weak": "the agent returned no parsable JSON"}')
               print('AGENT OUTPUT NOT VALID JSON - see agent-result.md')
               sys.exit(0)
           json.dump(data, open('card.json','w'))
@@ -196,7 +200,6 @@ jobs:
           set -o pipefail
           CARD=$(jq -r '.card // ""' card.json)
           SKIP=$(jq -r '.skip // ""' card.json)
-          NOTES=$(jq -r '.notes // ""' card.json)
           if [ -n "$SKIP" ]; then
             gh issue comment "$ISSUE_NUMBER" --body "Agent verdict: **does-not-fit** - $SKIP"
             gh issue close "$ISSUE_NUMBER"
@@ -253,7 +256,13 @@ jobs:
             gh issue comment "$ISSUE_NUMBER" --body-file gate-comment.md
             exit 1
           fi
-          echo "$NOTES" > notes.md
+          jq -r '.what // ""' card.json > pr-what.md
+          jq -r '.why // ""' card.json > pr-why.md
+          jq -r '.weak // ""' card.json > pr-weak.md
+          NAME=$(jq -r '.card' card.json | sed -n 's/^- \[\([^]]*\)\].*/\1/p')
+          ./cli/target/release/abr verify --only "$NAME" > pr-verify.log 2>&1 || true
+          head -2 pr-verify.log > pr-verify.md
+          cat pr-verify.md
           cat gates.md
       - name: Open draft PR
         if: steps.gate.outputs.skip == ''
@@ -281,13 +290,39 @@ jobs:
           {
             echo "Draft card from #${ISSUE_NUMBER}."
             echo
-            echo "## Agent notes"
+            echo "## What this is"
             echo
-            cat notes.md
+            cat pr-what.md
             echo
-            echo "Closes #${ISSUE_NUMBER}"
+            echo "## Why it belongs in the catalog"
+            echo
+            cat pr-why.md
+            echo
+            echo "## What to check before merging"
+            echo
+            cat pr-weak.md
+            echo
+            echo "## The card"
+            echo
+            echo '```'
+            jq -r '.card' card.json
+            echo '```'
+            echo
+            echo "## Numbers against the source"
+            echo
+            echo '```'
+            cat pr-verify.md
+            echo '```'
+            echo
+            echo "\`OK\` means every number in the claim was found in the page the card"
+            echo "links. \`MISS\` means some were not: they may sit in a chart, a PDF or"
+            echo "another file, so look before deciding."
+            echo
+            echo "## Automatic gates"
             echo
             cat gates.md
+            echo
+            echo "Closes #${ISSUE_NUMBER}"
           } > pr-body.md
           gh pr create --title "Card draft from issue #${ISSUE_NUMBER}" \
             --body-file pr-body.md --head "$BRANCH" --label card-draft
