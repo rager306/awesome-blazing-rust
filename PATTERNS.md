@@ -36,7 +36,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `density-dependent` | roaring-rs |
 | `dst-in-ci` | shuttle |
 | `elm-architecture` | crux |
-| `embedded` | cozo |
+| `embedded` | cozo, canopydb |
 | `embedded-first` | slint |
 | `epoch-reclamation` | crossbeam |
 | `extensible` | datafusion |
@@ -83,7 +83,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `pgo` | cargo-pgo |
 | `poseidon2-gf2` | paramo1d |
 | `prefilter` | regex |
-| `prefix-keys` | bbtree |
+| `prefix-keys` | bbtree, canopydb |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |
 | `python-bridge` | rustworkx |
