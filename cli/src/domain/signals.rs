@@ -7,7 +7,14 @@
 
 /// The closed vocabulary a flag may use. `security` and `unmaintained` are
 /// machine facts; the rest require judgement and belong in a human verdict.
-pub const ALL_FLAGS: &[&str] = &["security", "unmaintained", "contested", "hype-suspect", "astroturf-suspected", "stale-claim"];
+pub const ALL_FLAGS: &[&str] = &[
+    "security",
+    "unmaintained",
+    "contested",
+    "hype-suspect",
+    "astroturf-suspected",
+    "stale-claim",
+];
 
 /// RUSTSEC keeps every advisory forever; only the last two years are a current
 /// risk. The advisory id encodes the year (`RUSTSEC-2026-0041`).
@@ -132,7 +139,12 @@ fn advisory_year(id: &str) -> Option<i32> {
 
 /// Objective flags. `today` is a parameter, not a clock read, so the rule is
 /// pure and testable.
-pub fn machine_flags(archived: Option<bool>, pushed_at: Option<&str>, advisories: &[String], today: i64) -> Vec<String> {
+pub fn machine_flags(
+    archived: Option<bool>,
+    pushed_at: Option<&str>,
+    advisories: &[String],
+    today: i64,
+) -> Vec<String> {
     let mut flags = Vec::new();
     let (current_year, _, _) = civil_from_days(today);
     if advisories
@@ -170,7 +182,12 @@ pub fn bucket(p: Option<f64>) -> Bucket {
 
 /// Verdicts and notes a human wrote are preserved across recollects: a
 /// scheduled job must not overwrite a maintainer's decision.
-pub fn parse_previous(raw: &str) -> (std::collections::BTreeMap<String, String>, std::collections::BTreeMap<String, String>) {
+pub fn parse_previous(
+    raw: &str,
+) -> (
+    std::collections::BTreeMap<String, String>,
+    std::collections::BTreeMap<String, String>,
+) {
     let mut verdicts = std::collections::BTreeMap::new();
     let mut notes = std::collections::BTreeMap::new();
     let mut repo: Option<String> = None;
@@ -180,7 +197,9 @@ pub fn parse_previous(raw: &str) -> (std::collections::BTreeMap<String, String>,
             repo = rest.split('"').next().map(str::to_string);
             continue;
         }
-        let Some(current) = repo.as_ref() else { continue };
+        let Some(current) = repo.as_ref() else {
+            continue;
+        };
         if let Some(rest) = t.strip_prefix("\"verdict\": \"") {
             if let Some(v) = rest.split('"').next() {
                 if !v.is_empty() {
@@ -199,20 +218,10 @@ pub fn parse_previous(raw: &str) -> (std::collections::BTreeMap<String, String>,
     (verdicts, notes)
 }
 
+/// One escaper for the whole domain: two copies drift, and a drifted
+/// escaper writes invalid JSON.
 fn esc(s: &str) -> String {
-    let mut out = String::with_capacity(s.len() + 2);
-    for c in s.chars() {
-        match c {
-            '"' => out.push_str("\\\""),
-            '\\' => out.push_str("\\\\"),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
-            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
-            c => out.push(c),
-        }
-    }
-    out
+    super::projection::json_escape(s)
 }
 
 fn opt_str(v: &Option<String>, indent: &str) -> String {
@@ -231,7 +240,10 @@ fn crate_block(c: &Option<Crate>, indent: &str) -> String {
             let mut out = String::from("{\n");
             out.push_str(&format!("{i2}\"name\": \"{}\",\n", esc(&c.name)));
             out.push_str(&format!("{i2}\"downloads\": {},\n", c.downloads));
-            out.push_str(&format!("{i2}\"recent_downloads\": {},\n", c.recent_downloads));
+            out.push_str(&format!(
+                "{i2}\"recent_downloads\": {},\n",
+                c.recent_downloads
+            ));
             out.push_str(&format!("{i2}\"versions\": {},\n", c.versions));
             out.push_str(&format!("{i2}\"yanked\": {},\n", c.yanked));
             out.push_str(&format!("{i2}\"updated_at\": \"{}\"\n", esc(&c.updated_at)));
@@ -255,30 +267,48 @@ pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> S
         out.push_str("    \"sources_note\": \"triage via subq.ai decisions\",\n");
     }
     out.push_str("    \"flag_vocabulary\": [\"security\", \"unmaintained\", \"contested\", \"hype-suspect\", \"astroturf-suspected\", \"stale-claim\"],\n");
-    out.push_str(&format!("    \"generated_at\": \"{}\",\n", esc(generated_at)));
-    out.push_str(&format!("    \"repos\": {}\n  }},\n  \"repos\": [", sorted.len()));
+    out.push_str(&format!(
+        "    \"generated_at\": \"{}\",\n",
+        esc(generated_at)
+    ));
+    out.push_str(&format!(
+        "    \"repos\": {}\n  }},\n  \"repos\": [",
+        sorted.len()
+    ));
     for (i, r) in sorted.iter().enumerate() {
         if i > 0 {
             out.push(',');
         }
         out.push_str("\n    {\n");
         out.push_str(&format!("      \"repo\": \"{}\",\n", esc(&r.repo)));
-        out.push_str(&format!("      \"observed_at\": \"{}\",\n", esc(&r.observed_at)));
+        out.push_str(&format!(
+            "      \"observed_at\": \"{}\",\n",
+            esc(&r.observed_at)
+        ));
         out.push_str("      \"github\": {\n");
         let archived = match r.archived {
             Some(b) => b.to_string(),
             None => "null".to_string(),
         };
         out.push_str(&format!("        \"archived\": {archived},\n"));
-        out.push_str(&format!("        \"pushed_at\": {},\n", opt_str(&r.pushed_at, "        ")));
+        out.push_str(&format!(
+            "        \"pushed_at\": {},\n",
+            opt_str(&r.pushed_at, "        ")
+        ));
         let stars = match r.stars {
             Some(s) => s.to_string(),
             None => "null".to_string(),
         };
         out.push_str(&format!("        \"stars\": {stars},\n"));
-        out.push_str(&format!("        \"license\": {}\n", opt_str(&r.license, "        ")));
+        out.push_str(&format!(
+            "        \"license\": {}\n",
+            opt_str(&r.license, "        ")
+        ));
         out.push_str("      },\n");
-        out.push_str(&format!("      \"crate\": {},\n", crate_block(&r.krate, "      ")));
+        out.push_str(&format!(
+            "      \"crate\": {},\n",
+            crate_block(&r.krate, "      ")
+        ));
         out.push_str(&format!(
             "      \"attention\": {{\n        \"stories\": {},\n        \"comments\": {},\n        \"stars_per_day\": {}\n      }},\n",
             r.attention.stories,
@@ -294,7 +324,10 @@ pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> S
             out.push_str("      \"advisories\": [\n");
             for (j, a) in r.advisories.iter().enumerate() {
                 let comma = if j + 1 == r.advisories.len() { "" } else { "," };
-                out.push_str(&format!("        {{\n          \"id\": \"{}\"\n        }}{comma}\n", esc(a)));
+                out.push_str(&format!(
+                    "        {{\n          \"id\": \"{}\"\n        }}{comma}\n",
+                    esc(a)
+                ));
             }
             out.push_str("      ],\n");
         }
@@ -308,7 +341,10 @@ pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> S
                 out.push_str(&format!("          \"source\": \"{}\",\n", esc(&d.source)));
                 out.push_str(&format!("          \"url\": \"{}\",\n", esc(&d.url)));
                 if !d.created_at.is_empty() {
-                    out.push_str(&format!("          \"created_at\": \"{}\",\n", esc(&d.created_at)));
+                    out.push_str(&format!(
+                        "          \"created_at\": \"{}\",\n",
+                        esc(&d.created_at)
+                    ));
                 }
                 out.push_str(&format!("          \"status\": \"{}\"", esc(&d.status)));
                 if let Some(p) = d.p {
@@ -359,14 +395,23 @@ mod tests {
         let old = vec!["RUSTSEC-2019-0008".to_string()];
         let recent = vec!["RUSTSEC-2026-0041".to_string()];
         assert!(machine_flags(Some(false), Some("2026-10-01"), &old, today).is_empty());
-        assert_eq!(machine_flags(Some(false), Some("2026-10-01"), &recent, today), vec!["security".to_string()]);
+        assert_eq!(
+            machine_flags(Some(false), Some("2026-10-01"), &recent, today),
+            vec!["security".to_string()]
+        );
     }
 
     #[test]
     fn unmaintained_covers_archive_and_staleness() {
         let today = days_from_civil(2026, 10, 27);
-        assert_eq!(machine_flags(Some(true), Some("2026-10-01"), &[], today), vec!["unmaintained".to_string()]);
-        assert_eq!(machine_flags(Some(false), Some("2024-01-01"), &[], today), vec!["unmaintained".to_string()]);
+        assert_eq!(
+            machine_flags(Some(true), Some("2026-10-01"), &[], today),
+            vec!["unmaintained".to_string()]
+        );
+        assert_eq!(
+            machine_flags(Some(false), Some("2024-01-01"), &[], today),
+            vec!["unmaintained".to_string()]
+        );
         assert!(machine_flags(Some(false), Some("2026-09-01"), &[], today).is_empty());
     }
 
@@ -374,7 +419,10 @@ mod tests {
     fn stars_per_day_is_attention_not_a_score() {
         let today = days_from_civil(2026, 10, 27);
         // 316 stars in 8 days: a burst, recorded and never shown on a card
-        assert_eq!(stars_per_day(Some(316), Some("2026-10-19T03:05:36Z"), today), Some(39.5));
+        assert_eq!(
+            stars_per_day(Some(316), Some("2026-10-19T03:05:36Z"), today),
+            Some(39.5)
+        );
         assert_eq!(stars_per_day(Some(0), Some("2026-10-19"), today), Some(0.0));
         // a same-day repository divides by one, not by zero
         assert_eq!(stars_per_day(Some(5), Some("2026-10-27"), today), Some(5.0));

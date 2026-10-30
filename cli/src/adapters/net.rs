@@ -11,7 +11,12 @@ use std::process::{Command, Stdio};
 const UA: &str = "abr-signals/1.0 (+https://github.com/rager306/awesome-blazing-rust)";
 
 fn run(mut cmd: Command, stdin: Option<&str>) -> Option<String> {
-    let mut child = cmd.stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::null()).spawn().ok()?;
+    let mut child = cmd
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .ok()?;
     if let Some(input) = stdin {
         child.stdin.as_mut()?.write_all(input.as_bytes()).ok()?;
     }
@@ -38,7 +43,17 @@ pub fn get(url: &str, headers: &[(&str, &str)]) -> Option<String> {
 /// act on (out of credits), not a transport failure.
 pub fn post(url: &str, headers: &[(&str, &str)], body: &str) -> Option<(u16, String)> {
     let mut cmd = Command::new("curl");
-    cmd.args(["-sL", "-m", "30", "-A", UA, "-X", "POST", "-H", "Content-Type: application/json"]);
+    cmd.args([
+        "-sL",
+        "-m",
+        "30",
+        "-A",
+        UA,
+        "-X",
+        "POST",
+        "-H",
+        "Content-Type: application/json",
+    ]);
     for (k, v) in headers {
         cmd.args(["-H", &format!("{k}: {v}")]);
     }

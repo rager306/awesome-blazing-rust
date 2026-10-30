@@ -17,10 +17,13 @@ pub struct Subq {
 
 impl Subq {
     pub fn from_env() -> Subq {
-        Subq { key: std::env::var("SUBQ_API_KEY").unwrap_or_default(), available: None }
+        Subq {
+            key: std::env::var("SUBQ_API_KEY").unwrap_or_default(),
+            available: None,
+        }
     }
 
-    fn question(repo: &str) -> String {
+    fn question(repo: &str, text: &str) -> String {
         let instructions = format!(
             "Does this comment contradict or dispute the performance claims of the project github.com/{repo} \
              - its own benchmark numbers, its methodology, or the speed it advertises?"
@@ -40,14 +43,15 @@ impl Subq {
             "Is this comment about the software project github.com/{repo} - not a different project, \
              and not an unrelated identifier that happens to share its name?"
         );
-        let subject_t = "It refers to that project: its code, its releases, its benchmarks, its speed";
+        let subject_t =
+            "It refers to that project: its code, its releases, its benchmarks, its speed";
         let subject_f = "It refers to another project with a similar name, to a variable or type named the same, \
                          or to a general topic without naming this project";
 
         let mut body = String::from("{\"model\":\"");
         body.push_str(MODEL);
         body.push_str("\",\"state\":");
-        body.push_str(&json_str(text_placeholder()));
+        body.push_str(&json_str(text));
         body.push_str(",\"questions\":{\"subject\":{\"type\":\"noul\",\"instructions\":");
         body.push_str(&json_str(&subject_i));
         body.push_str(",\"criteria\":{\"true\":");
@@ -63,10 +67,6 @@ impl Subq {
         body.push_str("}}}}");
         body
     }
-}
-
-fn text_placeholder() -> &'static str {
-    "\u{1}"
 }
 
 fn json_str(s: &str) -> String {
@@ -94,10 +94,13 @@ impl DecisionSource for Subq {
         let v = if self.key.is_empty() {
             false
         } else {
-            net::get(&format!("{BASE}/models"), &[("Authorization", &format!("Bearer {}", self.key))])
-                .and_then(|b| net::jq(&b, ".data[].id"))
-                .map(|ids| ids.lines().any(|id| id.trim() == MODEL))
-                .unwrap_or(false)
+            net::get(
+                &format!("{BASE}/models"),
+                &[("Authorization", &format!("Bearer {}", self.key))],
+            )
+            .and_then(|b| net::jq(&b, ".data[].id"))
+            .map(|ids| ids.lines().any(|id| id.trim() == MODEL))
+            .unwrap_or(false)
         };
         // the cache is only ever read through &self, so recompute rather than mutate
         v
@@ -107,7 +110,7 @@ impl DecisionSource for Subq {
         if self.key.is_empty() {
             return None;
         }
-        let body = Self::question(repo).replace(&json_str(text_placeholder()), &json_str(text));
+        let body = Self::question(repo, text);
         let (status, resp) = net::post(
             &format!("{BASE}/systemone"),
             &[("Authorization", &format!("Bearer {}", self.key))],
@@ -120,8 +123,10 @@ impl DecisionSource for Subq {
         // disputes its numbers. Multiplying them is the cheapest honest
         // conjunction - a name collision cannot be rescued by a confident
         // critique judgement.
-        let subject: f64 = net::jq(&resp, ".answers.subject.noul").and_then(|v| v.trim().parse().ok())?;
-        let critique: f64 = net::jq(&resp, ".answers.critique.noul").and_then(|v| v.trim().parse().ok())?;
+        let subject: f64 =
+            net::jq(&resp, ".answers.subject.noul").and_then(|v| v.trim().parse().ok())?;
+        let critique: f64 =
+            net::jq(&resp, ".answers.critique.noul").and_then(|v| v.trim().parse().ok())?;
         Some(subject * critique)
     }
 }
@@ -131,16 +136,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn question_is_valid_json_with_the_placeholder() {
-        let q = Subq::question("apache/datafusion");
+    fn question_embeds_the_text_escaped() {
+        let q = Subq::question("apache/datafusion", "he said \"hi\" \n and left");
         assert!(q.contains("\"type\":\"noul\""));
         assert!(q.contains("apache/datafusion"));
-        assert!(q.contains("\\u0001"), "placeholder must be a JSON escape: {q}");
-    }
-
-    #[test]
-    fn text_substitution_escapes_quotes() {
-        let q = Subq::question("a/b").replace(&json_str(text_placeholder()), &json_str("he said \"hi\""));
-        assert!(q.contains("he said \\\"hi\\\""));
+        assert!(q.contains("\\\"hi\\\""), "quotes must be escaped: {q}");
+        assert!(q.contains("\\n"), "newlines must be escaped: {q}");
     }
 }

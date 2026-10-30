@@ -48,9 +48,18 @@ fn main() {
         let mut i = 2;
         while i < args.len() {
             match args[i].as_str() {
-                "--limit" => { i += 1; opts.limit = args.get(i).and_then(|v| v.parse().ok()).unwrap_or(0); }
-                "--only" => { i += 1; opts.only = args.get(i).cloned(); }
-                other => { eprintln!("abr verify: unknown option '{other}'"); exit(2); }
+                "--limit" => {
+                    i += 1;
+                    opts.limit = args.get(i).and_then(|v| v.parse().ok()).unwrap_or(0);
+                }
+                "--only" => {
+                    i += 1;
+                    opts.only = args.get(i).cloned();
+                }
+                other => {
+                    eprintln!("abr verify: unknown option '{other}'");
+                    exit(2);
+                }
             }
             i += 1;
         }

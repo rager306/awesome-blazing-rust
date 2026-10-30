@@ -69,8 +69,12 @@ pub enum State {
 /// Loaded -> Checked: run all domain invariants.
 pub fn run_checks(ws: Workspace) -> State {
     let fresh = super::projection::catalog(&ws.model).content;
-    let mut violations =
-        super::rules::check(&ws.model, &ws.patterns_index, ws.catalog_raw.as_deref(), &fresh);
+    let mut violations = super::rules::check(
+        &ws.model,
+        &ws.patterns_index,
+        ws.catalog_raw.as_deref(),
+        &fresh,
+    );
     // Signals are data about the project, never evidence about its speed: they
     // can only hold or demote a card (see rules::check_signals).
     if let Some(raw) = ws.signals_raw.as_deref() {
@@ -85,7 +89,10 @@ pub fn run_checks(ws: Workspace) -> State {
 pub fn plan(cmd: Cmd, ws: Workspace) -> Result<State, String> {
     let artifacts = match cmd {
         Cmd::Catalog => vec![super::projection::catalog(&ws.model)],
-        Cmd::Patterns => vec![super::projection::patterns_doc(&ws.model, &ws.patterns_raw)?],
+        Cmd::Patterns => vec![super::projection::patterns_doc(
+            &ws.model,
+            &ws.patterns_raw,
+        )?],
         Cmd::Llms => vec![super::projection::llms(&ws.model)],
         // Check/Stats are terminal observations; Upstream is handled in the
         // driver at Checked (the fetch is I/O and lives behind a port).
@@ -112,7 +119,12 @@ pub fn stats_report(ws: &Workspace) -> Report {
         summary.push_str(&format!("  {k}: {n}\n"));
     }
     summary.push_str(&format!("tags: {}", ws.model.usage().len()));
-    Report { ok: true, summary, failures: Vec::new(), artifacts_written: 0 }
+    Report {
+        ok: true,
+        summary,
+        failures: Vec::new(),
+        artifacts_written: 0,
+    }
 }
 
 pub fn check_report(ws: &Workspace, violations: &[Violation]) -> Report {

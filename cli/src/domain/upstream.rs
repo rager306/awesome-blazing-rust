@@ -28,7 +28,10 @@ pub fn json(rows: &[UpstreamRow]) -> String {
     let mut out = String::from("[\n");
     for (i, r) in sorted.iter().enumerate() {
         let comma = if i + 1 == sorted.len() { "" } else { "," };
-        out.push_str(&format!("  {{\"repo\": \"{}\", \"tag\": \"{}\"}}{}\n", r.repo, r.tag, comma));
+        out.push_str(&format!(
+            "  {{\"repo\": \"{}\", \"tag\": \"{}\"}}{}\n",
+            r.repo, r.tag, comma
+        ));
     }
     out.push_str("]\n");
     out
@@ -42,7 +45,9 @@ pub fn parse_prev(raw: &str) -> Vec<UpstreamRow> {
         if !line.starts_with("{\"repo\": \"") {
             continue;
         }
-        let inner = line.trim_start_matches("{\"repo\": \"").trim_end_matches('}');
+        let inner = line
+            .trim_start_matches("{\"repo\": \"")
+            .trim_end_matches('}');
         if let Some((repo, tag)) = inner.split_once("\", \"tag\": \"") {
             rows.push(UpstreamRow {
                 repo: repo.to_string(),
@@ -62,10 +67,14 @@ pub struct Diff {
 /// Compare fetched rows against the previous projection (pure).
 pub fn diff(prev_raw: Option<&str>, rows: &[UpstreamRow]) -> Diff {
     let prev = prev_raw.map(parse_prev).unwrap_or_default();
-    let prev_map: std::collections::BTreeMap<&str, &str> =
-        prev.iter().map(|r| (r.repo.as_str(), r.tag.as_str())).collect();
-    let now_map: std::collections::BTreeMap<&str, &str> =
-        rows.iter().map(|r| (r.repo.as_str(), r.tag.as_str())).collect();
+    let prev_map: std::collections::BTreeMap<&str, &str> = prev
+        .iter()
+        .map(|r| (r.repo.as_str(), r.tag.as_str()))
+        .collect();
+    let now_map: std::collections::BTreeMap<&str, &str> = rows
+        .iter()
+        .map(|r| (r.repo.as_str(), r.tag.as_str()))
+        .collect();
 
     let mut d = Diff::default();
     for (repo, tag) in &now_map {
@@ -117,7 +126,12 @@ pub fn incident(unreachable: usize, scanned: usize) -> bool {
 
 /// Repos at or past the enforcement threshold (phase 2 removes these).
 pub fn tripwire(strike: &Strike) -> Vec<String> {
-    strike.0.iter().filter(|(_, n)| **n >= 3).map(|(r, _)| r.clone()).collect()
+    strike
+        .0
+        .iter()
+        .filter(|(_, n)| **n >= 3)
+        .map(|(r, _)| r.clone())
+        .collect()
 }
 
 /// Deterministic one-line-object projection (same contract style as `json`).
@@ -125,7 +139,9 @@ pub fn strike_json(strike: &Strike) -> String {
     let mut out = String::from("[\n");
     for (i, (repo, n)) in strike.0.iter().enumerate() {
         let comma = if i + 1 == strike.0.len() { "" } else { "," };
-        out.push_str(&format!("  {{\"repo\": \"{repo}\", \"strikes\": {n}}}{comma}\n"));
+        out.push_str(&format!(
+            "  {{\"repo\": \"{repo}\", \"strikes\": {n}}}{comma}\n"
+        ));
     }
     out.push_str("]\n");
     out
@@ -139,7 +155,9 @@ pub fn parse_strike(raw: &str) -> Strike {
         if !line.starts_with("{\"repo\": \"") {
             continue;
         }
-        let inner = line.trim_start_matches("{\"repo\": \"").trim_end_matches('}');
+        let inner = line
+            .trim_start_matches("{\"repo\": \"")
+            .trim_end_matches('}');
         if let Some((repo, n)) = inner.split_once("\", \"strikes\": ") {
             if let Ok(n) = n.parse::<u32>() {
                 s.0.insert(repo.to_string(), n);
@@ -155,16 +173,28 @@ mod tests {
 
     #[test]
     fn slug_extracts_owner_repo() {
-        assert_eq!(repo_slug("https://github.com/RoaringBitmap/roaring-rs"), Some("RoaringBitmap/roaring-rs".into()));
-        assert_eq!(repo_slug("https://github.com/o/r/blob/main/x.md"), Some("o/r".into()));
+        assert_eq!(
+            repo_slug("https://github.com/RoaringBitmap/roaring-rs"),
+            Some("RoaringBitmap/roaring-rs".into())
+        );
+        assert_eq!(
+            repo_slug("https://github.com/o/r/blob/main/x.md"),
+            Some("o/r".into())
+        );
         assert_eq!(repo_slug("https://rust-lang.org"), None);
     }
 
     #[test]
     fn json_roundtrip() {
         let rows = vec![
-            UpstreamRow { repo: "b/c".into(), tag: "v2".into() },
-            UpstreamRow { repo: "a/b".into(), tag: "v1".into() },
+            UpstreamRow {
+                repo: "b/c".into(),
+                tag: "v2".into(),
+            },
+            UpstreamRow {
+                repo: "a/b".into(),
+                tag: "v1".into(),
+            },
         ];
         let text = json(&rows);
         assert!(text.find("\"repo\": \"a/b\"").unwrap() < text.find("\"repo\": \"b/c\"").unwrap());
@@ -177,22 +207,49 @@ mod tests {
     #[test]
     fn diff_reports_changed_new_gone() {
         let prev = json(&[
-            UpstreamRow { repo: "a/b".into(), tag: "v1".into() },
-            UpstreamRow { repo: "x/y".into(), tag: "v9".into() },
+            UpstreamRow {
+                repo: "a/b".into(),
+                tag: "v1".into(),
+            },
+            UpstreamRow {
+                repo: "x/y".into(),
+                tag: "v9".into(),
+            },
         ]);
         let now = vec![
-            UpstreamRow { repo: "a/b".into(), tag: "v2".into() },
-            UpstreamRow { repo: "n/m".into(), tag: "v0".into() },
+            UpstreamRow {
+                repo: "a/b".into(),
+                tag: "v2".into(),
+            },
+            UpstreamRow {
+                repo: "n/m".into(),
+                tag: "v0".into(),
+            },
         ];
         let d = diff(Some(&prev), &now);
-        assert_eq!(d.changed, vec!["a/b: v1 -> v2".to_string(), "n/m: v0 (first scan)".to_string()]);
+        assert_eq!(
+            d.changed,
+            vec![
+                "a/b: v1 -> v2".to_string(),
+                "n/m: v0 (first scan)".to_string()
+            ]
+        );
         assert_eq!(d.gone, vec!["x/y".to_string()]);
     }
 
     #[test]
     fn strike_increments_on_unreachable_and_resets_on_success() {
         let mut s = Strike::default();
-        let out = |unreachable: bool| vec![("a/b".to_string(), if unreachable { Outcome::Unreachable } else { Outcome::Ok })];
+        let out = |unreachable: bool| {
+            vec![(
+                "a/b".to_string(),
+                if unreachable {
+                    Outcome::Unreachable
+                } else {
+                    Outcome::Ok
+                },
+            )]
+        };
         s = apply(&s, &out(true));
         s = apply(&s, &out(true));
         assert_eq!(s.0.get("a/b"), Some(&2));
@@ -203,8 +260,20 @@ mod tests {
     #[test]
     fn strike_tracks_repos_independently() {
         let mut s = Strike::default();
-        s = apply(&s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
-        s = apply(&s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+        s = apply(
+            &s,
+            &[
+                ("a/b".to_string(), Outcome::Unreachable),
+                ("c/d".to_string(), Outcome::Ok),
+            ],
+        );
+        s = apply(
+            &s,
+            &[
+                ("a/b".to_string(), Outcome::Unreachable),
+                ("c/d".to_string(), Outcome::Ok),
+            ],
+        );
         assert_eq!(s.0.get("a/b"), Some(&2));
         assert_eq!(s.0.get("c/d"), Some(&0));
     }
@@ -225,7 +294,13 @@ mod tests {
     fn tripwire_reports_three_strikes() {
         let mut s = Strike::default();
         for _ in 0..3 {
-            s = apply(&s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+            s = apply(
+                &s,
+                &[
+                    ("a/b".to_string(), Outcome::Unreachable),
+                    ("c/d".to_string(), Outcome::Ok),
+                ],
+            );
         }
         assert_eq!(tripwire(&s), vec!["a/b".to_string()]);
     }
@@ -233,8 +308,20 @@ mod tests {
     #[test]
     fn strike_state_roundtrips_through_lines() {
         let mut s = Strike::default();
-        s = apply(&s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
-        s = apply(&s, &[("a/b".to_string(), Outcome::Unreachable), ("c/d".to_string(), Outcome::Ok)]);
+        s = apply(
+            &s,
+            &[
+                ("a/b".to_string(), Outcome::Unreachable),
+                ("c/d".to_string(), Outcome::Ok),
+            ],
+        );
+        s = apply(
+            &s,
+            &[
+                ("a/b".to_string(), Outcome::Unreachable),
+                ("c/d".to_string(), Outcome::Ok),
+            ],
+        );
         let text = strike_json(&s);
         let back = parse_strike(&text);
         assert_eq!(back.0.get("a/b"), Some(&2));

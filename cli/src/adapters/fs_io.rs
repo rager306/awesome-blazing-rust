@@ -47,7 +47,11 @@ impl Source for FsIo {
     fn read(&self, path: &str) -> String {
         let p = self.resolve(path);
         fs::read_to_string(&p).unwrap_or_else(|e| {
-            eprintln!("abr: cannot read {} (root {}): {e}", p.display(), self.root.display());
+            eprintln!(
+                "abr: cannot read {} (root {}): {e}",
+                p.display(),
+                self.root.display()
+            );
             exit(1);
         })
     }

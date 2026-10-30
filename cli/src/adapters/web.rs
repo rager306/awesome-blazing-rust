@@ -10,7 +10,9 @@ pub struct WebSignals {
 
 impl WebSignals {
     pub fn new() -> WebSignals {
-        WebSignals { rustsec_index: None }
+        WebSignals {
+            rustsec_index: None,
+        }
     }
 
     fn rustsec_index(&mut self) -> &Option<Vec<String>> {
@@ -27,8 +29,14 @@ impl WebSignals {
 }
 
 fn norm_repo(url: &str) -> String {
-    let u = url.trim().trim_end_matches('/').trim_end_matches(".git").to_lowercase();
-    u.replace("https://", "").replace("http://", "").replace("www.", "")
+    let u = url
+        .trim()
+        .trim_end_matches('/')
+        .trim_end_matches(".git")
+        .to_lowercase();
+    u.replace("https://", "")
+        .replace("http://", "")
+        .replace("www.", "")
 }
 
 impl SignalsSource for WebSignals {
@@ -67,7 +75,8 @@ impl SignalsSource for WebSignals {
         // crates.io asks for at most one request per second.
         std::thread::sleep(std::time::Duration::from_millis(1050));
         let body = net::get(&format!("https://crates.io/api/v1/crates/{name}"), &[])?;
-        let filter = "[.crate.name, .crate.downloads, .crate.recent_downloads, .crate.num_versions, \
+        let filter =
+            "[.crate.name, .crate.downloads, .crate.recent_downloads, .crate.num_versions, \
                       .crate.yanked, .crate.updated_at, .crate.repository] | @tsv";
         let row = net::jq(&body, filter)?;
         let f: Vec<String> = net::tsv_lines(&row).into_iter().next()?;
@@ -92,18 +101,27 @@ impl SignalsSource for WebSignals {
         let q = urlencode(&format!("\"{name}\""));
         let count = |tags: &str| -> u64 {
             net::get(
-                &format!("https://hn.algolia.com/api/v1/search?query={q}&tags={tags}&hitsPerPage=1"),
+                &format!(
+                    "https://hn.algolia.com/api/v1/search?query={q}&tags={tags}&hitsPerPage=1"
+                ),
                 &[],
             )
             .and_then(|b| net::jq(&b, ".nbHits"))
             .and_then(|v| v.trim().parse().ok())
             .unwrap_or(0)
         };
-        MentionCounts { stories: count("story"), comments: count("comment") }
+        MentionCounts {
+            stories: count("story"),
+            comments: count("comment"),
+        }
     }
 
     fn advisories(&mut self, name: &str) -> Vec<String> {
-        let indexed = self.rustsec_index().as_ref().map(|v| v.iter().any(|n| n == name)).unwrap_or(false);
+        let indexed = self
+            .rustsec_index()
+            .as_ref()
+            .map(|v| v.iter().any(|n| n == name))
+            .unwrap_or(false);
         if !indexed {
             return Vec::new();
         }
@@ -129,7 +147,10 @@ impl SignalsSource for WebSignals {
         ) else {
             return Vec::new();
         };
-        let Some(rows) = net::jq(&body, ".hits[] | [.objectID, .created_at, .comment_text] | @tsv") else {
+        let Some(rows) = net::jq(
+            &body,
+            ".hits[] | [.objectID, .created_at, .comment_text] | @tsv",
+        ) else {
             return Vec::new();
         };
         let slug = repo.to_lowercase();
@@ -146,7 +167,10 @@ impl SignalsSource for WebSignals {
             if created.get(..4).unwrap_or("0000") < "2020" {
                 continue;
             }
-            if !["bench", "fast", "speed", "perf", "slower", "faster"].iter().any(|w| low.contains(w)) {
+            if !["bench", "fast", "speed", "perf", "slower", "faster"]
+                .iter()
+                .any(|w| low.contains(w))
+            {
                 continue;
             }
             out.push(Candidate {
@@ -167,7 +191,9 @@ fn urlencode(s: &str) -> String {
     let mut out = String::with_capacity(s.len() * 3);
     for b in s.bytes() {
         match b {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => out.push(b as char),
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
+                out.push(b as char)
+            }
             b' ' => out.push_str("%20"),
             _ => out.push_str(&format!("%{b:02X}")),
         }
@@ -181,8 +207,14 @@ mod tests {
 
     #[test]
     fn repo_normalisation_ignores_case_and_suffixes() {
-        assert_eq!(norm_repo("https://github.com/Apache/Datafusion/"), "github.com/apache/datafusion");
-        assert_eq!(norm_repo("https://github.com/apache/datafusion.git"), "github.com/apache/datafusion");
+        assert_eq!(
+            norm_repo("https://github.com/Apache/Datafusion/"),
+            "github.com/apache/datafusion"
+        );
+        assert_eq!(
+            norm_repo("https://github.com/apache/datafusion.git"),
+            "github.com/apache/datafusion"
+        );
     }
 
     #[test]

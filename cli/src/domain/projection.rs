@@ -18,7 +18,7 @@ pub struct Artifact {
     pub content: String,
 }
 
-fn json_escape(s: &str) -> String {
+pub(crate) fn json_escape(s: &str) -> String {
     let mut out = String::with_capacity(s.len() + 8);
     for c in s.chars() {
         match c {
@@ -63,7 +63,10 @@ pub fn catalog(model: &Model) -> Artifact {
         .collect();
     out.push_str(&items.join(",\n"));
     out.push_str("\n  ]\n}\n");
-    Artifact { path: CATALOG_PATH, content: out }
+    Artifact {
+        path: CATALOG_PATH,
+        content: out,
+    }
 }
 
 fn index_table(model: &Model) -> String {
@@ -83,10 +86,15 @@ fn index_table(model: &Model) -> String {
 /// notes tail below the marker.
 pub fn patterns_doc(model: &Model, current: &str) -> Result<Artifact, String> {
     let tail_pos = current.find(PATTERNS_TAIL_MARKER).ok_or_else(|| {
-        format!("PATTERNS.md missing notes marker ({PATTERNS_TAIL_MARKER}) - refusing to regenerate")
+        format!(
+            "PATTERNS.md missing notes marker ({PATTERNS_TAIL_MARKER}) - refusing to regenerate"
+        )
     })?;
     let tail = &current[tail_pos..];
-    Ok(Artifact { path: PATTERNS_PATH, content: format!("{}{}", index_table(model), tail) })
+    Ok(Artifact {
+        path: PATTERNS_PATH,
+        content: format!("{}{}", index_table(model), tail),
+    })
 }
 
 /// llms.txt - the LLM-facing entry point (same spirit as llms.txt on sites).
@@ -97,10 +105,17 @@ pub fn llms(model: &Model) -> Artifact {
         model.entries.len()
     ));
     for s in &model.sections {
-        out.push_str(&format!("- {} ({} entries)\n", s, model.count_in_section(s)));
+        out.push_str(&format!(
+            "- {} ({} entries)\n",
+            s,
+            model.count_in_section(s)
+        ));
     }
     out.push_str("\n## For agents\n\n- Use catalog/projects.json for structured access; the README is prose-first.\n- Card types are explicit (**Type:** in the card, the type field here): measured = numbers plus a named baseline required; tool and case-study = mechanism claims, numbers optional; agent-skill = points at a skill file. A measured card without numbers is a bug; a tool card without numbers is normal.\n- Tags are defined in PATTERNS.md; unknown tags in PRs must add a row.\n");
-    Artifact { path: LLMS_PATH, content: out }
+    Artifact {
+        path: LLMS_PATH,
+        content: out,
+    }
 }
 
 #[cfg(test)]
@@ -133,7 +148,9 @@ mod tests {
     fn patterns_preserves_tail_and_links_decisions() {
         let cur = "OLD\n---\n\n## Pattern Notes\n\nkeep me";
         let doc = patterns_doc(&model(), cur).unwrap();
-        assert!(doc.content.contains("[`cost-model-driven`](decisions/001-cost-model-driven.md)"));
+        assert!(doc
+            .content
+            .contains("[`cost-model-driven`](decisions/001-cost-model-driven.md)"));
         assert!(doc.content.ends_with("keep me"));
     }
 

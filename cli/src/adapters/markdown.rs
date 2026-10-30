@@ -8,7 +8,9 @@ use crate::domain::model::{Entry, Kind, Model, PatternRow, Provenance};
 /// A tag token must be lowercase alnum or '-', otherwise it is prose that
 /// leaked out of a backtick pair - never a tag.
 fn is_tag_token(t: &str) -> bool {
-    !t.is_empty() && t.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
+    !t.is_empty()
+        && t.chars()
+            .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
 }
 
 fn parse_arch_tags(arch_tail: &str) -> Vec<String> {
@@ -76,18 +78,35 @@ pub fn parse_readme(readme: &str) -> Model {
                 .unwrap_or_default();
             let declared = body
                 .find("**Type:**")
-                .map(|i| field_end(&body[i + "**Type:**".len()..]).trim().trim_end_matches('.'))
+                .map(|i| {
+                    field_end(&body[i + "**Type:**".len()..])
+                        .trim()
+                        .trim_end_matches('.')
+                })
                 .and_then(Kind::parse);
             let measured_by = body
                 .find("**Measured by:**")
-                .map(|i| field_end(&body[i + "**Measured by:**".len()..]).trim().trim_end_matches('.'))
+                .map(|i| {
+                    field_end(&body[i + "**Measured by:**".len()..])
+                        .trim()
+                        .trim_end_matches('.')
+                })
                 .and_then(Provenance::parse);
             let arch = body
                 .split("**Arch:**")
                 .nth(1)
                 .map(parse_arch_tags)
                 .unwrap_or_default();
-            model.entries.push(Entry { name, url, section: section.clone(), description, blazing, arch, declared, measured_by });
+            model.entries.push(Entry {
+                name,
+                url,
+                section: section.clone(),
+                description,
+                blazing,
+                arch,
+                declared,
+                measured_by,
+            });
         }
     }
     model
@@ -113,8 +132,16 @@ pub fn parse_patterns(patterns: &str) -> Vec<PatternRow> {
             .trim_end_matches(['`', ')'])
             .to_string();
         let has_decision_link = cells[0].starts_with("[`");
-        let used_by = cells[1].split(", ").map(str::to_string).filter(|s| !s.is_empty()).collect();
-        rows.push(PatternRow { tag, has_decision_link, used_by });
+        let used_by = cells[1]
+            .split(", ")
+            .map(str::to_string)
+            .filter(|s| !s.is_empty())
+            .collect();
+        rows.push(PatternRow {
+            tag,
+            has_decision_link,
+            used_by,
+        });
     }
     rows
 }
@@ -146,14 +173,19 @@ Intro line.
         assert_eq!(m.sections, vec!["Alpha".to_string(), "Use".to_string()]);
         assert_eq!(m.entries.len(), 2);
         let alpha = &m.entries[0];
-        assert_eq!(alpha.arch, vec!["simd".to_string(), "lock-free".to_string()]);
+        assert_eq!(
+            alpha.arch,
+            vec!["simd".to_string(), "lock-free".to_string()]
+        );
         assert_eq!(alpha.blazing, "10x faster, 5 MB.");
         assert_eq!(m.entries[1].kind(), crate::domain::model::Kind::CaseStudy);
     }
 
     #[test]
     fn parses_pattern_rows() {
-        let rows = parse_patterns("| [`cost-model-driven`](decisions/001.md) | bbtree, x |\n| `simd` | alpha |\n");
+        let rows = parse_patterns(
+            "| [`cost-model-driven`](decisions/001.md) | bbtree, x |\n| `simd` | alpha |\n",
+        );
         assert_eq!(rows.len(), 2);
         assert_eq!(rows[0].tag, "cost-model-driven");
         assert!(rows[0].has_decision_link);

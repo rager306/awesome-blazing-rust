@@ -25,7 +25,11 @@ pub fn parse_signals(raw: &str) -> Vec<SignalRow> {
         let t = line.trim();
         if let Some(rest) = t.strip_prefix("\"repo\": \"") {
             if let Some(name) = rest.split('"').next() {
-                rows.push(SignalRow { repo: name.to_string(), flags: Vec::new(), verdict: None });
+                rows.push(SignalRow {
+                    repo: name.to_string(),
+                    flags: Vec::new(),
+                    verdict: None,
+                });
             }
             continue;
         }
@@ -100,9 +104,18 @@ pub fn check_signals(model: &Model, signals: &[SignalRow]) -> Vec<Violation> {
 /// Patterns with a full ADR write-up.
 pub const DECISION_LINKS: &[(&str, &str)] = &[
     ("cost-model-driven", "decisions/001-cost-model-driven.md"),
-    ("findings-as-verdicts", "decisions/002-findings-as-verdicts.md"),
-    ("proof-carrying-performance", "decisions/003-proof-carrying-performance.md"),
-    ("memory-bounded-streaming", "decisions/004-memory-bounded-streaming.md"),
+    (
+        "findings-as-verdicts",
+        "decisions/002-findings-as-verdicts.md",
+    ),
+    (
+        "proof-carrying-performance",
+        "decisions/003-proof-carrying-performance.md",
+    ),
+    (
+        "memory-bounded-streaming",
+        "decisions/004-memory-bounded-streaming.md",
+    ),
     ("skills-in-repo", "decisions/005-skills-in-repo.md"),
 ];
 
@@ -202,7 +215,10 @@ pub fn check(
         if e.kind() == Kind::AgentSkill && !in_skills {
             out.push(Violation {
                 code: "SKILL_OUTSIDE_SECTION",
-                message: format!("agent-skill entry '{}' is outside the Agent Skills section", e.name),
+                message: format!(
+                    "agent-skill entry '{}' is outside the Agent Skills section",
+                    e.name
+                ),
             });
         }
         if in_skills && e.kind() != Kind::AgentSkill {
@@ -348,7 +364,12 @@ mod tests {
     fn measured_numbers_need_a_named_baseline() {
         let m = Model {
             sections: vec![],
-            entries: vec![entry_typed("x", &[], "3x faster on tier two", Some(Kind::Measured))],
+            entries: vec![entry_typed(
+                "x",
+                &[],
+                "3x faster on tier two",
+                Some(Kind::Measured),
+            )],
         };
         let v = check(&m, &[], None, "{}");
         assert!(v.iter().any(|x| x.code == "MEASURED_NO_BASELINE"));
@@ -394,7 +415,12 @@ mod tests {
     fn measured_needs_a_named_measurer() {
         let m = Model {
             sections: vec![],
-            entries: vec![entry_typed("x", &[], "3x vs baseline", Some(Kind::Measured))],
+            entries: vec![entry_typed(
+                "x",
+                &[],
+                "3x vs baseline",
+                Some(Kind::Measured),
+            )],
         };
         let v = check(&m, &[], Some("x"), "x");
         assert!(v.iter().any(|x| x.code == "MEASURED_NO_PROVENANCE"));
@@ -404,23 +430,39 @@ mod tests {
     fn provenance_on_a_case_study_is_a_violation() {
         let mut e = entry_typed("x", &[], "claim", Some(Kind::CaseStudy));
         e.measured_by = Some(Provenance::Author);
-        let m = Model { sections: vec![], entries: vec![e] };
+        let m = Model {
+            sections: vec![],
+            entries: vec![e],
+        };
         let v = check(&m, &[], Some("x"), "x");
         assert!(v.iter().any(|x| x.code == "PROVENANCE_ON_UNMEASURED"));
     }
 
     #[test]
     fn a_catalog_claim_must_link_its_run() {
-        let mut e = entry_typed("x", &[], "2.5 ms vs 1879 ms, see the run", Some(Kind::Measured));
+        let mut e = entry_typed(
+            "x",
+            &[],
+            "2.5 ms vs 1879 ms, see the run",
+            Some(Kind::Measured),
+        );
         e.measured_by = Some(Provenance::Catalog);
-        let m = Model { sections: vec![], entries: vec![e] };
+        let m = Model {
+            sections: vec![],
+            entries: vec![e],
+        };
         let v = check(&m, &[], Some("x"), "x");
         assert!(v.iter().any(|x| x.code == "CATALOG_RUN_UNLINKED"));
 
         let mut linked = entry_typed("x", &[], "see runs/x/RESULTS.md", Some(Kind::Measured));
         linked.measured_by = Some(Provenance::Catalog);
-        let m = Model { sections: vec![], entries: vec![linked] };
-        assert!(check(&m, &[], Some("x"), "x").iter().all(|v| v.code != "CATALOG_RUN_UNLINKED"));
+        let m = Model {
+            sections: vec![],
+            entries: vec![linked],
+        };
+        assert!(check(&m, &[], Some("x"), "x")
+            .iter()
+            .all(|v| v.code != "CATALOG_RUN_UNLINKED"));
     }
 
     #[test]
@@ -433,7 +475,7 @@ mod tests {
             blazing: "10x vs baseline".to_string(),
             arch: vec![],
             declared: Some(Kind::CaseStudy),
-                measured_by: None,
+            measured_by: None,
         };
         // same repository spelled differently: case, trailing slash, .git
         for (second_name, second_url) in [
@@ -466,7 +508,7 @@ mod tests {
             blazing: "10x vs baseline".to_string(),
             arch: vec![],
             declared: Some(Kind::CaseStudy),
-                measured_by: None,
+            measured_by: None,
         };
         let m = Model {
             sections: vec![],
@@ -501,7 +543,10 @@ mod tests {
         let rows = parse_signals(raw);
         assert_eq!(rows.len(), 2);
         assert_eq!(rows[0].repo, "a/b");
-        assert_eq!(rows[0].flags, vec!["security".to_string(), "unmaintained".to_string()]);
+        assert_eq!(
+            rows[0].flags,
+            vec!["security".to_string(), "unmaintained".to_string()]
+        );
         assert_eq!(rows[0].verdict.as_deref(), Some("contested"));
         assert!(rows[1].flags.is_empty());
         assert!(rows[1].verdict.is_none());
@@ -547,7 +592,10 @@ mod tests {
 
     #[test]
     fn unknown_signal_flag_is_a_violation() {
-        let m = Model { sections: vec![], entries: vec![] };
+        let m = Model {
+            sections: vec![],
+            entries: vec![],
+        };
         let signals = vec![SignalRow {
             repo: "a/b".into(),
             flags: vec!["feels-hypey".into()],
@@ -559,7 +607,10 @@ mod tests {
 
     #[test]
     fn unknown_pattern_reference_detected() {
-        let m = Model { sections: vec![], entries: vec![] };
+        let m = Model {
+            sections: vec![],
+            entries: vec![],
+        };
         let patterns = vec![PatternRow {
             tag: "t".into(),
             has_decision_link: false,

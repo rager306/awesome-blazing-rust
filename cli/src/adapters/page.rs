@@ -43,7 +43,9 @@ pub fn to_text(html: &str) -> String {
                 if in_script {
                     // find the closing tag
                     let rest: String = bytes[i..bytes.len().min(i + 10)].iter().collect();
-                    if rest.to_lowercase().contains("/script") || rest.to_lowercase().contains("/style") {
+                    if rest.to_lowercase().contains("/script")
+                        || rest.to_lowercase().contains("/style")
+                    {
                         in_script = false;
                     }
                 } else {
@@ -51,7 +53,9 @@ pub fn to_text(html: &str) -> String {
                 }
             } else if in_script {
                 let rest: String = bytes[i..bytes.len().min(i + 10)].iter().collect();
-                if rest.to_lowercase().starts_with("/script") || rest.to_lowercase().starts_with("/style") {
+                if rest.to_lowercase().starts_with("/script")
+                    || rest.to_lowercase().starts_with("/style")
+                {
                     in_script = false;
                     in_tag = false;
                 }
@@ -82,7 +86,13 @@ pub fn to_text(html: &str) -> String {
 }
 
 fn decode_entity(rest: &str) -> Option<(char, usize)> {
-    for (name, ch) in [("&amp;", '&'), ("&lt;", '<'), ("&gt;", '>'), ("&quot;", '"'), ("&#39;", '\'')] {
+    for (name, ch) in [
+        ("&amp;", '&'),
+        ("&lt;", '<'),
+        ("&gt;", '>'),
+        ("&quot;", '"'),
+        ("&#39;", '\''),
+    ] {
         if rest.starts_with(name) {
             return Some((ch, name.len()));
         }

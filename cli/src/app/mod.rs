@@ -6,8 +6,8 @@
 use crate::adapters::markdown;
 use crate::domain::fsm::{self, Cmd, Report, State, Workspace};
 use crate::domain::signals::{self, Bucket, Crate, Dispute, SignalRow};
-use crate::domain::verify;
 use crate::domain::upstream::{self, UpstreamRow};
+use crate::domain::verify;
 use crate::ports::signals::DecisionSource;
 use crate::ports::sink::Sink;
 use crate::ports::source::Source;
@@ -54,14 +54,25 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
                 let model = markdown::parse_readme(&readme);
                 let patterns_index = markdown::parse_patterns(&patterns_raw);
                 let signals_raw = io.read_opt(SIGNALS);
-                State::Loaded(Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw, signals_raw })
+                State::Loaded(Workspace {
+                    model,
+                    patterns_index,
+                    patterns_raw,
+                    catalog_raw,
+                    upstream_raw,
+                    signals_raw,
+                })
             }
             // Loaded -> Checked: domain invariants run on every command.
             State::Loaded(ws) => fsm::run_checks(ws),
             State::Checked(ws, violations) => match cmd {
                 Cmd::Check => {
                     let r = fsm::check_report(&ws, &violations);
-                    if r.ok { State::Done(r) } else { State::Failed(r) }
+                    if r.ok {
+                        State::Done(r)
+                    } else {
+                        State::Failed(r)
+                    }
                 }
                 Cmd::Stats => State::Done(fsm::stats_report(&ws)),
                 // Generators are the fix path for violations (e.g. new tags
@@ -84,21 +95,27 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
                     io.write(a.path, &a.content);
                 }
                 let summary = match cmd {
-                    Cmd::Catalog => format!("catalog: wrote {CATALOG} ({} entries)", ws.model.entries.len()),
-                    Cmd::Patterns => format!("patterns: rebuilt index ({} tags)", ws.model.usage().len()),
+                    Cmd::Catalog => format!(
+                        "catalog: wrote {CATALOG} ({} entries)",
+                        ws.model.entries.len()
+                    ),
+                    Cmd::Patterns => {
+                        format!("patterns: rebuilt index ({} tags)", ws.model.usage().len())
+                    }
                     Cmd::Llms => "llms: wrote llms.txt".to_string(),
                     _ => String::new(),
                 };
-                State::Done(Report { ok: true, summary, failures: vec![], artifacts_written: n })
+                State::Done(Report {
+                    ok: true,
+                    summary,
+                    failures: vec![],
+                    artifacts_written: n,
+                })
             }
             State::Done(r) | State::Failed(r) => return r,
         };
     }
 }
-
-
-
-
 
 /// Provenance check: does each measured card's number appear at its source?
 ///
@@ -113,7 +130,11 @@ pub fn run_verify(
 ) -> Report {
     let readme = io.read(README);
     let model = markdown::parse_readme(&readme);
-    let mut cards: Vec<_> = model.entries.iter().filter(|e| e.kind() == crate::domain::model::Kind::Measured).collect();
+    let mut cards: Vec<_> = model
+        .entries
+        .iter()
+        .filter(|e| e.kind() == crate::domain::model::Kind::Measured)
+        .collect();
     if let Some(only) = &opts.only {
         cards.retain(|e| e.name.eq_ignore_ascii_case(only));
     }
@@ -141,7 +162,12 @@ pub fn run_verify(
         let (present, missing) = verify::coverage(&e.blazing, &text);
         if missing.is_empty() {
             clean += 1;
-            lines.push(format!("OK {:<26} {}/{} numbers found", e.name, present.len(), present.len()));
+            lines.push(format!(
+                "OK {:<26} {}/{} numbers found",
+                e.name,
+                present.len(),
+                present.len()
+            ));
         } else {
             lines.push(format!(
                 "MISS {:<24} {}/{} found; missing: {}",
@@ -162,7 +188,12 @@ pub fn run_verify(
         unfetched,
         lines.join("\n")
     );
-    Report { ok: true, summary, failures: Vec::new(), artifacts_written: 0 }
+    Report {
+        ok: true,
+        summary,
+        failures: Vec::new(),
+        artifacts_written: 0,
+    }
 }
 
 /// Signals: third-party context about every cataloged repository.
@@ -181,7 +212,11 @@ pub fn run_signals(
     let readme = io.read(README);
     let model = markdown::parse_readme(&readme);
 
-    let mut slugs: Vec<String> = model.entries.iter().filter_map(|e| upstream::repo_slug(&e.url)).collect();
+    let mut slugs: Vec<String> = model
+        .entries
+        .iter()
+        .filter_map(|e| upstream::repo_slug(&e.url))
+        .collect();
     slugs.sort();
     slugs.dedup();
     if let Some(only) = &opts.only {
@@ -289,15 +324,27 @@ pub fn run_signals(
         rows.len(),
         with_crate,
         flagged,
-        if triage_on { format!("on ({triaged} accepted, {review} for review)") } else { "off".to_string() }
+        if triage_on {
+            format!("on ({triaged} accepted, {review} for review)")
+        } else {
+            "off".to_string()
+        }
     );
     let failures = rows
         .iter()
         .filter(|r| !r.flags.is_empty())
         .map(|r| format!("FLAG {} {:?}", r.repo, r.flags))
         .collect();
-    summary.push_str(&format!("\n{} flag lines follow", rows.iter().filter(|r| !r.flags.is_empty()).count()));
-    Report { ok: true, summary, failures, artifacts_written: 1 }
+    summary.push_str(&format!(
+        "\n{} flag lines follow",
+        rows.iter().filter(|r| !r.flags.is_empty()).count()
+    ));
+    Report {
+        ok: true,
+        summary,
+        failures,
+        artifacts_written: 1,
+    }
 }
 
 /// Score triage against a labelled fixture: `items[] = {repo, label, text}`.
@@ -316,12 +363,9 @@ fn eval_triage(io: &impl Source, decisions: &impl DecisionSource, path: &str) ->
         };
     }
     let raw = io.read(path);
-    let rows = crate::adapters::net::jq(
-        &raw,
-        ".items[] | [.repo, .label, .text] | @tsv",
-    )
-    .map(|out| crate::adapters::net::tsv_lines(&out))
-    .unwrap_or_default();
+    let rows = crate::adapters::net::jq(&raw, ".items[] | [.repo, .label, .text] | @tsv")
+        .map(|out| crate::adapters::net::tsv_lines(&out))
+        .unwrap_or_default();
     let mut kept = 0usize;
     let mut review = 0usize;
     let mut fp = 0usize;
@@ -356,7 +400,10 @@ fn eval_triage(io: &impl Source, decisions: &impl DecisionSource, path: &str) ->
             Some(p) => format!("{p:.2}"),
             None => "-".to_string(),
         };
-        lines.push(format!("{mark:6} p={shown:5} [{}] {repo}", if truth { "critique" } else { "noise" }));
+        lines.push(format!(
+            "{mark:6} p={shown:5} [{}] {repo}",
+            if truth { "critique" } else { "noise" }
+        ));
     }
     let report = format!(
         "signals --eval: {} items, {kept} accepted, {review} in review, {fp} false positives, {lost} lost\n{}",
@@ -383,7 +430,14 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
     let model = markdown::parse_readme(&readme);
     let patterns_index = markdown::parse_patterns(&patterns_raw);
     let signals_raw = io.read_opt(SIGNALS);
-    let ws = Workspace { model, patterns_index, patterns_raw, catalog_raw, upstream_raw, signals_raw };
+    let ws = Workspace {
+        model,
+        patterns_index,
+        patterns_raw,
+        catalog_raw,
+        upstream_raw,
+        signals_raw,
+    };
     let checked = fsm::run_checks(ws);
 
     let ws = match checked {
@@ -391,7 +445,12 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
         _ => unreachable!("run_checks always returns Checked"),
     };
 
-    let mut slugs: Vec<String> = ws.model.entries.iter().filter_map(|e| upstream::repo_slug(&e.url)).collect();
+    let mut slugs: Vec<String> = ws
+        .model
+        .entries
+        .iter()
+        .filter_map(|e| upstream::repo_slug(&e.url))
+        .collect();
     slugs.sort();
     slugs.dedup();
 
@@ -399,9 +458,15 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
     let mut missing: Vec<String> = Vec::new();
     for slug in &slugs {
         match upstream.latest_tag(slug) {
-            TagState::Tag(tag) => rows.push(UpstreamRow { repo: slug.clone(), tag }),
+            TagState::Tag(tag) => rows.push(UpstreamRow {
+                repo: slug.clone(),
+                tag,
+            }),
             // stable legitimate state - must not churn the weekly diff
-            TagState::NoTags => rows.push(UpstreamRow { repo: slug.clone(), tag: "(no-tags)".into() }),
+            TagState::NoTags => rows.push(UpstreamRow {
+                repo: slug.clone(),
+                tag: "(no-tags)".into(),
+            }),
             TagState::Unreachable => missing.push(slug.clone()),
         }
     }
@@ -434,7 +499,10 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
         failures.extend(missing.iter().map(|r| format!("UNREACHABLE {r}")));
         return Report {
             ok: true,
-            summary: format!("upstream: scanned {} repos, incident - nothing written", slugs.len()),
+            summary: format!(
+                "upstream: scanned {} repos, incident - nothing written",
+                slugs.len()
+            ),
             failures,
             artifacts_written: 0,
         };
@@ -469,7 +537,14 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
     }
     // Unfetchable repos are a soft condition: the scan still succeeded.
     for repo in upstream::tripwire(&strike_new) {
-        failures.push(format!("TRIPWIRE {repo}: 3 strikes (enforcement is phase 2)"));
+        failures.push(format!(
+            "TRIPWIRE {repo}: 3 strikes (enforcement is phase 2)"
+        ));
     }
-    Report { ok: true, summary, failures, artifacts_written: 2 }
+    Report {
+        ok: true,
+        summary,
+        failures,
+        artifacts_written: 2,
+    }
 }

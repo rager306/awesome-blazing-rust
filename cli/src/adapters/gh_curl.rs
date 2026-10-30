@@ -8,10 +8,17 @@ pub struct GhCli;
 
 impl GhCli {
     fn first_tag(&self, path: &str, jq: &str) -> Option<Result<String, bool>> {
-        let out = std::process::Command::new("gh").args(["api", path, "--jq", jq]).output().ok()?;
+        let out = std::process::Command::new("gh")
+            .args(["api", path, "--jq", jq])
+            .output()
+            .ok()?;
         Some(if out.status.success() {
             let tag = String::from_utf8_lossy(&out.stdout).trim().to_string();
-            if tag.is_empty() { Err(false) } else { Ok(tag) }
+            if tag.is_empty() {
+                Err(false)
+            } else {
+                Ok(tag)
+            }
         } else {
             Err(true) // HTTP error (404 / API failure)
         })

@@ -94,7 +94,10 @@ mod tests {
 
     #[test]
     fn numbers_normalise_thousands_and_trailing_zeros() {
-        assert_eq!(numbers("1,879 ms and 1879 and 12.50"), vec!["1879", "1879", "12.5"]);
+        assert_eq!(
+            numbers("1,879 ms and 1879 and 12.50"),
+            vec!["1879", "1879", "12.5"]
+        );
         assert_eq!(numbers("2.5 ms"), vec!["2.5"]);
     }
 
@@ -107,7 +110,10 @@ mod tests {
 
     #[test]
     fn coverage_splits_present_from_missing() {
-        let (p, m) = coverage("2.5 ms vs 1879 ms for 755x", "HashSet 1879 ms; roaring 2.5 ms");
+        let (p, m) = coverage(
+            "2.5 ms vs 1879 ms for 755x",
+            "HashSet 1879 ms; roaring 2.5 ms",
+        );
         assert!(p.contains(&"2.5".to_string()) && p.contains(&"1879".to_string()));
         assert!(m.contains(&"755".to_string()));
     }
