@@ -12,7 +12,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `backend-trait` | candle, burn |
 | `batching` | io-uring |
 | `bitmap-index` | roaring-rs |
-| `branchless` | memchr |
+| `branchless` | memchr, foldhash |
 | `broad-phase-narrow-phase` | rapier |
 | `btf-probe` | uringscope |
 | `bulk-loading` | rstar |
@@ -87,7 +87,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |
 | `python-bridge` | rustworkx |
-| `quality-vs-speed` | qdrant |
+| `quality-vs-speed` | qdrant, foldhash |
 | `quantization` | qdrant |
 | `query-optimization` | polars, datafusion |
 | `rank-select` | sux |
