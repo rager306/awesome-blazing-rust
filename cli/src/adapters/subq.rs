@@ -6,6 +6,7 @@
 
 use crate::adapters::net;
 use crate::ports::signals::DecisionSource;
+use crate::ports::verify::EntailmentJudge;
 
 pub const MODEL: &str = "subq-snap-1.1";
 const BASE: &str = "https://api.subq.ai/v1";
@@ -84,6 +85,42 @@ fn json_str(s: &str) -> String {
     }
     out.push('"');
     out
+}
+
+impl EntailmentJudge for Subq {
+    fn supports(&self, claim: &str, passage: &str) -> Option<f64> {
+        if self.key.is_empty() {
+            return None;
+        }
+        let instructions =
+            "Does this passage support the specific claim: same metric, same baseline, \
+                            same units - not merely a similar number?";
+        let yes =
+            "The passage states the same measurement the claim states, against the same baseline";
+        let no =
+            "The passage mentions a different metric, a different baseline, or a number that only \
+                  looks similar";
+        let mut body = String::from("{\"model\":\"");
+        body.push_str(MODEL);
+        body.push_str("\",\"state\":");
+        body.push_str(&json_str(&format!("CLAIM: {claim}\n\nPASSAGE: {passage}")));
+        body.push_str(",\"questions\":{\"supports\":{\"type\":\"noul\",\"instructions\":");
+        body.push_str(&json_str(instructions));
+        body.push_str(",\"criteria\":{\"true\":");
+        body.push_str(&json_str(yes));
+        body.push_str(",\"false\":");
+        body.push_str(&json_str(no));
+        body.push_str("}}}}");
+        let (status, resp) = net::post(
+            &format!("{BASE}/systemone"),
+            &[("Authorization", &format!("Bearer {}", self.key))],
+            &body,
+        )?;
+        if status != 200 {
+            return None;
+        }
+        net::jq(&resp, ".answers.supports.noul").and_then(|v| v.trim().parse().ok())
+    }
 }
 
 impl DecisionSource for Subq {

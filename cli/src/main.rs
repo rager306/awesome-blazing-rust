@@ -56,6 +56,7 @@ fn main() {
                     i += 1;
                     opts.only = args.get(i).cloned();
                 }
+                "--entail" => opts.entail = true,
                 other => {
                     eprintln!("abr verify: unknown option '{other}'");
                     exit(2);
@@ -63,7 +64,12 @@ fn main() {
             }
             i += 1;
         }
-        app::run_verify(&io, &adapters::page::WebPage, &opts)
+        app::run_verify(
+            &io,
+            &adapters::page::WebPage,
+            &adapters::subq::Subq::from_env(),
+            &opts,
+        )
     } else if cmd == Cmd::Signals {
         // Signals reach the network through three ports, so the command takes
         // options of its own: --triage, --limit N, --only owner/name.

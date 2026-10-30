@@ -36,6 +36,9 @@ pub struct VerifyOpts {
     pub limit: usize,
     /// Take one card by name.
     pub only: Option<String>,
+    /// Ask the decision model whether the source supports the claim. Off by
+    /// default: it costs a request per card and it is not deterministic.
+    pub entail: bool,
 }
 
 #[derive(Default)]
@@ -135,6 +138,7 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
 pub fn run_verify(
     io: &impl Source,
     page: &impl crate::ports::verify::PageSource,
+    judge: &impl crate::ports::verify::EntailmentJudge,
     opts: &VerifyOpts,
 ) -> Report {
     let readme = load(io, README);
@@ -169,17 +173,25 @@ pub fn run_verify(
         };
         checked += 1;
         let (present, missing) = verify::coverage(&e.blazing, &text);
+        let entail = if opts.entail {
+            match judge.supports(&e.blazing, &text.chars().take(6000).collect::<String>()) {
+                Some(p) => format!(" | support {p:.2}"),
+                None => " | support n/a".to_string(),
+            }
+        } else {
+            String::new()
+        };
         if missing.is_empty() {
             clean += 1;
             lines.push(format!(
-                "OK {:<26} {}/{} numbers found",
+                "OK {:<26} {}/{} numbers found{entail}",
                 e.name,
                 present.len(),
                 present.len()
             ));
         } else {
             lines.push(format!(
-                "MISS {:<24} {}/{} found; missing: {}",
+                "MISS {:<24} {}/{} found; missing: {}{entail}",
                 e.name,
                 present.len(),
                 present.len() + missing.len(),
