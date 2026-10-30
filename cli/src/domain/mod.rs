@@ -5,6 +5,7 @@
 //! projection of it; the FSM makes every pipeline step a total transition.
 
 pub mod fsm;
+pub mod json;
 pub mod model;
 pub mod projection;
 pub mod rules;

@@ -224,7 +224,7 @@ pub fn parse_previous(
 /// One escaper for the whole domain: two copies drift, and a drifted
 /// escaper writes invalid JSON.
 fn esc(s: &str) -> String {
-    super::projection::json_escape(s)
+    super::json::escape(s)
 }
 
 fn opt_str(v: &Option<String>, indent: &str) -> String {
@@ -260,131 +260,169 @@ fn crate_block(c: &Option<Crate>, indent: &str) -> String {
 /// indent - the shape `catalog/signals.schema.json` describes and the scanner
 /// in `rules::parse_signals` reads.
 pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> String {
+    use super::json::Value;
     let mut sorted: Vec<&SignalRow> = rows.iter().collect();
     sorted.sort_by(|a, b| a.repo.cmp(&b.repo));
-    let mut out = String::from("{\n  \"meta\": {\n");
-    out.push_str("    \"format\": \"awesome-blazing-rust signals v1\",\n");
-    out.push_str("    \"rule\": \"data, not evidence: signals can only hold or demote a card, never raise its Type\",\n");
-    out.push_str("    \"sources\": [\"crates.io\", \"hn.algolia.com\", \"rustsec/advisory-db\", \"api.github.com via gh\"],\n");
+
+    let mut meta = vec![
+        (
+            "format",
+            Value::Str("awesome-blazing-rust signals v1".into()),
+        ),
+        (
+            "rule",
+            Value::Str(
+                "data, not evidence: signals can only hold or demote a card, never raise its Type"
+                    .into(),
+            ),
+        ),
+        (
+            "sources",
+            Value::strs(&[
+                "crates.io",
+                "hn.algolia.com",
+                "rustsec/advisory-db",
+                "api.github.com via gh",
+            ]),
+        ),
+    ];
     if decision_enabled {
-        out.push_str("    \"sources_note\": \"triage via subq.ai decisions\",\n");
+        meta.push((
+            "sources_note",
+            Value::Str("triage via subq.ai decisions".into()),
+        ));
     }
-    out.push_str("    \"flag_vocabulary\": [\"security\", \"unmaintained\", \"contested\", \"hype-suspect\", \"astroturf-suspected\", \"stale-claim\"],\n");
-    out.push_str(&format!(
-        "    \"generated_at\": \"{}\",\n",
-        esc(generated_at)
+    meta.push((
+        "flag_vocabulary",
+        Value::strs(&[
+            "security",
+            "unmaintained",
+            "contested",
+            "hype-suspect",
+            "astroturf-suspected",
+            "stale-claim",
+        ]),
     ));
-    out.push_str(&format!(
-        "    \"repos\": {}\n  }},\n  \"repos\": [",
-        sorted.len()
-    ));
-    for (i, r) in sorted.iter().enumerate() {
-        if i > 0 {
-            out.push(',');
-        }
-        out.push_str("\n    {\n");
-        out.push_str(&format!("      \"repo\": \"{}\",\n", esc(&r.repo)));
-        out.push_str(&format!(
-            "      \"observed_at\": \"{}\",\n",
-            esc(&r.observed_at)
-        ));
-        out.push_str("      \"github\": {\n");
-        let archived = match r.archived {
-            Some(b) => b.to_string(),
-            None => "null".to_string(),
-        };
-        out.push_str(&format!("        \"archived\": {archived},\n"));
-        out.push_str(&format!(
-            "        \"pushed_at\": {},\n",
-            opt_str(&r.pushed_at, "        ")
-        ));
-        let stars = match r.stars {
-            Some(s) => s.to_string(),
-            None => "null".to_string(),
-        };
-        out.push_str(&format!("        \"stars\": {stars},\n"));
-        out.push_str(&format!(
-            "        \"license\": {}\n",
-            opt_str(&r.license, "        ")
-        ));
-        out.push_str("      },\n");
-        out.push_str(&format!(
-            "      \"crate\": {},\n",
-            crate_block(&r.krate, "      ")
-        ));
-        out.push_str(&format!(
-            "      \"attention\": {{\n        \"stories\": {},\n        \"comments\": {},\n        \"stars_per_day\": {}\n      }},\n",
-            r.attention.stories,
-            r.attention.comments,
-            match r.attention.stars_per_day {
-                Some(v) => format!("{v:.1}"),
-                None => "null".to_string(),
+    meta.push(("generated_at", Value::Str(generated_at.to_string())));
+    meta.push(("repos", Value::num(sorted.len())));
+
+    let rows_json: Vec<Value> = sorted
+        .iter()
+        .map(|r| {
+            let mut fields = vec![
+                ("repo", Value::Str(r.repo.clone())),
+                ("observed_at", Value::Str(r.observed_at.clone())),
+                (
+                    "github",
+                    Value::obj(vec![
+                        (
+                            "archived",
+                            match r.archived {
+                                Some(b) => Value::Bool(b),
+                                None => Value::Null,
+                            },
+                        ),
+                        ("pushed_at", opt(&r.pushed_at)),
+                        (
+                            "stars",
+                            match r.stars {
+                                Some(s) => Value::num(s),
+                                None => Value::Null,
+                            },
+                        ),
+                        ("license", opt(&r.license)),
+                    ]),
+                ),
+                ("crate", crate_value(&r.krate)),
+                (
+                    "attention",
+                    Value::obj(vec![
+                        ("stories", Value::num(r.attention.stories)),
+                        ("comments", Value::num(r.attention.comments)),
+                        (
+                            "stars_per_day",
+                            match r.attention.stars_per_day {
+                                Some(v) => Value::Num(format!("{v:.1}")),
+                                None => Value::Null,
+                            },
+                        ),
+                    ]),
+                ),
+                (
+                    "advisories",
+                    Value::Block(
+                        r.advisories
+                            .iter()
+                            .map(|a| Value::obj(vec![("id", Value::Str(a.clone()))]))
+                            .collect(),
+                    ),
+                ),
+                (
+                    "disputes",
+                    Value::Block(
+                        r.disputes
+                            .iter()
+                            .map(|d| {
+                                let mut f = vec![
+                                    ("source", Value::Str(d.source.clone())),
+                                    ("url", Value::Str(d.url.clone())),
+                                ];
+                                if !d.created_at.is_empty() {
+                                    f.push(("created_at", Value::Str(d.created_at.clone())));
+                                }
+                                f.push(("status", Value::Str(d.status.clone())));
+                                if let Some(p) = d.p {
+                                    f.push(("p", Value::Num(format!("{p:.2}"))));
+                                }
+                                Value::obj(f)
+                            })
+                            .collect(),
+                    ),
+                ),
+                ("flags", Value::strs(&r.flags)),
+            ];
+            if !r.unavailable.is_empty() {
+                fields.push(("unavailable", Value::strs(&r.unavailable)));
             }
-        ));
-        if r.advisories.is_empty() {
-            out.push_str("      \"advisories\": [],\n");
-        } else {
-            out.push_str("      \"advisories\": [\n");
-            for (j, a) in r.advisories.iter().enumerate() {
-                let comma = if j + 1 == r.advisories.len() { "" } else { "," };
-                out.push_str(&format!(
-                    "        {{\n          \"id\": \"{}\"\n        }}{comma}\n",
-                    esc(a)
-                ));
+            if let Some(v) = &r.verdict {
+                fields.push(("verdict", Value::Str(v.clone())));
             }
-            out.push_str("      ],\n");
-        }
-        if r.disputes.is_empty() {
-            out.push_str("      \"disputes\": [],\n");
-        } else {
-            out.push_str("      \"disputes\": [\n");
-            for (j, d) in r.disputes.iter().enumerate() {
-                let comma = if j + 1 == r.disputes.len() { "" } else { "," };
-                out.push_str("        {\n");
-                out.push_str(&format!("          \"source\": \"{}\",\n", esc(&d.source)));
-                out.push_str(&format!("          \"url\": \"{}\",\n", esc(&d.url)));
-                if !d.created_at.is_empty() {
-                    out.push_str(&format!(
-                        "          \"created_at\": \"{}\",\n",
-                        esc(&d.created_at)
-                    ));
-                }
-                out.push_str(&format!("          \"status\": \"{}\"", esc(&d.status)));
-                if let Some(p) = d.p {
-                    out.push_str(&format!(",\n          \"p\": {p:.2}"));
-                }
-                out.push_str(&format!("\n        }}{comma}\n"));
+            if let Some(n) = &r.notes {
+                fields.push(("notes", Value::Str(n.clone())));
             }
-            out.push_str("      ],\n");
-        }
-        if r.flags.is_empty() {
-            out.push_str("      \"flags\": []");
-        } else {
-            out.push_str("      \"flags\": [\n");
-            for (j, f) in r.flags.iter().enumerate() {
-                let comma = if j + 1 == r.flags.len() { "" } else { "," };
-                out.push_str(&format!("        \"{}\"{comma}\n", esc(f)));
-            }
-            out.push_str("      ]");
-        }
-        if !r.unavailable.is_empty() {
-            let list: Vec<String> = r
-                .unavailable
-                .iter()
-                .map(|u| format!("\"{}\"", esc(u)))
-                .collect();
-            out.push_str(&format!(",\n      \"unavailable\": [{}]", list.join(", ")));
-        }
-        if let Some(v) = &r.verdict {
-            out.push_str(&format!(",\n      \"verdict\": \"{}\"", esc(v)));
-        }
-        if let Some(n) = &r.notes {
-            out.push_str(&format!(",\n      \"notes\": \"{}\"", esc(n)));
-        }
-        out.push_str("\n    }");
-    }
-    out.push_str("\n  ]\n}\n");
+            Value::obj(fields)
+        })
+        .collect();
+
+    let doc = Value::obj(vec![
+        ("meta", Value::obj(meta)),
+        ("repos", Value::Block(rows_json)),
+    ]);
+    let mut out = doc.render();
+    out.push('\n');
     out
+}
+
+fn opt(v: &Option<String>) -> super::json::Value {
+    match v {
+        Some(s) => super::json::Value::Str(s.clone()),
+        None => super::json::Value::Null,
+    }
+}
+
+fn crate_value(c: &Option<Crate>) -> super::json::Value {
+    use super::json::Value;
+    match c {
+        None => Value::Null,
+        Some(c) => Value::obj(vec![
+            ("name", Value::Str(c.name.clone())),
+            ("downloads", Value::num(c.downloads)),
+            ("recent_downloads", Value::num(c.recent_downloads)),
+            ("versions", Value::num(c.versions)),
+            ("yanked", Value::num(c.yanked)),
+            ("updated_at", Value::Str(c.updated_at.clone())),
+        ]),
+    }
 }
 
 #[cfg(test)]
