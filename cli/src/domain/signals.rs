@@ -221,41 +221,6 @@ pub fn parse_previous(
     (verdicts, notes)
 }
 
-/// One escaper for the whole domain: two copies drift, and a drifted
-/// escaper writes invalid JSON.
-fn esc(s: &str) -> String {
-    super::json::escape(s)
-}
-
-fn opt_str(v: &Option<String>, indent: &str) -> String {
-    match v {
-        Some(s) => format!("\"{}\"", esc(s)),
-        None => "null".to_string(),
-    }
-    .replace('\n', indent)
-}
-
-fn crate_block(c: &Option<Crate>, indent: &str) -> String {
-    let i2 = format!("{indent}  ");
-    match c {
-        None => "null".to_string(),
-        Some(c) => {
-            let mut out = String::from("{\n");
-            out.push_str(&format!("{i2}\"name\": \"{}\",\n", esc(&c.name)));
-            out.push_str(&format!("{i2}\"downloads\": {},\n", c.downloads));
-            out.push_str(&format!(
-                "{i2}\"recent_downloads\": {},\n",
-                c.recent_downloads
-            ));
-            out.push_str(&format!("{i2}\"versions\": {},\n", c.versions));
-            out.push_str(&format!("{i2}\"yanked\": {},\n", c.yanked));
-            out.push_str(&format!("{i2}\"updated_at\": \"{}\"\n", esc(&c.updated_at)));
-            out.push_str(&format!("{indent}}}"));
-            out
-        }
-    }
-}
-
 /// Deterministic projection: rows sorted by repo, fixed key order, two-space
 /// indent - the shape `catalog/signals.schema.json` describes and the scanner
 /// in `rules::parse_signals` reads.
