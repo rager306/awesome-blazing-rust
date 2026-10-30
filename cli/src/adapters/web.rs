@@ -3,28 +3,31 @@
 
 use crate::adapters::net;
 use crate::ports::signals::{Candidate, CrateInfo, Health, MentionCounts, SignalsSource};
+use std::cell::RefCell;
 
 pub struct WebSignals {
-    rustsec_index: Option<Vec<String>>,
+    /// Cache lives in the adapter: the port has no reason to demand &mut.
+    rustsec_index: RefCell<Option<Vec<String>>>,
 }
 
 impl WebSignals {
     pub fn new() -> WebSignals {
         WebSignals {
-            rustsec_index: None,
+            rustsec_index: RefCell::new(None),
         }
     }
 
-    fn rustsec_index(&mut self) -> &Option<Vec<String>> {
-        if self.rustsec_index.is_none() {
-            self.rustsec_index = net::get(
+    fn rustsec_index(&self) -> std::cell::Ref<'_, Option<Vec<String>>> {
+        if self.rustsec_index.borrow().is_none() {
+            let loaded = net::get(
                 "https://api.github.com/repos/rustsec/advisory-db/contents/crates",
                 &[("Accept", "application/vnd.github+json")],
             )
             .and_then(|body| net::jq(&body, ".[].name"))
             .map(|names| names.lines().map(str::to_string).collect());
+            *self.rustsec_index.borrow_mut() = loaded;
         }
-        &self.rustsec_index
+        self.rustsec_index.borrow()
     }
 }
 
@@ -116,7 +119,7 @@ impl SignalsSource for WebSignals {
         }
     }
 
-    fn advisories(&mut self, name: &str) -> Vec<String> {
+    fn advisories(&self, name: &str) -> Vec<String> {
         let indexed = self
             .rustsec_index()
             .as_ref()

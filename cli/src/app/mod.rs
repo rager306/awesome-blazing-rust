@@ -211,7 +211,7 @@ pub fn run_verify(
 /// the invariants run, then do the I/O behind ports and commit one projection.
 pub fn run_signals(
     io: &(impl Source + Sink),
-    source: &mut impl crate::ports::signals::SignalsSource,
+    source: &impl crate::ports::signals::SignalsSource,
     decisions: &impl DecisionSource,
     opts: &SignalOpts,
 ) -> Report {

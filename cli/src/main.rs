@@ -91,8 +91,8 @@ fn main() {
             }
             i += 1;
         }
-        let mut source = adapters::web::WebSignals::new();
-        app::run_signals(&io, &mut source, &adapters::subq::Subq::from_env(), &opts)
+        let source = adapters::web::WebSignals::new();
+        app::run_signals(&io, &source, &adapters::subq::Subq::from_env(), &opts)
     } else {
         app::run(cmd, &io)
     };

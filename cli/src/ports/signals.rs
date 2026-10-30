@@ -36,7 +36,7 @@ pub trait SignalsSource {
     /// `name` is the crate to look up, `repo` the repository it must belong to.
     fn crate_info(&self, name: &str, repo: &str) -> Option<CrateInfo>;
     fn attention(&self, name: &str) -> MentionCounts;
-    fn advisories(&mut self, name: &str) -> Vec<String>;
+    fn advisories(&self, name: &str) -> Vec<String>;
     fn dispute_candidates(&self, name: &str, repo: &str) -> Vec<Candidate>;
 }
 
