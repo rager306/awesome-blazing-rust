@@ -42,6 +42,10 @@ pub struct Crate {
 pub struct Attention {
     pub stories: u64,
     pub comments: u64,
+    /// Share of lifetime downloads that arrived in the recent window
+    /// (crates.io reports 90 days). A live project keeps this roughly flat; a
+    /// fading one drops while its repository still shows commits.
+    pub download_share: Option<f64>,
     /// Stars gained per day since the repository was created. Attention, not a
     /// score: fake stars have a promotion effect under two months and become a
     /// liability after (StarScout, ICSE 2026). Never shown on a card.
@@ -77,6 +81,15 @@ pub struct SignalRow {
     pub flags: Vec<String>,
     pub verdict: Option<String>,
     pub notes: Option<String>,
+}
+
+/// `recent_downloads / downloads`. Adoption that has stopped growing shows up
+/// here while the repository is still being pushed to.
+pub fn download_share(downloads: u64, recent: u64) -> Option<f64> {
+    if downloads == 0 {
+        return None;
+    }
+    Some((recent as f64 / downloads as f64 * 1000.0).round() / 1000.0)
 }
 
 pub fn stars_per_day(stars: Option<u64>, created_at: Option<&str>, today: i64) -> Option<f64> {
@@ -311,6 +324,13 @@ pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> S
                                 None => Value::Null,
                             },
                         ),
+                        (
+                            "download_share",
+                            match r.attention.download_share {
+                                Some(v) => Value::Num(format!("{v:.3}")),
+                                None => Value::Null,
+                            },
+                        ),
                     ]),
                 ),
                 (
@@ -442,6 +462,16 @@ mod tests {
         assert_eq!(stars_per_day(Some(5), Some("2026-10-27"), today), Some(5.0));
         assert_eq!(stars_per_day(None, Some("2026-10-19"), today), None);
         assert_eq!(stars_per_day(Some(5), None, today), None);
+    }
+
+    #[test]
+    fn download_share_reads_as_a_fraction_of_lifetime() {
+        // ripgrep: 124970 recent of 1635037 lifetime
+        assert_eq!(download_share(1635037, 124970), Some(0.076));
+        // a dead project: no recent downloads at all
+        assert_eq!(download_share(1000, 0), Some(0.0));
+        // nothing to divide by
+        assert_eq!(download_share(0, 0), None);
     }
 
     #[test]

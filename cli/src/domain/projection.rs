@@ -18,10 +18,6 @@ pub struct Artifact {
     pub content: String,
 }
 
-fn json_escape(s: &str) -> String {
-    super::json::escape(s)
-}
-
 /// catalog/projects.json - the machine-readable (agent-facing) projection.
 pub fn catalog(model: &Model) -> Artifact {
     use super::json::Value;

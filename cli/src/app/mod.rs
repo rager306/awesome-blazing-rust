@@ -265,6 +265,9 @@ pub fn run_signals(
         let attention = signals::Attention {
             stories: mentions.stories,
             comments: mentions.comments,
+            download_share: krate
+                .as_ref()
+                .and_then(|c| signals::download_share(c.downloads, c.recent_downloads)),
             stars_per_day: signals::stars_per_day(
                 health.as_ref().and_then(|h| h.stars),
                 health.as_ref().and_then(|h| h.created_at.as_deref()),

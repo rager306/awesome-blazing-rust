@@ -2,7 +2,9 @@
 
 > Rust projects that **prove** their speed. Every entry ships measured numbers - and the architectural tricks behind them are named.
 
-**The rule: no numbers, no entry.** Projects without public benchmarks live in the Candidates section until they show evidence. Each entry carries a `Blazing:` line (the measurement) and an `Arch:` line (the patterns - indexed in [PATTERNS.md](PATTERNS.md)).
+**The rule: no numbers, no entry.** Projects without public benchmarks live in the Candidates section until they show evidence. Each entry carries a `Blazing:` line (the measurement), a `Measured by:` line (who ran it) and an `Arch:` line (the patterns - indexed in [PATTERNS.md](PATTERNS.md)).
+
+**Why this list exists.** "Blazingly fast" became a meme before it became a claim: there is a GitHub topic for it, a satirical awesome-list, and a README line that means "written in Rust" more often than it means "measured". This catalog is the counter-move - the same projects, but only with a number, a baseline, a named measurer and a link to the method. A card without those is a case study, not a measurement.
 
 ---
 
