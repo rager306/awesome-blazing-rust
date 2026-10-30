@@ -152,7 +152,10 @@ jobs:
           fi
           echo "--- providers.txt ---"; cat providers.txt
           # Policy lives in docs/agents/discovery.md; the task carries this run's payload.
-          SYSTEM=$(cat docs/agents/discovery.md)
+          # llms.txt is appended, not left as a file to remember: Vercel's 2026
+          # eval found agents never invoked an available skill in 56% of cases,
+          # and a passive index in the prompt beat on-demand retrieval 100% to 53%.
+          SYSTEM="$(cat docs/agents/discovery.md; printf '\n\n## Repository index\n\n'; cat llms.txt)"
           PROVIDER_TOOLS=$(grep -o 'mcp__[^ ,]*' mcp-allow.txt | tr '\n' ' ')
           PROMPT=$(cat <<EOF_TASK
           Find up to 5 NEW candidate projects for the catalog: measurably fast Rust projects with public, verifiable benchmark evidence.

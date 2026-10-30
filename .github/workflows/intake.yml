@@ -121,7 +121,10 @@ jobs:
           ISSUE_BODY=$(gh issue view "$ISSUE_NUMBER" --json body --jq .body)
           # Policy lives in docs/agents/intake.md so it is reviewable and
           # reusable; the task below carries only this run's payload.
-          SYSTEM=$(cat docs/agents/intake.md)
+          # llms.txt is appended, not left as a file to remember: Vercel's 2026
+          # eval found agents never invoked an available skill in 56% of cases,
+          # and a passive index in the prompt beat on-demand retrieval 100% to 53%.
+          SYSTEM="$(cat docs/agents/intake.md; printf '\n\n## Repository index\n\n'; cat llms.txt)"
           PROMPT=$(cat <<EOF_ISSUE
           Draft a catalog card for this repository: ${REPO_SLUG}
           GitHub metadata already fetched for you: ${REPO_META}
