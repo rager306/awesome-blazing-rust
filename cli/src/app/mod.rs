@@ -13,6 +13,15 @@ use crate::ports::sink::Sink;
 use crate::ports::source::Source;
 use crate::ports::upstream::{TagState, UpstreamSource};
 
+/// Read or stop. The decision to exit belongs to the application, not to the
+/// adapter that meets the filesystem.
+fn load(io: &impl Source, path: &str) -> String {
+    io.read(path).unwrap_or_else(|e| {
+        eprintln!("abr: {e}");
+        std::process::exit(1);
+    })
+}
+
 pub const README: &str = "README.md";
 pub const PATTERNS: &str = "PATTERNS.md";
 pub const CATALOG: &str = "catalog/projects.json";
@@ -47,8 +56,8 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
         state = match state {
             // Boot -> Loaded: adapters translate raw texts into domain terms.
             State::Boot => {
-                let readme = io.read(README);
-                let patterns_raw = io.read(PATTERNS);
+                let readme = load(io, README);
+                let patterns_raw = load(io, PATTERNS);
                 let catalog_raw = io.read_opt(CATALOG);
                 let upstream_raw = io.read_opt(UPSTREAM);
                 let model = markdown::parse_readme(&readme);
@@ -128,7 +137,7 @@ pub fn run_verify(
     page: &impl crate::ports::verify::PageSource,
     opts: &VerifyOpts,
 ) -> Report {
-    let readme = io.read(README);
+    let readme = load(io, README);
     let model = markdown::parse_readme(&readme);
     let mut cards: Vec<_> = model
         .entries
@@ -209,7 +218,7 @@ pub fn run_signals(
     if let Some(path) = &opts.eval {
         return eval_triage(io, decisions, path);
     }
-    let readme = io.read(README);
+    let readme = load(io, README);
     let model = markdown::parse_readme(&readme);
 
     let mut slugs: Vec<String> = model
@@ -362,7 +371,7 @@ fn eval_triage(io: &impl Source, decisions: &impl DecisionSource, path: &str) ->
             artifacts_written: 0,
         };
     }
-    let raw = io.read(path);
+    let raw = load(io, path);
     let rows = crate::adapters::net::jq(&raw, ".items[] | [.repo, .label, .text] | @tsv")
         .map(|out| crate::adapters::net::tsv_lines(&out))
         .unwrap_or_default();
@@ -423,8 +432,8 @@ fn eval_triage(io: &impl Source, decisions: &impl DecisionSource, path: &str) ->
 /// carries the changed-repo lines so the pipeline can act on them.
 pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -> Report {
     // Reuse the same Boot -> Loaded -> Checked prefix for invariant parity.
-    let readme = io.read(README);
-    let patterns_raw = io.read(PATTERNS);
+    let readme = load(io, README);
+    let patterns_raw = load(io, PATTERNS);
     let catalog_raw = io.read_opt(CATALOG);
     let upstream_raw = io.read_opt(UPSTREAM);
     let model = markdown::parse_readme(&readme);
