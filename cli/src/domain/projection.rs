@@ -24,36 +24,42 @@ fn json_escape(s: &str) -> String {
 
 /// catalog/projects.json - the machine-readable (agent-facing) projection.
 pub fn catalog(model: &Model) -> Artifact {
-    let mut out = String::from(
-        "{\n  \"meta\": {\n    \"format\": \"awesome-blazing-rust catalog v1\",\n    \"rule\": \"no numbers, no entry - measured entries carry claim+source; others are case-studies or tools\",\n    \"types\": [\"measured\", \"tool\", \"case-study\", \"agent-skill\"],\n    \"maintainer\": \"rager306\"\n  },\n  \"projects\": [\n",
-    );
-    let items: Vec<String> = model
+    use super::json::Value;
+    let meta = Value::obj(vec![
+        ("format", Value::Str("awesome-blazing-rust catalog v1".into())),
+        (
+            "rule",
+            Value::Str(
+                "no numbers, no entry - measured entries carry claim+source; others are case-studies or tools"
+                    .into(),
+            ),
+        ),
+        ("types", Value::strs(&["measured", "tool", "case-study", "agent-skill"])),
+        ("maintainer", Value::Str("rager306".into())),
+    ]);
+    let projects: Vec<Value> = model
         .entries
         .iter()
         .map(|e| {
-            let tags: Vec<String> = e.arch.iter().map(|t| format!("\"{}\"", json_escape(t))).collect();
-            let measured_by = match e.measured_by {
-                Some(p) => format!(",\n      \"measured_by\": \"{}\"", p.as_str()),
-                None => String::new(),
-            };
-            format!(
-                "    {{\n      \"name\": \"{}\",\n      \"url\": \"{}\",\n      \"section\": \"{}\",\n      \"type\": \"{}\"{},\n      \"description\": \"{}\",\n      \"blazing\": \"{}\",\n      \"arch\": [{}]\n    }}",
-                json_escape(&e.name),
-                json_escape(&e.url),
-                json_escape(&e.section),
-                e.kind().as_str(),
-                measured_by,
-                json_escape(&e.description),
-                json_escape(&e.blazing),
-                tags.join(", ")
-            )
+            let mut fields = vec![
+                ("name", Value::Str(e.name.clone())),
+                ("url", Value::Str(e.url.clone())),
+                ("section", Value::Str(e.section.clone())),
+                ("type", Value::Str(e.kind().as_str().to_string())),
+            ];
+            if let Some(p) = e.measured_by {
+                fields.push(("measured_by", Value::Str(p.as_str().to_string())));
+            }
+            fields.push(("description", Value::Str(e.description.clone())));
+            fields.push(("blazing", Value::Str(e.blazing.clone())));
+            fields.push(("arch", Value::strs(&e.arch)));
+            Value::obj(fields)
         })
         .collect();
-    out.push_str(&items.join(",\n"));
-    out.push_str("\n  ]\n}\n");
+    let doc = Value::obj(vec![("meta", meta), ("projects", Value::Block(projects))]);
     Artifact {
         path: CATALOG_PATH,
-        content: out,
+        content: format!("{}\n", doc.render()),
     }
 }
 
