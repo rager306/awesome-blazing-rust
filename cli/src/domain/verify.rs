@@ -30,8 +30,10 @@ pub fn numbers(text: &str) -> Vec<String> {
                 buf.push(c);
                 digits += 1;
                 i += 1;
-            } else if (c == ',' || c == '_' || c == '\u{202f}' || c == ' ') && digits > 0 {
-                // a thousands separator: only if a digit follows
+            } else if (c == ',' || c == '_' || c == '\u{202f}') && digits > 0 {
+                // A thousands separator, only if a digit follows. A space is
+                // deliberately NOT one: "version 3. 28.7 ns" must not become
+                // 328.7, and English prose separates numbers with spaces.
                 if chars.get(i + 1).is_some_and(|n| n.is_ascii_digit()) {
                     i += 1;
                 } else {
@@ -99,6 +101,8 @@ mod tests {
             vec!["1879", "1879", "12.5"]
         );
         assert_eq!(numbers("2.5 ms"), vec!["2.5"]);
+        // a space is not a thousands separator: "3. 28.7" is two tokens
+        assert_eq!(numbers("version 3. 28.7 ns"), vec!["28.7"]);
     }
 
     #[test]
