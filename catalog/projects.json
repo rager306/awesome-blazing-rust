@@ -891,6 +891,16 @@
       "description": "Python linter and code formatter written in Rust with drop-in Black parity, replacing flake8, isort, pyupgrade, pydocstyle and autoflake in one tool",
       "blazing": "README benchmark chart lints the whole CPython codebase from scratch at a claimed '10-100x faster than existing linters (like Flake8) and formatters (like Black)' (methodology: chart image in [README Performance section](https://github.com/astral-sh/ruff#performance) only - no written methodology reachable this session, so the range is vendor-claimed, not replicated).",
       "arch": ["work-stealing", "zero-copy"]
+    },
+    {
+      "name": "hotpath-rs",
+      "url": "https://github.com/pawurb/hotpath-rs",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "instrumenting profiler: macros wrap functions, locks, channels and async blocks to report time, allocations, and mutex wait-vs-hold across await - the \"why is it slow\" complement to sampling profilers",
+      "blazing": "~39 ns per measured function call vs an uninstrumented baseline in the same run (1041.4 → 1079.9 ns/op on a ~1 µs spin body), 29-66 ns per lock cycle, 47-88 ns per channel send/recv, ~125 ns per future poll, ~30 ns per stream item; dedicated benchmark examples, 100k iterations, ±10 ns run-to-run noise ([methodology](https://hotpath.rs/profiling_overhead)).",
+      "arch": ["alloc-tracking"]
     }
   ]
 }

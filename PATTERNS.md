@@ -5,7 +5,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | Pattern | Used by |
 | --- | --- |
 | `aes-ni` | ahash |
-| `alloc-tracking` | divan, dhat |
+| `alloc-tracking` | divan, dhat, hotpath-rs |
 | `arrangement-indexing` | differential-dataflow |
 | `async-native` | quinn, hyper, ntex, plumbrs |
 | `automata-compilation` | regex, aho-corasick |
