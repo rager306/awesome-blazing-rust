@@ -12,7 +12,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `backend-trait` | candle, burn |
 | `batching` | io-uring |
 | `bitmap-index` | roaring-rs |
-| `branchless` | memchr |
+| `branchless` | memchr, foldhash |
 | `broad-phase-narrow-phase` | rapier |
 | `btf-probe` | uringscope |
 | `bulk-loading` | rstar |
