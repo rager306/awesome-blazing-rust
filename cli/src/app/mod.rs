@@ -248,6 +248,7 @@ pub fn run_signals(
         let name = slug.split('/').nth(1).unwrap_or(slug.as_str()).to_string();
         let health = source.health(slug);
         let krate = source.crate_info(&name, slug);
+        let crate_missing = krate.is_none();
         let mentions = source.attention(&name);
         let attention = signals::Attention {
             stories: mentions.stories,
@@ -316,6 +317,16 @@ pub fn run_signals(
             attention,
             advisories,
             disputes,
+            unavailable: {
+                let mut u = Vec::new();
+                if crate_missing {
+                    u.push("crate".to_string());
+                }
+                if health.is_none() {
+                    u.push("github".to_string());
+                }
+                u
+            },
             flags,
             verdict: verdicts.get(slug).cloned(),
             notes: notes.get(slug).cloned(),

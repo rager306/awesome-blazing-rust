@@ -71,6 +71,9 @@ pub struct SignalRow {
     pub attention: Attention,
     pub advisories: Vec<String>,
     pub disputes: Vec<Dispute>,
+    /// Which sources did not answer. `None` alone cannot say whether a field is
+    /// absent because it does not apply or because the lookup failed.
+    pub unavailable: Vec<String>,
     pub flags: Vec<String>,
     pub verdict: Option<String>,
     pub notes: Option<String>,
@@ -364,6 +367,14 @@ pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> S
             }
             out.push_str("      ]");
         }
+        if !r.unavailable.is_empty() {
+            let list: Vec<String> = r
+                .unavailable
+                .iter()
+                .map(|u| format!("\"{}\"", esc(u)))
+                .collect();
+            out.push_str(&format!(",\n      \"unavailable\": [{}]", list.join(", ")));
+        }
         if let Some(v) = &r.verdict {
             out.push_str(&format!(",\n      \"verdict\": \"{}\"", esc(v)));
         }
@@ -453,6 +464,33 @@ mod tests {
         let b = json(&[row("a/a"), row("b/b")], "2026-10-27T00:00:00Z", false);
         assert_eq!(a, b);
         assert!(a.find("\"a/a\"").unwrap() < a.find("\"b/b\"").unwrap());
+    }
+
+    #[test]
+    fn the_writer_and_the_readers_agree() {
+        // Round trip over the one format three places encode: the writer below,
+        // rules::parse_signals, and parse_previous. A drift between them is the
+        // bug class this test exists to catch.
+        let row = SignalRow {
+            repo: "owner/repo".to_string(),
+            observed_at: "2026-10-28".to_string(),
+            flags: vec!["security".to_string()],
+            verdict: Some("contested".to_string()),
+            notes: Some("checked by hand".to_string()),
+            unavailable: vec!["crate".to_string()],
+            ..Default::default()
+        };
+        let doc = json(&[row], "2026-10-28T00:00:00Z", false);
+        assert!(doc.contains("\"unavailable\": [\"crate\"]"), "{doc}");
+        let (verdicts, notes) = parse_previous(&doc);
+        assert_eq!(
+            verdicts.get("owner/repo").map(String::as_str),
+            Some("contested")
+        );
+        assert_eq!(
+            notes.get("owner/repo").map(String::as_str),
+            Some("checked by hand")
+        );
     }
 
     #[test]
