@@ -20,7 +20,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
-| `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
+| `columnar` | tantivy, polars, apache-arrow-rs, datafusion, minarrow |  |
 | `columnar-layout-optional` | ndarray |  |
 | `combinators` | winnow, ntex |  |
 | `compact-index` | indexmap |  |
@@ -86,7 +86,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
-| `python-bridge` | rustworkx |  |
+| `python-bridge` | rustworkx, minarrow |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
 | `query-optimization` | polars, datafusion |  |
@@ -98,7 +98,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, minarrow |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, minarrow |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
