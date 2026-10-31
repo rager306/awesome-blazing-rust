@@ -1,0 +1,492 @@
+{
+  "meta": {
+    "format": "awesome-blazing-rust patterns v1",
+    "rule": "a tag is a contract: what cost it removes, and when it stops working",
+    "fields": [
+      "removes",
+      "fails_when"
+    ]
+  },
+  "patterns": {
+    "aes-ni": {
+      "removes": "hashing rounds on the critical path",
+      "fails_when": "the CPU has no AES instructions, or the hasher must be portable"
+    },
+    "alloc-tracking": {
+      "removes": "allocation churn you cannot see in a CPU profile",
+      "fails_when": "allocation is not the bottleneck"
+    },
+    "arrangement-indexing": {
+      "removes": "recomputing a join arrangement on every change",
+      "fails_when": "the arrangement never changes, so the index is dead weight"
+    },
+    "async-native": {
+      "removes": "a thread per connection",
+      "fails_when": "the work is CPU-bound and blocking"
+    },
+    "automata-compilation": {
+      "removes": "backtracking on pathological patterns",
+      "fails_when": "patterns need backreferences or lookaround, which DFAs cannot express"
+    },
+    "backend-trait": {
+      "removes": "one kernel per device written by hand",
+      "fails_when": "a single backend is all that will ever ship"
+    },
+    "batching": {
+      "removes": "one syscall or round trip per item",
+      "fails_when": "latency per item matters more than throughput"
+    },
+    "bitmap-index": {
+      "removes": "per-id set operations in a hash table",
+      "fails_when": "density is very low, where the bitmap is mostly zeros"
+    },
+    "branchless": {
+      "removes": "branch mispredictions on unpredictable data",
+      "fails_when": "the branch is predictable, where a branch is faster"
+    },
+    "broad-phase-narrow-phase": {
+      "removes": "pairwise collision checks on every object pair",
+      "fails_when": "object counts are small enough that pairwise is cheap"
+    },
+    "btf-probe": {
+      "removes": "a tracer tied to one kernel version",
+      "fails_when": "BTF is unavailable, where the fallback must be maintained"
+    },
+    "bulk-loading": {
+      "removes": "incremental inserts during a one-shot build",
+      "fails_when": "the tree is mutated continuously after the load"
+    },
+    "c-binding": {
+      "removes": "reimplementing a mature codec",
+      "fails_when": "a portable pure-Rust build is required"
+    },
+    "cache-conscious-layout": {
+      "removes": "cache misses from pointer chasing",
+      "fails_when": "the working set already fits in L1"
+    },
+    "classical-algorithms": {
+      "removes": "reimplementing textbook algorithms per project",
+      "fails_when": "the algorithm is not the bottleneck"
+    },
+    "code-layout": {
+      "removes": "instruction cache misses from cold code in hot paths",
+      "fails_when": "the workload never reaches the reordered paths"
+    },
+    "columnar": {
+      "removes": "per-row deserialization and cache misses over wide rows",
+      "fails_when": "the workload touches whole rows rather than a few columns"
+    },
+    "columnar-layout-optional": {
+      "removes": "forcing one memory order on every caller",
+      "fails_when": "the caller cannot afford the copy a layout change requires"
+    },
+    "combinators": {
+      "removes": "hand-written state machines for parsing",
+      "fails_when": "the grammar needs error recovery a combinator cannot express"
+    },
+    "compact-index": {
+      "removes": "per-entry pointers in exchange for an index",
+      "fails_when": "entries are removed frequently, so the index must be repaired"
+    },
+    "compact-serialization": {
+      "removes": "loading the whole structure to answer one query",
+      "fails_when": "the structure is rebuilt often, where build time dominates"
+    },
+    "component-layer": {
+      "removes": "rebuilding widget behaviour per app",
+      "fails_when": "the app needs a bespoke interaction model"
+    },
+    "connection-coalescing": {
+      "removes": "a TLS handshake per request",
+      "fails_when": "requests are long-lived and independent"
+    },
+    "const-generics": {
+      "removes": "runtime dimension checks in numeric code",
+      "fails_when": "dimensions are dynamic and known only at run time"
+    },
+    "copy-on-write": {
+      "removes": "locking readers out during a write",
+      "fails_when": "writes are frequent and the copy dominates"
+    },
+    "cost-model-driven": {
+      "removes": "optimising the wrong term of the hardware bill",
+      "fails_when": "the workload changes faster than the model can be maintained"
+    },
+    "data-parallel": {
+      "removes": "single-core wall time on separable work",
+      "fails_when": "the work has a serial dependency or the data is too small to split"
+    },
+    "datalog": {
+      "removes": "hand-written graph traversal per query",
+      "fails_when": "queries are simple lookups, where a full engine is overhead"
+    },
+    "declarative-dsl": {
+      "removes": "imperative UI code that drifts from state",
+      "fails_when": "the UI is trivial, where the DSL costs more than it saves"
+    },
+    "density-dependent": {
+      "removes": "choosing a representation by habit",
+      "fails_when": "density swings widely within one workload, so no single choice holds"
+    },
+    "dst-in-ci": {
+      "removes": "concurrency bugs that only appear under a rare interleaving",
+      "fails_when": "the code is single-threaded"
+    },
+    "elm-architecture": {
+      "removes": "state scattered across the UI",
+      "fails_when": "the app is a single screen with no shared state"
+    },
+    "embedded": {
+      "removes": "a server round trip for local queries",
+      "fails_when": "the data does not fit on the device"
+    },
+    "embedded-first": {
+      "removes": "an app that cannot run without a browser stack",
+      "fails_when": "the app needs a browser engine's rendering"
+    },
+    "epoch-reclamation": {
+      "removes": "blocking readers while memory is freed",
+      "fails_when": "the workload allocates rarely and never reads concurrently"
+    },
+    "extensible": {
+      "removes": "forking an engine to add one operator",
+      "fails_when": "the extension surface becomes the maintenance burden"
+    },
+    "feature-gated-safety": {
+      "removes": "choosing safety or speed once for all users",
+      "fails_when": "the safe path is fast enough, where the flag is complexity"
+    },
+    "findings-as-verdicts": {
+      "removes": "raw counters that a human must interpret",
+      "fails_when": "the hypothesis is still being formed and verdicts mislead"
+    },
+    "finite-fields": {
+      "removes": "generic arithmetic that misses field structure",
+      "fails_when": "the field is not fixed at compile time"
+    },
+    "finite-state-transducer": {
+      "removes": "storing a set as sorted strings",
+      "fails_when": "the set is mutated often, where rebuild cost dominates"
+    },
+    "generic-graph": {
+      "removes": "one graph implementation per project",
+      "fails_when": "the graph needs a representation the generic one cannot express"
+    },
+    "generic-vertices": {
+      "removes": "integer-only graph algorithms",
+      "fails_when": "vertex ids must stay dense integers for speed"
+    },
+    "gpu-rendered-ui": {
+      "removes": "CPU work per frame in the UI layer",
+      "fails_when": "the UI is mostly text, where GPU setup dominates"
+    },
+    "hamt": {
+      "removes": "deep copies of immutable maps",
+      "fails_when": "the map is mutated in place anyway"
+    },
+    "hit-ratio-first": {
+      "removes": "eviction chosen by folklore",
+      "fails_when": "the working set is stable and eviction never runs"
+    },
+    "hnsw": {
+      "removes": "exact nearest-neighbour scans over the whole index",
+      "fails_when": "recall requirements are very high or the index does not fit in memory"
+    },
+    "hot-patch": {
+      "removes": "a full rebuild after a one-function edit",
+      "fails_when": "the change touches layout or types the patch cannot express"
+    },
+    "hyaline-reclamation": {
+      "removes": "reader registration cost on every read",
+      "fails_when": "the read path can afford a pointer bump"
+    },
+    "hybrid-cache": {
+      "removes": "re-reading from disk what RAM could hold",
+      "fails_when": "the working set is far larger than any cache tier"
+    },
+    "immediate-mode": {
+      "removes": "retained widget trees and their bookkeeping",
+      "fails_when": "the UI needs fine-grained widget identity and focus"
+    },
+    "incremental-view-maintenance": {
+      "removes": "recomputing a whole view after each change",
+      "fails_when": "changes are rare, where the machinery costs more than the recompute"
+    },
+    "inline-keys": {
+      "removes": "pointer chasing for small keys",
+      "fails_when": "keys are large or variable-length"
+    },
+    "inline-storage": {
+      "removes": "a heap allocation for short vectors",
+      "fails_when": "values routinely exceed the inline capacity"
+    },
+    "invariants-as-tests": {
+      "removes": "invariants that live in a document nobody runs",
+      "fails_when": "the invariant is too expensive to check per test"
+    },
+    "inverted-index": {
+      "removes": "scanning every document per query",
+      "fails_when": "the corpus is tiny, where a scan is cheaper"
+    },
+    "io-driver": {
+      "removes": "a thread per socket",
+      "fails_when": "the workload is CPU-bound"
+    },
+    "io-uring": {
+      "removes": "one syscall per operation and the thread-per-connection model",
+      "fails_when": "kernel older than 5.1, or the workload is not I/O bound"
+    },
+    "jit": {
+      "removes": "interpreting the same hot path repeatedly",
+      "fails_when": "the program runs once, where compilation never pays back"
+    },
+    "join-split": {
+      "removes": "idle cores while one task runs",
+      "fails_when": "tasks are not divisible"
+    },
+    "kernel-fusion": {
+      "removes": "memory traffic between element-wise passes",
+      "fails_when": "the passes cannot be fused without changing semantics"
+    },
+    "kernel-matrix-in-ci": {
+      "removes": "a portability claim nobody executes",
+      "fails_when": "the matrix is too expensive to run per change"
+    },
+    "lock-free": {
+      "removes": "a global lock around every operation",
+      "fails_when": "contention is low, where a lock is simpler and faster"
+    },
+    "lock-free-parallel-walk": {
+      "removes": "a global lock around directory traversal",
+      "fails_when": "the tree is small enough that the lock is never contended"
+    },
+    "lsm": {
+      "removes": "random writes into a B-tree's pages",
+      "fails_when": "reads dominate and the compaction debt is never repaid"
+    },
+    "lsm-plus-btree": {
+      "removes": "picking one write path for every workload",
+      "fails_when": "the workload is stable, where one structure is simpler"
+    },
+    "memory-bounded-streaming": {
+      "removes": "peak memory proportional to the artifact",
+      "fails_when": "the artifact fits in RAM, where streaming is pure overhead"
+    },
+    "merkle-tree": {
+      "removes": "rehashing a whole artifact to verify one chunk",
+      "fails_when": "the artifact is small, where the tree is overhead"
+    },
+    "miri-in-ci": {
+      "removes": "undefined behaviour the type system cannot see",
+      "fails_when": "the code is entirely safe"
+    },
+    "multi-core-hash": {
+      "removes": "single-core hashing of large inputs",
+      "fails_when": "inputs are small, where the split costs more than it saves"
+    },
+    "no-python": {
+      "removes": "a Python dependency in the hot path",
+      "fails_when": "the ecosystem only exists in Python"
+    },
+    "no-std-friendly": {
+      "removes": "a runtime dependency in embedded targets",
+      "fails_when": "the target has an allocator and threads"
+    },
+    "object-storage": {
+      "removes": "a local disk tier that must be provisioned",
+      "fails_when": "latency per read matters more than durability"
+    },
+    "own-renderer": {
+      "removes": "a browser engine's memory footprint",
+      "fails_when": "the app needs web content"
+    },
+    "parallel-algos": {
+      "removes": "single-core graph algorithms",
+      "fails_when": "the graph is too small to split"
+    },
+    "partitioned": {
+      "removes": "one global index over all data",
+      "fails_when": "partitions are skewed, so one dominates"
+    },
+    "perf-integration": {
+      "removes": "guessing where the time goes",
+      "fails_when": "the profiler cannot attach to the target"
+    },
+    "pgo": {
+      "removes": "branch layout chosen without evidence",
+      "fails_when": "the profile is unrepresentative, which makes layout worse"
+    },
+    "poseidon2-gf2": {
+      "removes": "slow field arithmetic in proof systems",
+      "fails_when": "the field is not the bottleneck"
+    },
+    "prefilter": {
+      "removes": "a full regex engine run on every byte",
+      "fails_when": "the pattern has no literal to prefilter on"
+    },
+    "prefix-keys": {
+      "removes": "comparing whole keys at each node",
+      "fails_when": "keys share no prefix"
+    },
+    "proof-carrying-performance": {
+      "removes": "bugs that only appear under concurrency",
+      "fails_when": "the design is still moving, so proofs cost more than they save"
+    },
+    "pure-rust-port": {
+      "removes": "a C dependency in the build",
+      "fails_when": "the C library is far faster and portability is not a goal"
+    },
+    "python-bridge": {
+      "removes": "reimplementing an algorithm in Python",
+      "fails_when": "the caller cannot cross an FFI boundary"
+    },
+    "quality-vs-speed": {
+      "removes": "speed claims that ignore retrieval quality",
+      "fails_when": "quality is not a variable in the workload"
+    },
+    "quantization": {
+      "removes": "memory traffic per vector at query time",
+      "fails_when": "the accuracy budget is tighter than the compression allows"
+    },
+    "query-optimization": {
+      "removes": "executing a plan as written",
+      "fails_when": "the plan is already optimal, where the optimiser is overhead"
+    },
+    "rank-select": {
+      "removes": "storing positions explicitly",
+      "fails_when": "the structure is mutated, which rank/select resists"
+    },
+    "read-optimized": {
+      "removes": "write locks on a read-mostly map",
+      "fails_when": "writes dominate, where read-optimisation costs more"
+    },
+    "recursive-proofs": {
+      "removes": "verifying every step on the verifier",
+      "fails_when": "the proof does not compress"
+    },
+    "relative-pointers": {
+      "removes": "fixing up pointers after deserialization",
+      "fails_when": "the data must be mutated after load"
+    },
+    "runtime-dispatch": {
+      "removes": "a compile-time SIMD fork per target",
+      "fails_when": "only one target will ever run"
+    },
+    "sandboxing": {
+      "removes": "trusting the code you execute",
+      "fails_when": "the sandbox cost exceeds the risk"
+    },
+    "sharding": {
+      "removes": "one lock over the whole map",
+      "fails_when": "keys are skewed, so one shard dominates"
+    },
+    "shuttle-in-ci": {
+      "removes": "races that depend on an untested interleaving",
+      "fails_when": "the code is single-threaded"
+    },
+    "simd": {
+      "removes": "per-element branching and scalar instruction count on hot loops",
+      "fails_when": "data is branchy, small, or already memory-bound"
+    },
+    "skills-in-repo": {
+      "removes": "an agent misapplying the tool from a stale man page",
+      "fails_when": "the skill is not updated with the code it describes"
+    },
+    "sparql-engine": {
+      "removes": "hand-written RDF traversal",
+      "fails_when": "queries are simple lookups"
+    },
+    "speculative-parallel-decode": {
+      "removes": "serial decoding of independent blocks",
+      "fails_when": "the format is inherently sequential"
+    },
+    "statistical-rigor": {
+      "removes": "conclusions drawn from a single noisy run",
+      "fails_when": "the effect size is far below the measurement noise"
+    },
+    "storage-backend-flag": {
+      "removes": "one storage backend for every deployment",
+      "fails_when": "the backend choice never changes"
+    },
+    "stringview": {
+      "removes": "copying strings out of a buffer",
+      "fails_when": "the buffer is mutated while views are live"
+    },
+    "structural-sharing": {
+      "removes": "deep copies of persistent collections",
+      "fails_when": "the collection is mutated in place"
+    },
+    "succinct": {
+      "removes": "storing the data structure in expanded form",
+      "fails_when": "queries need mutation, which a succinct form resists"
+    },
+    "table-driven": {
+      "removes": "recomputing per byte what a table could hold",
+      "fails_when": "memory is tighter than the instruction budget"
+    },
+    "tape-representation": {
+      "removes": "building an object tree while parsing",
+      "fails_when": "the consumer needs owned values immediately"
+    },
+    "thread-per-core": {
+      "removes": "cross-thread scheduling and its coherence traffic",
+      "fails_when": "the load is uneven across cores"
+    },
+    "tls-13": {
+      "removes": "a handshake round trip before the first byte",
+      "fails_when": "the peer only speaks older TLS"
+    },
+    "typed-effects": {
+      "removes": "state scattered across layers",
+      "fails_when": "the app has no cross-layer state"
+    },
+    "typed-parse-direct": {
+      "removes": "parsing into a document, then into a struct",
+      "fails_when": "the schema is dynamic"
+    },
+    "typegen": {
+      "removes": "hand-written bindings that drift",
+      "fails_when": "the API changes per build"
+    },
+    "valgrind-based": {
+      "removes": "noisy wall-clock comparisons in CI",
+      "fails_when": "the code is I/O bound, where instruction counts mislead"
+    },
+    "vendor-pinning": {
+      "removes": "an unpinned dependency you did not audit",
+      "fails_when": "upstream moves faster than the pin can be maintained"
+    },
+    "versioned-locks": {
+      "removes": "a write-lock increment on every read",
+      "fails_when": "the critical section is long, where retry costs more"
+    },
+    "verus-in-ci": {
+      "removes": "invariants that are only argued in prose",
+      "fails_when": "the design is still moving"
+    },
+    "views": {
+      "removes": "copying arrays on every reshape",
+      "fails_when": "the consumer mutates the underlying buffer"
+    },
+    "wakeup-contract": {
+      "removes": "hidden snoozing that turns into deadlocks",
+      "fails_when": "the future never needs a wakeup"
+    },
+    "window-tinylfu": {
+      "removes": "scan-resistant thrash in a small cache",
+      "fails_when": "the access pattern has no scan component"
+    },
+    "work-stealing": {
+      "removes": "idle cores while one queue is deep",
+      "fails_when": "tasks are uneven in size and the scheduler thrashes"
+    },
+    "zero-copy": {
+      "removes": "copying bytes between buffers and the allocations that go with it",
+      "fails_when": "the consumer needs to own or mutate the bytes"
+    },
+    "zero-macro-ergonomics": {
+      "removes": "macro-heavy APIs that cost compile time",
+      "fails_when": "the API genuinely needs code generation"
+    }
+  }
+}

@@ -46,6 +46,7 @@ pub struct Workspace {
     pub catalog_raw: Option<String>,
     pub upstream_raw: Option<String>,
     pub signals_raw: Option<String>,
+    pub pattern_specs: Vec<super::model::PatternSpec>,
 }
 
 #[derive(Debug)]
@@ -69,11 +70,12 @@ pub enum State {
 /// Loaded -> Checked: run all domain invariants.
 pub fn run_checks(ws: Workspace) -> State {
     let fresh = super::projection::catalog(&ws.model).content;
-    let mut violations = super::rules::check(
+    let mut violations = super::rules::check_with_specs(
         &ws.model,
         &ws.patterns_index,
         ws.catalog_raw.as_deref(),
         &fresh,
+        &ws.pattern_specs,
     );
     // Signals are data about the project, never evidence about its speed: they
     // can only hold or demote a card (see rules::check_signals).

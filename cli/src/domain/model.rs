@@ -119,6 +119,16 @@ impl Model {
 }
 
 /// One row of the PATTERNS.md index, parsed into domain terms.
+/// One row of `catalog/patterns.json`: a tag is a contract, not a label.
+#[derive(Clone, Debug, Default)]
+pub struct PatternSpec {
+    pub tag: String,
+    /// The cost this technique removes.
+    pub removes: String,
+    /// When the technique stops paying for itself.
+    pub fails_when: String,
+}
+
 #[derive(Debug)]
 pub struct PatternRow {
     pub tag: String,

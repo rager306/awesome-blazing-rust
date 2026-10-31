@@ -28,6 +28,7 @@ pub const CATALOG: &str = "catalog/projects.json";
 pub const UPSTREAM: &str = "catalog/upstream.json";
 pub const STRIKE: &str = "catalog/upstream-state.json";
 pub const SIGNALS: &str = "catalog/signals.json";
+pub const PATTERN_SPECS: &str = "catalog/patterns.json";
 
 /// Options for `abr signals`.
 #[derive(Default)]
@@ -68,6 +69,11 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
                 let model = markdown::parse_readme(&readme);
                 let patterns_index = markdown::parse_patterns(&patterns_raw);
                 let signals_raw = io.read_opt(SIGNALS);
+                let pattern_specs = io
+                    .read_opt(PATTERN_SPECS)
+                    .map(|r| markdown::parse_pattern_specs(&r))
+                    .unwrap_or_default();
+                let _ = &pattern_specs;
                 State::Loaded(Workspace {
                     model,
                     patterns_index,
@@ -75,6 +81,7 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
                     catalog_raw,
                     upstream_raw,
                     signals_raw,
+                    pattern_specs,
                 })
             }
             // Loaded -> Checked: domain invariants run on every command.
@@ -528,6 +535,10 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
     let model = markdown::parse_readme(&readme);
     let patterns_index = markdown::parse_patterns(&patterns_raw);
     let signals_raw = io.read_opt(SIGNALS);
+    let pattern_specs = io
+        .read_opt(PATTERN_SPECS)
+        .map(|r| markdown::parse_pattern_specs(&r))
+        .unwrap_or_default();
     let ws = Workspace {
         model,
         patterns_index,
@@ -535,6 +546,7 @@ pub fn run_upstream(io: &(impl Source + Sink), upstream: &impl UpstreamSource) -
         catalog_raw,
         upstream_raw,
         signals_raw,
+        pattern_specs,
     };
     let checked = fsm::run_checks(ws);
 

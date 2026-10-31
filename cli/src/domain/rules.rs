@@ -1,6 +1,6 @@
 //! Domain invariants: pure functions Model + documents -> violations.
 
-use super::model::{Kind, Model, PatternRow, Provenance, Violation};
+use super::model::{Kind, Model, PatternRow, PatternSpec, Provenance, Violation};
 use std::collections::BTreeMap;
 
 /// The closed vocabulary of signal flags. A free-form flag would let a
@@ -135,6 +135,16 @@ pub fn check(
     patterns: &[PatternRow],
     catalog_on_disk: Option<&str>,
     catalog_fresh: &str,
+) -> Vec<Violation> {
+    check_with_specs(model, patterns, catalog_on_disk, catalog_fresh, &[])
+}
+
+pub fn check_with_specs(
+    model: &Model,
+    patterns: &[PatternRow],
+    catalog_on_disk: Option<&str>,
+    catalog_fresh: &str,
+    specs: &[PatternSpec],
 ) -> Vec<Violation> {
     let mut out = Vec::new();
     let usage = model.usage();
@@ -278,7 +288,30 @@ pub fn check(
         }
     }
 
-    // 8. one entry per project (CONTRIBUTING): cross-posting the same project
+    // 8. a tag is a contract, not a label: every tag a card uses must say what
+    // cost it removes and when it stops paying. This is the difference between
+    // "simd" as a sticker and "simd removes per-element branching" as a claim.
+    if !specs.is_empty() {
+        for tag in usage.keys() {
+            match specs.iter().find(|s| &s.tag == tag) {
+                None => out.push(Violation {
+                    code: "TAG_UNCONTRACTED",
+                    message: format!("tag `{tag}` has no row in catalog/patterns.json"),
+                }),
+                Some(s) if s.removes.trim().is_empty() => out.push(Violation {
+                    code: "TAG_NO_REMOVES",
+                    message: format!("tag `{tag}` does not say what cost it removes"),
+                }),
+                Some(s) if s.fails_when.trim().is_empty() => out.push(Violation {
+                    code: "TAG_NO_LIMIT",
+                    message: format!("tag `{tag}` does not say when it fails"),
+                }),
+                Some(_) => {}
+            }
+        }
+    }
+
+    // 9. one entry per project (CONTRIBUTING): cross-posting the same project
     // into a second section is not allowed. Upper-cased by an author, with or
     // without a trailing slash or a .git suffix - same repository.
     let mut first_seen: BTreeMap<String, &str> = BTreeMap::new();

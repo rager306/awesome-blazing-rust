@@ -59,22 +59,31 @@ pub fn catalog(model: &Model) -> Artifact {
     }
 }
 
-fn index_table(model: &Model) -> String {
+fn index_table(model: &Model, specs: &[super::model::PatternSpec]) -> String {
     let mut rows = Vec::new();
     for (tag, names) in model.usage() {
         let label = match DECISION_LINKS.iter().find(|(t, _)| *t == tag) {
             Some((_, path)) => format!("[`{tag}`]({path})"),
             None => format!("`{tag}`"),
         };
-        rows.push(format!("| {label} | {} |", names.join(", ")));
+        let removes = specs.iter().find(|s| s.tag == *tag).map(|s| s.removes.as_str()).unwrap_or("");
+        rows.push(format!("| {label} | {} | {removes} |", names.join(", ")));
     }
-    let head = "# Architecture Patterns Index\n\nThe second axis of this list: **how** the speed is achieved. Patterns with a link have a full write-up in [decisions/](decisions/) - problem, technique, evidence, trade-offs. New entries must only use tags from this table (add a row via PR).\n\n| Pattern | Used by |\n| --- | --- |\n";
+    let head = "# Architecture Patterns Index\n\nThe second axis of this list: **how** the speed is achieved. Patterns with a link have a full write-up in [decisions/](decisions/) - problem, technique, evidence, trade-offs. New entries must only use tags from this table (add a row via PR).\n\n| Pattern | Used by | Removes |\n| --- | --- | --- |\n";
     format!("{head}{}\n", rows.join("\n"))
 }
 
 /// PATTERNS.md - regenerate the index table, preserving the hand-written
 /// notes tail below the marker.
 pub fn patterns_doc(model: &Model, current: &str) -> Result<Artifact, String> {
+    patterns_doc_with(model, current, &[])
+}
+
+pub fn patterns_doc_with(
+    model: &Model,
+    current: &str,
+    specs: &[super::model::PatternSpec],
+) -> Result<Artifact, String> {
     let tail_pos = current.find(PATTERNS_TAIL_MARKER).ok_or_else(|| {
         format!(
             "PATTERNS.md missing notes marker ({PATTERNS_TAIL_MARKER}) - refusing to regenerate"
@@ -83,7 +92,7 @@ pub fn patterns_doc(model: &Model, current: &str) -> Result<Artifact, String> {
     let tail = &current[tail_pos..];
     Ok(Artifact {
         path: PATTERNS_PATH,
-        content: format!("{}{}", index_table(model), tail),
+        content: format!("{}{}", index_table(model, specs), tail),
     })
 }
 
