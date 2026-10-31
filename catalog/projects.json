@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "canopydb",
+      "url": "https://github.com/arthurprs/canopydb",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "embedded multi-tree ACID key-value storage engine (log-structured B+tree, MVCC lock-free reads) in pure Rust",
+      "blazing": "author's rerun of redb's lmdb_benchmark vs redb/lmdb/rocksdb/sled/sanakirja (i9-12900H, turbo off, sync commits, 4GB page cache, in-memory workload): fastest individual writes 404ms vs lmdb 879ms and redb 553ms; reads at 32 threads 234ms, 2nd only to lmdb's 156ms and ahead of redb 349ms and rocksdb 616ms ([BENCHMARKS.md](https://github.com/arthurprs/canopydb/blob/master/BENCHMARKS.md), checkout-and-run repro).",
+      "arch": ["lsm-plus-btree", "prefix-keys"]
     }
   ]
 }
