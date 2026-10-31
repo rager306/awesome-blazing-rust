@@ -74,7 +74,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `miri-in-ci` | miri |  |
 | `multi-core-hash` | blake3 |  |
 | `no-python` | candle |  |
-| `no-std-friendly` | arkworks |  |
+| `no-std-friendly` | arkworks, rscrypto |  |
 | `object-storage` | SlateDB |  |
 | `own-renderer` | zed |  |
 | `parallel-algos` | rustworkx |  |
@@ -85,7 +85,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefilter` | regex |  |
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
-| `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq, rscrypto |  |
 | `python-bridge` | rustworkx |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
@@ -94,11 +94,11 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `read-optimized` | papaya |  |
 | `recursive-proofs` | paramo1d |  |
 | `relative-pointers` | rkyv |  |
-| `runtime-dispatch` | faer, pulp |  |
+| `runtime-dispatch` | faer, pulp, rscrypto |  |
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, rscrypto |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
