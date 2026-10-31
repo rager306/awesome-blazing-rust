@@ -50,3 +50,34 @@ rejection. The two inconclusive runs produced no card object at all.
   `Arch` tags that the pipeline indexes.
 - Card extraction assumed the JSON started a line and produced false
   INCONCLUSIVE verdicts when the agent wrapped it in prose.
+
+
+## A/B: catalog index in the prompt vs without
+
+Run: 2026-10-31, five fixtures, one run per cell, harness `ab-index.sh`.
+Baseline: the policy file only. Treatment: the policy file with `llms.txt`
+appended. The hypothesis came from Vercel's 2026 eval, where discretionary
+retrieval failed silently in the majority of cases.
+
+| Fixture | Expected | Baseline | With index |
+|---|---|---|---|
+| `astral-sh/uv` | card | PASS | PASS |
+| `nushell/nushell` | card | PASS | PASS |
+| `serde-rs/serde` | card | PASS | PASS |
+| `bodil/im-rs` (archived) | skip | PASS | PASS |
+| `facebook/react` (not Rust) | card -> refuse | **FAIL** | PASS |
+
+The one divergence is the informative cell: without the index, the agent drafted
+a card for `facebook/react` - a JavaScript project - which is exactly the
+silent scope failure the catalog exists to prevent. With the index, it refused.
+
+Directional, not statistical: five fixtures, one run per cell, and the INCONCLUSIVE
+rate means a missing row is not evidence of failure. The harness records this as
+`runs/agent-evals/ab-index.sh`; rerun it before drawing conclusions from a single
+sweep.
+
+Process notes from the run: the first sweep was unusable because the table
+recorded raw JSON instead of verdicts (`verdict_of` was defined but never
+called), and the second stopped after one fixture because the model call
+consumed the harness's stdin. Both are the kind of failure a fixed fixture set
+catches immediately, which is the argument for keeping this harness at all.

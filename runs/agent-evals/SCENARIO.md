@@ -28,3 +28,19 @@ Following AgentAssay (arXiv 2603.02601, 2026) and OpenAI's skill-eval practice
 
 Five fixtures, minutes each. This is not a CI gate - it runs on demand when a
 prompt, model or tool changes, and the result is written next to this file.
+
+
+## A/B: does the catalog index in the prompt change outcomes?
+
+Measured by `ab-index.sh`: each fixture runs twice — the policy file only
+(baseline) and the policy file with `llms.txt` appended (treatment). One run per
+cell, five fixtures, the verdict recorded verbatim.
+
+Question it answers: does an inlined catalog index (passive context) change
+whether the agent produces a card at all — Vercel's 2026 finding was that
+discretionary retrieval fails silently in the majority of cases.
+
+Limits: one run per cell, so the numbers are directional. A real claim needs
+several runs per cell and a report of the abstention (INCONCLUSIVE) rate — an
+INCONCLUSIVE cell is environment noise, not an outcome, and must not be counted
+as pass or fail.
