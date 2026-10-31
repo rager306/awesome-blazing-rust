@@ -10,7 +10,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
 | `automata-compilation` | regex, aho-corasick |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring |  |
+| `batching` | io-uring, fastrace |  |
 | `bitmap-index` | roaring-rs |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
