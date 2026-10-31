@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "SeekStorm",
+      "url": "https://github.com/SeekStorm/SeekStorm",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Rust keyword + vector search library and multi-tenancy search server (BM25F ranking, faceting, typo tolerance)",
+      "blazing": "in the public search_benchmark_game (5M English Wikipedia docs, queries from the AOL query log, single thread, best of 10 runs, i7-13700H laptop), average query latency 306 µs vs 2,205 µs for Tantivy and 2,656 µs for Lucene, P99 tail 1,591 µs vs 27,084 µs, indexing 35K docs/sec on the same machine ([methodology](https://github.com/SeekStorm/search-benchmark-game)).",
+      "arch": ["inverted-index", "bitmap-index", "sharding", "simd"]
     }
   ]
 }
