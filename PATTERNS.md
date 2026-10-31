@@ -56,7 +56,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `immediate-mode` | egui |  |
 | `incremental-view-maintenance` | differential-dataflow, eg-strider |  |
 | `inline-keys` | bbtree |  |
-| `inline-storage` | smallvec |  |
+| `inline-storage` | smallvec, kanal |  |
 | `invariants-as-tests` | nachalnik |  |
 | `inverted-index` | tantivy |  |
 | `io-driver` | tokio |  |
