@@ -11,6 +11,7 @@
   "repos": [
     {
       "repo": "01mf02/jaq",
+      "claim": {"numbers_found": 0, "numbers_total": 20},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -45,6 +46,7 @@
     },
     {
       "repo": "BLAKE3-team/BLAKE3",
+      "claim": {"numbers_found": 2, "numbers_total": 2},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -159,6 +161,7 @@
     },
     {
       "repo": "BurntSushi/ripgrep",
+      "claim": {"numbers_found": 0, "numbers_total": 1},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -219,6 +222,7 @@
     },
     {
       "repo": "DioxusLabs/taffy",
+      "claim": {"numbers_found": 7, "numbers_total": 16},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -271,6 +275,7 @@
     },
     {
       "repo": "GitoxideLabs/gitoxide",
+      "claim": {"numbers_found": 6, "numbers_total": 10},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -342,6 +347,7 @@
     },
     {
       "repo": "RoaringBitmap/roaring-rs",
+      "claim": {"numbers_found": 14, "numbers_total": 15},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -361,6 +367,7 @@
     },
     {
       "repo": "ShayanAbbas1/dbdelve",
+      "claim": {"numbers_found": 9, "numbers_total": 11},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -401,6 +408,7 @@
     },
     {
       "repo": "TimelyDataflow/differential-dataflow",
+      "claim": {"numbers_found": 0, "numbers_total": 6},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -427,6 +435,7 @@
     },
     {
       "repo": "XiangpengHao/bbtree",
+      "claim": {"numbers_found": 3, "numbers_total": 5},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -472,6 +481,7 @@
     },
     {
       "repo": "apache/datafusion",
+      "claim": {"numbers_found": 13, "numbers_total": 14},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -580,6 +590,7 @@
     },
     {
       "repo": "awgn/statico",
+      "claim": {"numbers_found": 9, "numbers_total": 11},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -927,6 +938,7 @@
     },
     {
       "repo": "cberner/redb",
+      "claim": {"numbers_found": 1, "numbers_total": 1},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -953,6 +965,7 @@
     },
     {
       "repo": "cloudflare/pingora",
+      "claim": {"numbers_found": 2, "numbers_total": 2},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -979,6 +992,7 @@
     },
     {
       "repo": "cloudwego/sonic-rs",
+      "claim": {"numbers_found": 1, "numbers_total": 1},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -1376,6 +1390,7 @@
     },
     {
       "repo": "ignotusnemo/paramo1d",
+      "claim": {"numbers_found": 6, "numbers_total": 7},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -1395,6 +1410,7 @@
     },
     {
       "repo": "indexable-inc/blaze",
+      "claim": {"numbers_found": 10, "numbers_total": 10},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -1440,6 +1456,7 @@
     },
     {
       "repo": "jackyzha0/eg-strider",
+      "claim": {"numbers_found": 2, "numbers_total": 9},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -1566,6 +1583,7 @@
     },
     {
       "repo": "ntex-rs/ntex",
+      "claim": {"numbers_found": 8, "numbers_total": 13},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -1645,6 +1663,7 @@
     },
     {
       "repo": "oxc-project/oxc",
+      "claim": {"numbers_found": 5, "numbers_total": 10},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -2406,6 +2425,7 @@
     },
     {
       "repo": "srijs/rust-crc32fast",
+      "claim": {"numbers_found": 1, "numbers_total": 2},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -2726,6 +2746,7 @@
     },
     {
       "repo": "ybouane/flashraw",
+      "claim": {"numbers_found": 9, "numbers_total": 10},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,
@@ -2752,6 +2773,7 @@
     },
     {
       "repo": "zed-industries/zed",
+      "claim": {"numbers_found": 0, "numbers_total": 2},
       "observed_at": "2026-10-28",
       "github": {
         "archived": false,

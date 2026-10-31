@@ -34,6 +34,8 @@ pub const SIGNALS: &str = "catalog/signals.json";
 pub struct VerifyOpts {
     /// Take only the first N cards (smoke test).
     pub limit: usize,
+    /// Write numbers_found / support into catalog/signals.json.
+    pub write: bool,
     /// Take one card by name.
     pub only: Option<String>,
     /// Ask the decision model whether the source supports the claim. Off by
@@ -129,6 +131,51 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
     }
 }
 
+/// Merge this run's claim checks into catalog/signals.json, leaving every other
+/// field untouched: the file is the collector's, and a verify run must not
+/// rewrite data it did not measure.
+fn record_claims(io: &(impl Source + Sink), checks: &[(String, signals::ClaimCheck)]) {
+    let raw = io.read_opt(SIGNALS).unwrap_or_default();
+    let by_name: std::collections::BTreeMap<&str, &signals::ClaimCheck> =
+        checks.iter().map(|(n, c)| (n.as_str(), c)).collect();
+    let model = markdown::parse_readme(&load(io, README));
+    let mut updated = 0usize;
+    let mut text = String::new();
+    for line in raw.lines() {
+        let trimmed = line.trim();
+        let repo = trimmed
+            .strip_prefix("\"repo\": \"")
+            .and_then(|r| r.split('"').next());
+        if let Some(repo) = repo {
+            if let Some(entry) = model
+                .entries
+                .iter()
+                .find(|e| crate::domain::upstream::repo_slug(&e.url).as_deref() == Some(repo))
+            {
+                if let Some(check) = by_name.get(entry.name.as_str()) {
+                    text.push_str(line);
+                    text.push('\n');
+                    text.push_str(&format!(
+                        "      \"claim\": {{\"numbers_found\": {}, \"numbers_total\": {}{}}},\n",
+                        check.numbers_found,
+                        check.numbers_total,
+                        match check.support {
+                            Some(p) => format!(", \"support\": {p:.2}"),
+                            None => String::new(),
+                        }
+                    ));
+                    updated += 1;
+                    continue;
+                }
+            }
+        }
+        text.push_str(line);
+        text.push('\n');
+    }
+    io.write(SIGNALS, &text);
+    eprintln!("verify: recorded claim checks for {updated} repos in {SIGNALS}");
+}
+
 /// Provenance check: does each measured card's number appear at its source?
 ///
 /// Advisory by design. A pass means the figure was not invented or transposed;
@@ -136,7 +183,7 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
 /// prose. Entailment - whether the source supports the claim - is a separate
 /// question and is not answered here.
 pub fn run_verify(
-    io: &impl Source,
+    io: &(impl Source + Sink),
     page: &impl crate::ports::verify::PageSource,
     judge: &impl crate::ports::verify::EntailmentJudge,
     opts: &VerifyOpts,
@@ -155,6 +202,7 @@ pub fn run_verify(
         cards.truncate(opts.limit);
     }
 
+    let mut checks: Vec<(String, signals::ClaimCheck)> = Vec::new();
     let mut lines = Vec::new();
     let mut checked = 0usize;
     let mut clean = 0usize;
@@ -173,14 +221,24 @@ pub fn run_verify(
         };
         checked += 1;
         let (present, missing) = verify::coverage(&e.blazing, &text);
-        let entail = if opts.entail {
-            match judge.supports(&e.blazing, &text.chars().take(6000).collect::<String>()) {
-                Some(p) => format!(" | support {p:.2}"),
-                None => " | support n/a".to_string(),
-            }
+        let support_p = if opts.entail {
+            judge.supports(&e.blazing, &text.chars().take(6000).collect::<String>())
         } else {
-            String::new()
+            None
         };
+        let entail = match (opts.entail, support_p) {
+            (true, Some(p)) => format!(" | support {p:.2}"),
+            (true, None) => " | support n/a".to_string(),
+            _ => String::new(),
+        };
+        checks.push((
+            e.name.clone(),
+            signals::ClaimCheck {
+                numbers_found: present.len(),
+                numbers_total: present.len() + missing.len(),
+                support: support_p,
+            },
+        ));
         if missing.is_empty() {
             clean += 1;
             lines.push(format!(
@@ -198,6 +256,10 @@ pub fn run_verify(
                 missing.join(", ")
             ));
         }
+    }
+
+    if opts.write {
+        record_claims(io, &checks);
     }
 
     let summary = format!(
@@ -343,6 +405,7 @@ pub fn run_signals(
                 u
             },
             flags,
+            claim: None, // filled by `run_verify` when it writes the report
             verdict: verdicts.get(slug).cloned(),
             notes: notes.get(slug).cloned(),
         });

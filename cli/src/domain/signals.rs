@@ -63,6 +63,17 @@ pub struct Dispute {
     pub p: Option<f64>,
 }
 
+/// What `abr verify` found for a measured card: how many of the claim's
+/// numbers are on the linked page, and (optionally) whether the page supports
+/// the claim at all. Mechanical part is deterministic; `support` is a judgement
+/// and is stored as one.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct ClaimCheck {
+    pub numbers_found: usize,
+    pub numbers_total: usize,
+    pub support: Option<f64>,
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct SignalRow {
     pub repo: String,
@@ -79,6 +90,8 @@ pub struct SignalRow {
     /// absent because it does not apply or because the lookup failed.
     pub unavailable: Vec<String>,
     pub flags: Vec<String>,
+    /// Present only when the collector was asked to check the claim.
+    pub claim: Option<ClaimCheck>,
     pub verdict: Option<String>,
     pub notes: Option<String>,
 }
@@ -366,6 +379,16 @@ pub fn json(rows: &[SignalRow], generated_at: &str, decision_enabled: bool) -> S
                 ),
                 ("flags", Value::strs(&r.flags)),
             ];
+            if let Some(c) = &r.claim {
+                let mut f = vec![
+                    ("numbers_found", Value::num(c.numbers_found)),
+                    ("numbers_total", Value::num(c.numbers_total)),
+                ];
+                if let Some(p) = c.support {
+                    f.push(("support", Value::Num(format!("{p:.2}"))));
+                }
+                fields.push(("claim", Value::obj(f)));
+            }
             if !r.unavailable.is_empty() {
                 fields.push(("unavailable", Value::strs(&r.unavailable)));
             }
@@ -497,6 +520,24 @@ mod tests {
         let b = json(&[row("a/a"), row("b/b")], "2026-10-27T00:00:00Z", false);
         assert_eq!(a, b);
         assert!(a.find("\"a/a\"").unwrap() < a.find("\"b/b\"").unwrap());
+    }
+
+    #[test]
+    fn a_claim_check_round_trips_through_the_writer() {
+        let row = SignalRow {
+            repo: "a/b".into(),
+            observed_at: "2026-10-31".into(),
+            claim: Some(ClaimCheck {
+                numbers_found: 9,
+                numbers_total: 11,
+                support: Some(0.96),
+            }),
+            ..Default::default()
+        };
+        let doc = json(&[row], "2026-10-31T00:00:00Z", false);
+        assert!(doc.contains("\"claim\""), "{doc}");
+        assert!(doc.contains("\"numbers_found\": 9"));
+        assert!(doc.contains("\"support\": 0.96"));
     }
 
     #[test]

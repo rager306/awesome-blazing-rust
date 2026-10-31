@@ -57,6 +57,7 @@ fn main() {
                     opts.only = args.get(i).cloned();
                 }
                 "--entail" => opts.entail = true,
+                "--write" => opts.write = true,
                 other => {
                     eprintln!("abr verify: unknown option '{other}'");
                     exit(2);
