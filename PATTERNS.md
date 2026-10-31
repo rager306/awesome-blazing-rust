@@ -20,7 +20,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
-| `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
+| `columnar` | tantivy, polars, apache-arrow-rs, datafusion, lance |  |
 | `columnar-layout-optional` | ndarray |  |
 | `combinators` | winnow, ntex |  |
 | `compact-index` | indexmap |  |
@@ -88,7 +88,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
 | `python-bridge` | rustworkx |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
-| `quantization` | qdrant |  |
+| `quantization` | qdrant, lance |  |
 | `query-optimization` | polars, datafusion |  |
 | `rank-select` | sux |  |
 | `read-optimized` | papaya |  |
