@@ -10,7 +10,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
 | `automata-compilation` | regex, aho-corasick |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring |  |
+| `batching` | io-uring, SurrealKV |  |
 | `bitmap-index` | roaring-rs |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
@@ -67,7 +67,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `kernel-matrix-in-ci` | uringscope |  |
 | `lock-free` | crossbeam |  |
 | `lock-free-parallel-walk` | ripgrep |  |
-| `lsm` | fjall, SlateDB |  |
+| `lsm` | fjall, SlateDB, SurrealKV |  |
 | `lsm-plus-btree` | sled |  |
 | [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
 | `merkle-tree` | blake3 |  |
@@ -91,7 +91,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `quantization` | qdrant |  |
 | `query-optimization` | polars, datafusion |  |
 | `rank-select` | sux |  |
-| `read-optimized` | papaya |  |
+| `read-optimized` | papaya, SurrealKV |  |
 | `recursive-proofs` | paramo1d |  |
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
