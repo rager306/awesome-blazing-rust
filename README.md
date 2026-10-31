@@ -42,7 +42,7 @@
 
 The canonical blazing projects - the ones that made "Rust is fast" a meme with receipts.
 
-- [ripgrep](https://github.com/BurntSushi/ripgrep) - recursive grep with regex support. **Blazing:** repeatedly benchmarks 10×+ faster than GNU grep on large trees (see the project's own fgrep/grep comparisons). **Measured by:** author. **Type:** measured. **Arch:** `simd`, `lock-free-parallel-walk`, `zero-copy`.
+- [ripgrep](https://github.com/BurntSushi/ripgrep) - recursive grep with regex support. **Blazing:** repeatedly benchmarks 10×+ faster than GNU grep on large trees (see the project's own fgrep/grep comparisons in the [GUIDE](https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#benchmarks)). **Measured by:** author. **Type:** measured. **Arch:** `simd`, `lock-free-parallel-walk`, `zero-copy`.
 - [memchr](https://github.com/BurntSushi/memchr) - substring & multi-substring search. **Blazing:** SIMD-accelerated; the backbone under `regex` and `ripgrep`. **Type:** case-study. **Arch:** `simd`, `branchless`.
 - [regex](https://github.com/rust-lang/regex) - the regex engine. **Blazing:** literal optimizations + SIMD-powered DFA; its docs document multi-x speedups vs naive engines. **Type:** case-study. **Arch:** `automata-compilation`, `simd`, `prefilter`.
 - [tokio](https://github.com/tokio-rs/tokio) - the async runtime most of this list runs on. **Blazing:** work-stealing scheduler; powers production at AWS, Microsoft, Discord. **Type:** case-study. **Arch:** `work-stealing`, `io-driver`.
@@ -65,10 +65,10 @@ Well-known algorithms, implemented properly in Rust.
 
 ### Hashing & Checksums
 
-- [blake3](https://github.com/BLAKE3-team/BLAKE3) - cryptographic hash. **Blazing:** ~GB/s on modern x86 (AVX2/AVX-512, per project benchmarks); orders above SHA-2/SHA-3. **Measured by:** author. **Type:** measured. **Arch:** `simd`, `merkle-tree`, `multi-core-hash`.
+- [blake3](https://github.com/BLAKE3-team/BLAKE3) - cryptographic hash. **Blazing:** ~GB/s on modern x86 (AVX2/AVX-512, per the [project's benchmark table](https://github.com/BLAKE3-team/BLAKE3#benchmarks)); orders above SHA-2/SHA-3. **Measured by:** author. **Type:** measured. **Arch:** `simd`, `merkle-tree`, `multi-core-hash`.
 - [xxhash-rust](https://github.com/DoumanAsh/xxhash-rust) - xxHash (XXH3). **Blazing:** non-crypto hashing at memory-bandwidth speeds. **Type:** case-study. **Arch:** `simd`.
 - [ahash](https://github.com/tkaitchuck/aHash) - DoS-resistant fast hash map hasher. **Blazing:** documented multi-fold wins over SipHash on hash-map workloads. **Type:** case-study. **Arch:** `aes-ni`.
-- [crc32fast](https://github.com/srijs/rust-crc32fast) - CRC-32. **Blazing:** 15× faster than naive, via slicing-by-8 and SIMD switching. **Measured by:** author. **Type:** measured. **Arch:** `simd`, `table-driven`.
+- [crc32fast](https://github.com/srijs/rust-crc32fast) - CRC-32. **Blazing:** 15× faster than naive, via slicing-by-8 and SIMD switching ([crate docs](https://github.com/srijs/rust-crc32fast#performance)). **Measured by:** author. **Type:** measured. **Arch:** `simd`, `table-driven`.
 
 ### Pathfinding & Spatial
 
@@ -87,7 +87,7 @@ Well-known algorithms, implemented properly in Rust.
 
 ## Concurrency & Lock-free
 
-- [bbtree](https://github.com/XiangpengHao/bbtree) - concurrent ordered map built from a cost model. **Blazing:** 5× vs std `BTreeMap` at 1 thread; 12× vs crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower. **Measured by:** author. **Type:** measured. **Arch:** `cost-model-driven`, `simd`, `versioned-locks`, `inline-keys`, `prefix-keys`, `verus-in-ci`, `shuttle-in-ci`.
+- [bbtree](https://github.com/XiangpengHao/bbtree) - concurrent ordered map built from a cost model. **Blazing:** 5× vs std `BTreeMap` at 1 thread; 12× vs crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower ([design post and benchmark tables](https://github.com/XiangpengHao/bbtree#benchmarks)). **Measured by:** author. **Type:** measured. **Arch:** `cost-model-driven`, `simd`, `versioned-locks`, `inline-keys`, `prefix-keys`, `verus-in-ci`, `shuttle-in-ci`.
 - [crossbeam](https://github.com/crossbeam-rs/crossbeam) - epoch-based memory reclamation + concurrent queues/deques. **Blazing:** the substrate half of modern lock-free Rust runs on. **Type:** case-study. **Arch:** `epoch-reclamation`, `lock-free`.
 - [dashmap](https://github.com/xacrimon/dashmap) - concurrent hash map. **Blazing:** sharded locking beats global `RwLock<HashMap>` by design. **Type:** case-study. **Arch:** `sharding`.
 - [papaya](https://github.com/ibraheemdev/papaya) - concurrent hash map, read-optimized counterpoint to sharded designs. **Blazing:** built around read throughput with incremental resizing. **Type:** case-study. **Arch:** `read-optimized`, `hyaline-reclamation`.
@@ -100,7 +100,7 @@ Well-known algorithms, implemented properly in Rust.
 
 ## Storage & Embedded Databases
 
-- [redb](https://github.com/cberner/redb) - pure-Rust ACID B-tree database. **Blazing:** LMDB-class numbers documented in its bench suite; the File backend stays within a ~2× margin against the removed (unsound-in-practice) mmap backend per the 0.14.0 changelog. **Measured by:** author. **Type:** measured. **Arch:** `copy-on-write`.
+- [redb](https://github.com/cberner/redb) - pure-Rust ACID B-tree database. **Blazing:** LMDB-class numbers documented in its bench suite; the File backend stays within a ~2× margin against the removed (unsound-in-practice) mmap backend per the 0.14.0 [changelog](https://github.com/cberner/redb/blob/master/CHANGELOG.md); benchmark harness in [`crates/redb-bench`](https://github.com/cberner/redb/tree/master/crates/redb-bench). **Measured by:** author. **Type:** measured. **Arch:** `copy-on-write`.
 - [fjall](https://github.com/fjall-rs/fjall) - LSM storage engine. **Blazing:** benchmarked against rocksdb/sled with open methodology; bbtree swap-in partner. **Type:** case-study. **Arch:** `lsm`, `partitioned`.
 - [SlateDB](https://github.com/slatedb/slatedb) - LSM on object storage (S3/R2). **Blazing:** cloud-native LSM; bbtree e2e partner. **Type:** case-study. **Arch:** `lsm`, `object-storage`.
 - [sled](https://github.com/spacejam/sled) - the famous beta embedded DB. **Blazing:** the project that set the tone for "blazing" claims - treat numbers as historical. **Type:** case-study. **Arch:** `lsm-plus-btree`.
@@ -124,7 +124,7 @@ Well-known algorithms, implemented properly in Rust.
 
 ## Data & Analytics
 
-- [sonic-rs](https://github.com/cloudwego/sonic-rs) - SIMD JSON parsing straight into serde-compatible structs (no intermediate tape re-parse). **Blazing:** published benchmarks vs serde_json and simd-json; the `sanitize` feature needed for LLVM sanitizers costs ~30% in serialization - production builds keep it off. **Measured by:** author. **Type:** measured. **Arch:** `simd`, `typed-parse-direct`.
+- [sonic-rs](https://github.com/cloudwego/sonic-rs) - SIMD JSON parsing straight into serde-compatible structs (no intermediate tape re-parse). **Blazing:** published benchmarks vs serde_json and simd-json; the `sanitize` feature needed for LLVM sanitizers costs ~30% in serialization - production builds keep it off ([benchmarks](https://github.com/cloudwego/sonic-rs#performance)). **Measured by:** author. **Type:** measured. **Arch:** `simd`, `typed-parse-direct`.
 - [simd-json](https://github.com/simd-lite/simd-json) - SIMD JSON parsing into a tape, following the simdjson design in Rust. **Blazing:** performance tracks the C++ simdjson implementation; best numbers require a custom allocator (mimalloc/jemalloc). **Type:** case-study. **Arch:** `simd`, `tape-representation`.
 
 - [polars](https://github.com/pola-rs/polars) - DataFrames. **Blazing:** documented multi-x wins over pandas on groupby/join; query-optimized, lazy, parallel. **Type:** case-study. **Arch:** `columnar`, `query-optimization`, `simd`.
@@ -142,13 +142,13 @@ The win here is avoiding expensive misses - judge these by hit ratio on realisti
 
 Recompute nothing you can update: define the computation once, respond to changes.
 
-- [differential-dataflow](https://github.com/TimelyDataflow/differential-dataflow) - incremental data-parallel computation on timely dataflow. **Blazing:** in the author's graph example (10M nodes, 50M edges), a 15 s initial computation answers input changes in ~230 us - about 100,000x faster than recomputing; batched updates average ~5 us each; two workers cut the build from 15 s to ~8 s. **Measured by:** author. **Type:** measured. **Arch:** `incremental-view-maintenance`, `arrangement-indexing`, `data-parallel`.
+- [differential-dataflow](https://github.com/TimelyDataflow/differential-dataflow) - incremental data-parallel computation on timely dataflow. **Blazing:** in the author's graph example (10M nodes, 50M edges), a 15 s initial computation answers input changes in ~230 us - about 100,000x faster than recomputing; batched updates average ~5 us each; two workers cut the build from 15 s to ~8 s ([experiments](https://github.com/TimelyDataflow/differential-dataflow/tree/master/experiments)). **Measured by:** author. **Type:** measured. **Arch:** `incremental-view-maintenance`, `arrangement-indexing`, `data-parallel`.
 
 ## Networking & Protocols
 
 - [quinn](https://github.com/quinn-rs/quinn) - QUIC implementation. **Blazing:** 0-RTT, multiplexed streams without head-of-line blocking. **Type:** case-study. **Arch:** `async-native`, `tls-13`.
 - [hyper](https://github.com/hyperium/hyper) - HTTP implementation. **Blazing:** the substrate of axum/reqwest; TechEmpower regular. **Type:** case-study. **Arch:** `async-native`.
-- [pingora](https://github.com/cloudflare/pingora) - Cloudflare's proxy framework. **Blazing:** in Cloudflare's migration report, ~70% less CPU and ~67% less memory than the previous proxy at the same traffic. **Measured by:** author. **Type:** measured. **Arch:** `connection-coalescing`, `work-stealing`.
+- [pingora](https://github.com/cloudflare/pingora) - Cloudflare's proxy framework. **Blazing:** in Cloudflare's migration report, ~70% less CPU and ~67% less memory than the previous proxy at the same traffic ([migration report](https://blog.cloudflare.com/how-we-built-pingora-the-proxy-that-connects-cloudflare-to-the-internet/)). **Measured by:** author. **Type:** measured. **Arch:** `connection-coalescing`, `work-stealing`.
 
 ## Web & Edge
 
@@ -169,7 +169,7 @@ Recompute nothing you can update: define the computation once, respond to change
 
 ## Crypto & Proof Systems
 
-- [paramo1d](https://github.com/ignotusnemo/paramo1d) - mobile blockchain verification client with recursive proofs. **Blazing:** mainnet sync in 48.43 s on a $100 Redmi 15C against its own cold start (4 GB RAM; prepared matrix caches in place); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s. **Measured by:** author. **Type:** measured. **Arch:** `memory-bounded-streaming`, `recursive-proofs`, `vendor-pinning`, `poseidon2-gf2`.
+- [paramo1d](https://github.com/ignotusnemo/paramo1d) - mobile blockchain verification client with recursive proofs. **Blazing:** mainnet sync in 48.43 s on a $100 Redmi 15C against its own cold start (4 GB RAM; prepared matrix caches in place); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s ([README numbers](https://github.com/ignotusnemo/paramo1d#readme)). **Measured by:** author. **Type:** measured. **Arch:** `memory-bounded-streaming`, `recursive-proofs`, `vendor-pinning`, `poseidon2-gf2`.
 - [arkworks](https://github.com/arkworks-rs) - zk-SNARK ecosystem. **Blazing:** the research-grade finite-field/curve stack most new proof systems benchmark against. **Type:** case-study. **Arch:** `finite-fields`, `no-std-friendly`.
 
 ## Verification & Correctness

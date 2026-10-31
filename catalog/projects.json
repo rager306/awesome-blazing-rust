@@ -13,7 +13,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "recursive grep with regex support",
-      "blazing": "repeatedly benchmarks 10×+ faster than GNU grep on large trees (see the project's own fgrep/grep comparisons).",
+      "blazing": "repeatedly benchmarks 10×+ faster than GNU grep on large trees (see the project's own fgrep/grep comparisons in the [GUIDE](https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#benchmarks)).",
       "arch": ["simd", "lock-free-parallel-walk", "zero-copy"]
     },
     {
@@ -123,7 +123,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "cryptographic hash",
-      "blazing": "~GB/s on modern x86 (AVX2/AVX-512, per project benchmarks); orders above SHA-2/SHA-3.",
+      "blazing": "~GB/s on modern x86 (AVX2/AVX-512, per the [project's benchmark table](https://github.com/BLAKE3-team/BLAKE3#benchmarks)); orders above SHA-2/SHA-3.",
       "arch": ["simd", "merkle-tree", "multi-core-hash"]
     },
     {
@@ -151,7 +151,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "CRC-32",
-      "blazing": "15× faster than naive, via slicing-by-8 and SIMD switching.",
+      "blazing": "15× faster than naive, via slicing-by-8 and SIMD switching ([crate docs](https://github.com/srijs/rust-crc32fast#performance)).",
       "arch": ["simd", "table-driven"]
     },
     {
@@ -215,7 +215,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "concurrent ordered map built from a cost model",
-      "blazing": "5× vs std `BTreeMap` at 1 thread; 12× vs crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower.",
+      "blazing": "5× vs std `BTreeMap` at 1 thread; 12× vs crossbeam-skiplist at 96 threads; map-only swap into fjall/SlateDB/Tonbo/Turso/Lance: 1.16-6.83× end-to-end; p99 5× lower ([design post and benchmark tables](https://github.com/XiangpengHao/bbtree#benchmarks)).",
       "arch": ["cost-model-driven", "simd", "versioned-locks", "inline-keys", "prefix-keys", "verus-in-ci", "shuttle-in-ci"]
     },
     {
@@ -279,7 +279,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "pure-Rust ACID B-tree database",
-      "blazing": "LMDB-class numbers documented in its bench suite; the File backend stays within a ~2× margin against the removed (unsound-in-practice) mmap backend per the 0.14.0 changelog.",
+      "blazing": "LMDB-class numbers documented in its bench suite; the File backend stays within a ~2× margin against the removed (unsound-in-practice) mmap backend per the 0.14.0 [changelog](https://github.com/cberner/redb/blob/master/CHANGELOG.md); benchmark harness in [`crates/redb-bench`](https://github.com/cberner/redb/tree/master/crates/redb-bench).",
       "arch": ["copy-on-write"]
     },
     {
@@ -397,7 +397,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "SIMD JSON parsing straight into serde-compatible structs (no intermediate tape re-parse)",
-      "blazing": "published benchmarks vs serde_json and simd-json; the `sanitize` feature needed for LLVM sanitizers costs ~30% in serialization - production builds keep it off.",
+      "blazing": "published benchmarks vs serde_json and simd-json; the `sanitize` feature needed for LLVM sanitizers costs ~30% in serialization - production builds keep it off ([benchmarks](https://github.com/cloudwego/sonic-rs#performance)).",
       "arch": ["simd", "typed-parse-direct"]
     },
     {
@@ -462,7 +462,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "incremental data-parallel computation on timely dataflow",
-      "blazing": "in the author's graph example (10M nodes, 50M edges), a 15 s initial computation answers input changes in ~230 us - about 100,000x faster than recomputing; batched updates average ~5 us each; two workers cut the build from 15 s to ~8 s.",
+      "blazing": "in the author's graph example (10M nodes, 50M edges), a 15 s initial computation answers input changes in ~230 us - about 100,000x faster than recomputing; batched updates average ~5 us each; two workers cut the build from 15 s to ~8 s ([experiments](https://github.com/TimelyDataflow/differential-dataflow/tree/master/experiments)).",
       "arch": ["incremental-view-maintenance", "arrangement-indexing", "data-parallel"]
     },
     {
@@ -490,7 +490,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "Cloudflare's proxy framework",
-      "blazing": "in Cloudflare's migration report, ~70% less CPU and ~67% less memory than the previous proxy at the same traffic.",
+      "blazing": "in Cloudflare's migration report, ~70% less CPU and ~67% less memory than the previous proxy at the same traffic ([migration report](https://blog.cloudflare.com/how-we-built-pingora-the-proxy-that-connects-cloudflare-to-the-internet/)).",
       "arch": ["connection-coalescing", "work-stealing"]
     },
     {
@@ -590,7 +590,7 @@
       "type": "measured",
       "measured_by": "author",
       "description": "mobile blockchain verification client with recursive proofs",
-      "blazing": "mainnet sync in 48.43 s on a $100 Redmi 15C against its own cold start (4 GB RAM; prepared matrix caches in place); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s.",
+      "blazing": "mainnet sync in 48.43 s on a $100 Redmi 15C against its own cold start (4 GB RAM; prepared matrix caches in place); state proof from genesis 10.78 s; 192.2 MiB peak for the verification client process; 249,885-header chain in 7.44 s ([README numbers](https://github.com/ignotusnemo/paramo1d#readme)).",
       "arch": ["memory-bounded-streaming", "recursive-proofs", "vendor-pinning", "poseidon2-gf2"]
     },
     {

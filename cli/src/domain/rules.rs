@@ -255,6 +255,17 @@ pub fn check(
                 ),
             });
         }
+        // A measured claim without a link cannot be checked by anyone: `abr
+        // verify` has nothing to fetch, and a reader has nothing to open.
+        if e.kind() == Kind::Measured && !e.blazing.contains("http") {
+            out.push(Violation {
+                code: "MEASURED_NO_SOURCE",
+                message: format!(
+                    "measured entry '{}' cites no URL in its claim - a number nobody can open is not evidence",
+                    e.name
+                ),
+            });
+        }
         // A claim this catalog made itself must link the run that made it.
         if e.measured_by == Some(Provenance::Catalog) && !e.blazing.contains("runs/") {
             out.push(Violation {
