@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "rust-graph",
+      "url": "https://github.com/deargen/rust-graph",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Rust all-pairs Dijkstra exposed as a Python package, a drop-in rewrite of networkx's `all_pairs_dijkstra_path_length` (one function, cutoff supported)",
+      "blazing": "23x vs networkx on an M1 MacBook (4.45 s → 0.19 s), 15x on Azure EPYC 7V13 (6.14 s → 0.41 s), 12x on a Ryzen 7 5800H laptop (6.83 s → 0.57 s); without rayon it is 1.04 s, so parallelism is worth ~2x; baseline is pure-Python networkx, not rustworkx (README: rustworkx lacked `cutoff` and returns lazy types) - [methodology](https://github.com/deargen/rust-graph#-benchmark).",
+      "arch": ["python-bridge", "parallel-algos"]
     }
   ]
 }
