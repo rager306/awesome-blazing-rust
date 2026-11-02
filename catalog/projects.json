@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "gdelta",
+      "url": "https://github.com/ImGajeed76/gdelta",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "pure-Rust delta compression for similar data chunks (GEAR rolling hash to find reused blocks, copy/literal instructions), library and CLI",
+      "blazing": "author benchmarks on named hardware (Ryzen 7 7800X3D, Fedora 42) encode at 496 MB/s and decode at 4.4 GB/s across 2,097 synthetic tests - 5.3x the vcdiff crate (94 MB/s) and 23x qbsdiff (22 MB/s) at comparable ratio (68% vs 64% space saved); over 1.36M real git-history comparisons it encodes in 4-5µs at 94.5-97.0% space saved, fastest of the tested set ([methodology](https://github.com/ImGajeed76/gdelta/blob/master/PERFORMANCE.md)).",
+      "arch": ["classical-algorithms", "pure-rust-port"]
     }
   ]
 }
