@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "zenflate",
+      "url": "https://github.com/imazen/zenflate",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "pure-Rust DEFLATE/zlib/gzip codec ported from C libdeflate, with effort levels 0-200, parallel gzip, SIMD checksums, and `#![forbid(unsafe_code)]` by default",
+      "blazing": "author benchmark (2026-07-13, commit 1a7ce8c7, interleaved n=100/arm on idle dedicated hosts): fastest Rust DEFLATE decoder on 1 MB mixed data at 1.89 ms, ~5% behind C libdeflate (1.80 ms) with zlib-rs at 2.01 ms; compression ~2x faster than zlib-rs at level 6 (8.14 vs 16.52 ms) and ~2x faster than C libdeflate at max effort (11.41 vs 23.28 ms) on the same host - [methodology](https://github.com/imazen/zenflate/blob/main/benchmarks/deflate_rust_ecosystem_2026-07-13.md).",
+      "arch": ["pure-rust-port", "simd", "runtime-dispatch", "feature-gated-safety"]
     }
   ]
 }
