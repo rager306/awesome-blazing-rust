@@ -68,7 +68,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `lock-free` | crossbeam |  |
 | `lock-free-parallel-walk` | ripgrep |  |
 | `lsm` | fjall, SlateDB |  |
-| `lsm-plus-btree` | sled |  |
+| `lsm-plus-btree` | sled, canopydb |  |
 | [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
 | `merkle-tree` | blake3 |  |
 | `miri-in-ci` | miri |  |
@@ -83,7 +83,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `pgo` | cargo-pgo |  |
 | `poseidon2-gf2` | paramo1d |  |
 | `prefilter` | regex |  |
-| `prefix-keys` | bbtree |  |
+| `prefix-keys` | bbtree, canopydb |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
 | `python-bridge` | rustworkx |  |
