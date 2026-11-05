@@ -21,7 +21,7 @@
   {"repo": "astral-sh/ruff", "tag": "0.17.3"},
   {"repo": "awgn/plumbrs", "tag": "(no-tags)"},
   {"repo": "awgn/statico", "tag": "(no-tags)"},
-  {"repo": "awslabs/shuttle", "tag": "v0.9.9"},
+  {"repo": "awslabs/shuttle", "tag": "v0.9.10"},
   {"repo": "bheisler/criterion.rs", "tag": "0.7.0"},
   {"repo": "bodil/im-rs", "tag": "v15.1.0"},
   {"repo": "bytecodealliance/wasmtime", "tag": "v50.0.1"},
@@ -50,7 +50,7 @@
   {"repo": "longbridge/gpui-kit", "tag": "v0.9.0"},
   {"repo": "moka-rs/moka", "tag": "v0.12.16"},
   {"repo": "nnethercote/dhat-rs", "tag": "0.3.3"},
-  {"repo": "ntex-rs/ntex", "tag": "ntex-v4.6.0"},
+  {"repo": "ntex-rs/ntex", "tag": "service-v5.7.1"},
   {"repo": "nvzqz/divan", "tag": "v0.1.21"},
   {"repo": "oconnor663/rfcs", "tag": "(no-tags)"},
   {"repo": "orlp/foldhash", "tag": "v0.2.0"},
@@ -91,8 +91,8 @@
   {"repo": "tracel-ai/burn", "tag": "v0.22.1"},
   {"repo": "verus-lang/verus", "tag": "release/0.2026.11.02.8bf68ee"},
   {"repo": "vigna/sux-rs", "tag": "0.15.4"},
-  {"repo": "winnow-rs/winnow", "tag": "v1.0.4"},
+  {"repo": "winnow-rs/winnow", "tag": "v1.0.5"},
   {"repo": "xacrimon/dashmap", "tag": "v6.2.2"},
   {"repo": "ybouane/flashraw", "tag": "v0.1.1"},
-  {"repo": "zed-industries/zed", "tag": "v1.26.2"}
+  {"repo": "zed-industries/zed", "tag": "v1.27.0"}
 ]
