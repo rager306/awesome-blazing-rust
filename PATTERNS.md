@@ -20,7 +20,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
-| `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
+| `columnar` | tantivy, polars, apache-arrow-rs, datafusion, vortex |  |
 | `columnar-layout-optional` | ndarray |  |
 | `combinators` | winnow, ntex |  |
 | `compact-index` | indexmap |  |
@@ -39,7 +39,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `embedded` | cozo |  |
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
-| `extensible` | datafusion |  |
+| `extensible` | datafusion, vortex |  |
 | `feature-gated-safety` | lz4_flex |  |
 | [`findings-as-verdicts`](decisions/002-findings-as-verdicts.md) | uringscope, uringscope SKILL.md |  |
 | `finite-fields` | arkworks |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, vortex |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
