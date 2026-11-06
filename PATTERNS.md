@@ -60,7 +60,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `invariants-as-tests` | nachalnik |  |
 | `inverted-index` | tantivy |  |
 | `io-driver` | tokio |  |
-| `io-uring` | glommio, monoio, io-uring, statico, plumbrs |  |
+| `io-uring` | glommio, monoio, io-uring, statico, plumbrs, spargio |  |
 | `jit` | wasmtime, blaze |  |
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn |  |
@@ -96,7 +96,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio |  |
+| `sharding` | dashmap, glommio, spargio |  |
 | `shuttle-in-ci` | bbtree |  |
 | `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
@@ -121,7 +121,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `views` | ndarray |  |
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
-| `work-stealing` | tokio, rayon, pingora, ruff |  |
+| `work-stealing` | tokio, rayon, pingora, ruff, spargio |  |
 | `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
 | `zero-macro-ergonomics` | axum |  |
 
