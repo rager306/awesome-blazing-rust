@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "spargio",
+      "url": "https://github.com/soumyarupsarkar/spargio",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "self-described experimental work-stealing io_uring async runtime that hybridizes thread-per-core sharding with pre-execution work stealing, coordinating shards via io_uring msg_ring messages",
+      "blazing": "Criterion mean latencies, 3.8x vs tokio on steady ping-pong RTT (367 µs vs 1.409 ms) and 1.7x vs compio on rotating-hotspot network loads (11.0 ms vs 18.8 ms), while reporting compio ~70% faster on sustained balanced throughput ([benchmark tables](https://github.com/soumyarupsarkar/spargio#benchmark-results)).",
+      "arch": ["io-uring", "work-stealing", "sharding"]
     }
   ]
 }
