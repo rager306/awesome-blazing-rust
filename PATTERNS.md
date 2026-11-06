@@ -16,8 +16,8 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `broad-phase-narrow-phase` | rapier |  |
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
-| `c-binding` | zstd-safe |  |
-| `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
+| `c-binding` | zstd-safe, ForkUnion |  |
+| `cache-conscious-layout` | hashbrown, taffy, eg-strider, ForkUnion |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, ForkUnion |  |
 | `datalog` | cozo |  |
 | `declarative-dsl` | slint |  |
 | `density-dependent` | roaring-rs |  |
@@ -65,7 +65,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn |  |
 | `kernel-matrix-in-ci` | uringscope |  |
-| `lock-free` | crossbeam |  |
+| `lock-free` | crossbeam, ForkUnion |  |
 | `lock-free-parallel-walk` | ripgrep |  |
 | `lsm` | fjall, SlateDB |  |
 | `lsm-plus-btree` | sled |  |
