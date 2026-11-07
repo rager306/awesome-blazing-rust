@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "sol",
+      "url": "https://github.com/cboudereau/sol",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "OTLP-native observability pipeline (a Vector fork) that collects, transforms and routes logs, metrics and traces, with tail sampling and trace-aware load balancing",
+      "blazing": "author-run benchmarks vs otelcontribcol 0.122.0 and Vector 0.55.0 on identical hardware (12 CPUs, 60s per scenario, [methodology + repro script](https://github.com/cboudereau/sol/tree/main/demo/benchmark)): 46,726 vs 24,175 spans/s (193% of otelcol) with 41% less CPU on load-balanced tail sampling at 50k, 6.6x Vector on traces gRPC 50k, ~11 MiB vs ~47 MiB RSS in noop pipelines - and honest losses (94% of otelcol at 10k, 90% on batched traces 50k).",
+      "arch": ["typed-parse-direct", "sharding"]
     }
   ]
 }

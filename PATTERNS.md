@@ -96,7 +96,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio |  |
+| `sharding` | dashmap, glommio, sol |  |
 | `shuttle-in-ci` | bbtree |  |
 | `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
@@ -112,7 +112,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `thread-per-core` | glommio, monoio, statico |  |
 | `tls-13` | quinn |  |
 | `typed-effects` | crux |  |
-| `typed-parse-direct` | sonic-rs |  |
+| `typed-parse-direct` | sonic-rs, sol |  |
 | `typegen` | crux |  |
 | `valgrind-based` | gungraun |  |
 | `vendor-pinning` | paramo1d |  |
