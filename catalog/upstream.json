@@ -77,7 +77,7 @@
   {"repo": "samueltardieu/pathfinding", "tag": "v4.16.0"},
   {"repo": "sarah-quinones/faer-rs", "tag": "faer-v0.24.4"},
   {"repo": "sarah-quinones/pulp", "tag": "pulp-wasm-simd-flag-v0.1.1"},
-  {"repo": "servo/rust-smallvec", "tag": "v1.16.4"},
+  {"repo": "servo/rust-smallvec", "tag": "v1.16.5"},
   {"repo": "sharkdp/hyperfine", "tag": "v2.0.0"},
   {"repo": "simd-lite/simd-json", "tag": "v0.19.0"},
   {"repo": "slatedb/slatedb", "tag": "v0.18.0"},
