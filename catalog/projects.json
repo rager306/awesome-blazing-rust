@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "graphrs",
+      "url": "https://github.com/malcolmvr/graphrs",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "NetworkX-style Rust graph library whose Dijkstra shortest-path and centrality algorithms run rayon-parallel",
+      "blazing": "author benchmark, betweenness centrality on a 2,000-node/199,702-edge random graph in 670 ms vs igraph 8,280 ms and NetworkX 294,397 ms, though graph-tool 478 ms stays ahead (10 timed runs with mean/std, AWS m5d.4xlarge 16 vCPU, versions pinned, [methodology](https://github.com/malcolmvr/graphrs/blob/main/performance.md)).",
+      "arch": ["parallel-algos", "work-stealing", "generic-graph"]
     }
   ]
 }
