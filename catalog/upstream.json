@@ -15,7 +15,7 @@
   {"repo": "ShayanAbbas1/dbdelve", "tag": "v0.7.0"},
   {"repo": "Stoeoef/rstar", "tag": "0.9.0"},
   {"repo": "TimelyDataflow/differential-dataflow", "tag": "differential-dogs3-v0.26.0"},
-  {"repo": "XiangpengHao/bbtree", "tag": "v0.2.0"},
+  {"repo": "XiangpengHao/bbtree", "tag": "v0.2.1"},
   {"repo": "apache/arrow-rs", "tag": "60.1.0"},
   {"repo": "apache/datafusion", "tag": "python-0.4.0"},
   {"repo": "astral-sh/ruff", "tag": "0.17.4"},
