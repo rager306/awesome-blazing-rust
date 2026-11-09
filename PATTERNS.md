@@ -12,12 +12,12 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `backend-trait` | candle, burn |  |
 | `batching` | io-uring |  |
 | `bitmap-index` | roaring-rs |  |
-| `branchless` | memchr, foldhash |  |
+| `branchless` | memchr, foldhash, density |  |
 | `broad-phase-narrow-phase` | rapier |  |
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
 | `c-binding` | zstd-safe |  |
-| `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
+| `cache-conscious-layout` | hashbrown, taffy, eg-strider, density |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
@@ -85,7 +85,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefilter` | regex |  |
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
-| `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq, density |  |
 | `python-bridge` | rustworkx |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
