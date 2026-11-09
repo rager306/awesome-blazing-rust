@@ -5,23 +5,23 @@
     "sources": ["crates.io", "hn.algolia.com", "rustsec/advisory-db", "api.github.com via gh"],
     "sources_note": "triage via subq.ai decisions",
     "flag_vocabulary": ["security", "unmaintained", "contested", "hype-suspect", "astroturf-suspected", "stale-claim"],
-    "generated_at": "2026-11-02T00:00:00Z",
+    "generated_at": "2026-11-09T00:00:00Z",
     "repos": 96
   },
   "repos": [
     {
       "repo": "01mf02/jaq",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-30T11:08:20Z",
-        "stars": 3818,
+        "pushed_at": "2026-11-09T10:39:40Z",
+        "stars": 3828,
         "license": "MIT"
       },
       "crate": {
         "name": "jaq",
-        "downloads": 124859,
-        "recent_downloads": 5749,
+        "downloads": 125380,
+        "recent_downloads": 5656,
         "versions": 37,
         "yanked": 0,
         "updated_at": "2026-10-21T11:37:21.993965Z"
@@ -30,7 +30,7 @@
         "stories": 16,
         "comments": 88,
         "stars_per_day": 1.8,
-        "download_share": 0.046
+        "download_share": 0.045
       },
       "advisories": [],
       "disputes": [
@@ -46,17 +46,17 @@
     },
     {
       "repo": "BLAKE3-team/BLAKE3",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-01T20:07:25Z",
-        "stars": 6504,
+        "stars": 6516,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "blake3",
-        "downloads": 216305795,
-        "recent_downloads": 57580716,
+        "downloads": 222416487,
+        "recent_downloads": 60326492,
         "versions": 46,
         "yanked": 0,
         "updated_at": "2026-08-20T09:09:56.903547Z"
@@ -64,8 +64,8 @@
       "attention": {
         "stories": 56,
         "comments": 507,
-        "stars_per_day": 2.6,
-        "download_share": 0.266
+        "stars_per_day": 2.5,
+        "download_share": 0.271
       },
       "advisories": [],
       "disputes": [],
@@ -73,17 +73,17 @@
     },
     {
       "repo": "BurntSushi/aho-corasick",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-08-10T12:06:53Z",
-        "stars": 1307,
+        "stars": 1306,
         "license": "Unlicense"
       },
       "crate": {
         "name": "aho-corasick",
-        "downloads": 1325266113,
-        "recent_downloads": 316313599,
+        "downloads": 1358979282,
+        "recent_downloads": 330957211,
         "versions": 63,
         "yanked": 0,
         "updated_at": "2026-08-03T11:44:11.111398Z"
@@ -92,7 +92,7 @@
         "stories": 15,
         "comments": 189,
         "stars_per_day": 0.3,
-        "download_share": 0.239
+        "download_share": 0.244
       },
       "advisories": [],
       "disputes": [],
@@ -100,17 +100,17 @@
     },
     {
       "repo": "BurntSushi/fst",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2024-09-25T20:46:04Z",
-        "stars": 2122,
+        "stars": 2123,
         "license": "Unlicense"
       },
       "crate": {
         "name": "fst",
-        "downloads": 32672596,
-        "recent_downloads": 8518446,
+        "downloads": 33390211,
+        "recent_downloads": 8744312,
         "versions": 54,
         "yanked": 0,
         "updated_at": "2021-06-06T11:00:31.172403Z"
@@ -119,7 +119,7 @@
         "stories": 43,
         "comments": 427,
         "stars_per_day": 0.5,
-        "download_share": 0.261
+        "download_share": 0.262
       },
       "advisories": [],
       "disputes": [],
@@ -127,7 +127,7 @@
     },
     {
       "repo": "BurntSushi/memchr",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-08-10T17:32:21Z",
@@ -136,17 +136,17 @@
       },
       "crate": {
         "name": "memchr",
-        "downloads": 1662480467,
-        "recent_downloads": 436153970,
+        "downloads": 1706752680,
+        "recent_downloads": 452500379,
         "versions": 47,
         "yanked": 0,
         "updated_at": "2026-07-08T00:49:54.408285Z"
       },
       "attention": {
         "stories": 11,
-        "comments": 180,
+        "comments": 181,
         "stars_per_day": 0.4,
-        "download_share": 0.262
+        "download_share": 0.265
       },
       "advisories": [],
       "disputes": [
@@ -162,26 +162,26 @@
     },
     {
       "repo": "BurntSushi/ripgrep",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T18:31:31Z",
-        "stars": 69641,
+        "stars": 69930,
         "license": "Unlicense"
       },
       "crate": {
         "name": "ripgrep",
-        "downloads": 1639181,
-        "recent_downloads": 126113,
+        "downloads": 1652687,
+        "recent_downloads": 130178,
         "versions": 59,
         "yanked": 0,
         "updated_at": "2026-07-15T16:28:46.152381Z"
       },
       "attention": {
         "stories": 152,
-        "comments": 3383,
-        "stars_per_day": 17.9,
-        "download_share": 0.077
+        "comments": 3385,
+        "stars_per_day": 18.0,
+        "download_share": 0.079
       },
       "advisories": [],
       "disputes": [
@@ -197,7 +197,7 @@
     },
     {
       "repo": "DataDog/glommio",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-08-31T08:00:20Z",
@@ -206,8 +206,8 @@
       },
       "crate": {
         "name": "glommio",
-        "downloads": 175003,
-        "recent_downloads": 23317,
+        "downloads": 176493,
+        "recent_downloads": 23194,
         "versions": 11,
         "yanked": 0,
         "updated_at": "2024-03-25T20:49:41.570451Z"
@@ -216,7 +216,7 @@
         "stories": 7,
         "comments": 81,
         "stars_per_day": 1.6,
-        "download_share": 0.133
+        "download_share": 0.131
       },
       "advisories": [],
       "disputes": [],
@@ -224,17 +224,17 @@
     },
     {
       "repo": "DioxusLabs/taffy",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T07:19:51Z",
-        "stars": 3729,
+        "pushed_at": "2026-11-06T16:12:21Z",
+        "stars": 3760,
         "license": "MIT"
       },
       "crate": {
         "name": "taffy",
-        "downloads": 18443530,
-        "recent_downloads": 8001458,
+        "downloads": 19339968,
+        "recent_downloads": 8470867,
         "versions": 65,
         "yanked": 0,
         "updated_at": "2026-10-25T16:23:56.807191Z"
@@ -243,7 +243,7 @@
         "stories": 21,
         "comments": 148,
         "stars_per_day": 2.1,
-        "download_share": 0.434
+        "download_share": 0.438
       },
       "advisories": [],
       "disputes": [],
@@ -251,17 +251,17 @@
     },
     {
       "repo": "DoumanAsh/xxhash-rust",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-09-28T13:15:53Z",
-        "stars": 300,
+        "stars": 301,
         "license": "BSL-1.0"
       },
       "crate": {
         "name": "xxhash-rust",
-        "downloads": 131374211,
-        "recent_downloads": 43858901,
+        "downloads": 137069100,
+        "recent_downloads": 47303946,
         "versions": 26,
         "yanked": 0,
         "updated_at": "2026-09-28T13:16:18.201165Z"
@@ -270,7 +270,7 @@
         "stories": 0,
         "comments": 2,
         "stars_per_day": 0.1,
-        "download_share": 0.334
+        "download_share": 0.345
       },
       "advisories": [],
       "disputes": [],
@@ -278,17 +278,17 @@
     },
     {
       "repo": "GitoxideLabs/gitoxide",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T10:18:22Z",
-        "stars": 12098,
+        "pushed_at": "2026-11-09T14:18:27Z",
+        "stars": 12114,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "gitoxide",
-        "downloads": 111487,
-        "recent_downloads": 1448,
+        "downloads": 111574,
+        "recent_downloads": 1460,
         "versions": 69,
         "yanked": 0,
         "updated_at": "2026-10-22T13:59:52.026211Z"
@@ -305,17 +305,17 @@
     },
     {
       "repo": "Kobzol/cargo-pgo",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-04-25T09:05:58Z",
-        "stars": 793,
+        "stars": 795,
         "license": "MIT"
       },
       "crate": {
         "name": "cargo-pgo",
-        "downloads": 74927,
-        "recent_downloads": 8830,
+        "downloads": 76332,
+        "recent_downloads": 9996,
         "versions": 13,
         "yanked": 0,
         "updated_at": "2026-01-25T14:23:32.000777Z"
@@ -324,7 +324,7 @@
         "stories": 3,
         "comments": 0,
         "stars_per_day": 0.5,
-        "download_share": 0.118
+        "download_share": 0.131
       },
       "advisories": [],
       "disputes": [],
@@ -332,18 +332,18 @@
     },
     {
       "repo": "Qiskit/rustworkx",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-26T14:22:41Z",
-        "stars": 1778,
+        "pushed_at": "2026-11-08T18:22:12Z",
+        "stars": 1780,
         "license": "Apache-2.0"
       },
       "crate": null,
       "attention": {
         "stories": 2,
         "comments": 5,
-        "stars_per_day": 0.7,
+        "stars_per_day": 0.6,
         "download_share": null
       },
       "advisories": [],
@@ -353,11 +353,11 @@
     },
     {
       "repo": "RoaringBitmap/roaring-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-28T14:35:06Z",
-        "stars": 970,
+        "pushed_at": "2026-11-09T03:53:34Z",
+        "stars": 972,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -374,18 +374,18 @@
     },
     {
       "repo": "ShayanAbbas1/dbdelve",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:19:34Z",
-        "stars": 642,
+        "pushed_at": "2026-11-09T11:40:54Z",
+        "stars": 686,
         "license": "GPL-3.0"
       },
       "crate": null,
       "attention": {
         "stories": 1,
         "comments": 1,
-        "stars_per_day": 8.3,
+        "stars_per_day": 8.2,
         "download_share": null
       },
       "advisories": [],
@@ -395,7 +395,7 @@
     },
     {
       "repo": "Stoeoef/rstar",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2022-12-29T12:38:58Z",
@@ -416,26 +416,26 @@
     },
     {
       "repo": "TimelyDataflow/differential-dataflow",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-31T22:13:27Z",
-        "stars": 3025,
+        "pushed_at": "2026-11-07T15:31:50Z",
+        "stars": 3032,
         "license": "MIT"
       },
       "crate": {
         "name": "differential-dataflow",
-        "downloads": 551020,
-        "recent_downloads": 123699,
-        "versions": 44,
+        "downloads": 562067,
+        "recent_downloads": 130254,
+        "versions": 45,
         "yanked": 0,
-        "updated_at": "2026-07-15T20:56:23.895455Z"
+        "updated_at": "2026-11-05T20:38:12.732597Z"
       },
       "attention": {
         "stories": 39,
         "comments": 248,
         "stars_per_day": 0.7,
-        "download_share": 0.224
+        "download_share": 0.232
       },
       "advisories": [],
       "disputes": [],
@@ -443,25 +443,25 @@
     },
     {
       "repo": "XiangpengHao/bbtree",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-31T23:43:44Z",
-        "stars": 619,
+        "pushed_at": "2026-11-08T21:51:15Z",
+        "stars": 641,
         "license": "NOASSERTION"
       },
       "crate": {
         "name": "bbtree",
-        "downloads": 2698,
-        "recent_downloads": 2698,
-        "versions": 8,
+        "downloads": 4151,
+        "recent_downloads": 4151,
+        "versions": 9,
         "yanked": 0,
-        "updated_at": "2026-10-31T23:43:00.034404Z"
+        "updated_at": "2026-11-08T21:50:15.627609Z"
       },
       "attention": {
         "stories": 3,
         "comments": 6,
-        "stars_per_day": 24.8,
+        "stars_per_day": 20.0,
         "download_share": 1.000
       },
       "advisories": [],
@@ -470,11 +470,11 @@
     },
     {
       "repo": "apache/arrow-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-01T15:23:38Z",
-        "stars": 3655,
+        "pushed_at": "2026-11-08T23:29:26Z",
+        "stars": 3664,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -491,17 +491,17 @@
     },
     {
       "repo": "apache/datafusion",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:46:38Z",
-        "stars": 9561,
+        "pushed_at": "2026-11-09T13:25:25Z",
+        "stars": 9577,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "datafusion",
-        "downloads": 31152181,
-        "recent_downloads": 7240236,
+        "downloads": 31995748,
+        "recent_downloads": 7682765,
         "versions": 123,
         "yanked": 0,
         "updated_at": "2026-10-07T23:12:24.023Z"
@@ -510,7 +510,7 @@
         "stories": 107,
         "comments": 477,
         "stars_per_day": 4.7,
-        "download_share": 0.232
+        "download_share": 0.240
       },
       "advisories": [],
       "disputes": [
@@ -526,26 +526,26 @@
     },
     {
       "repo": "astral-sh/ruff",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:48:45Z",
-        "stars": 50393,
+        "pushed_at": "2026-11-09T13:48:47Z",
+        "stars": 51129,
         "license": "MIT"
       },
       "crate": {
         "name": "ruff",
-        "downloads": 13252,
-        "recent_downloads": 1881,
-        "versions": 21,
+        "downloads": 15563,
+        "recent_downloads": 4076,
+        "versions": 22,
         "yanked": 0,
-        "updated_at": "2026-10-27T00:35:20.735225Z"
+        "updated_at": "2026-11-05T18:53:36.503041Z"
       },
       "attention": {
         "stories": 95,
         "comments": 1208,
-        "stars_per_day": 32.6,
-        "download_share": 0.142
+        "stars_per_day": 32.9,
+        "download_share": 0.262
       },
       "advisories": [],
       "disputes": [
@@ -575,7 +575,7 @@
     },
     {
       "repo": "awgn/plumbrs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-21T10:32:25Z",
@@ -585,7 +585,7 @@
       "crate": {
         "name": "plumbrs",
         "downloads": 1333,
-        "recent_downloads": 339,
+        "recent_downloads": 334,
         "versions": 72,
         "yanked": 0,
         "updated_at": "2026-10-21T10:32:51.863823Z"
@@ -594,7 +594,7 @@
         "stories": 0,
         "comments": 2,
         "stars_per_day": 0.0,
-        "download_share": 0.254
+        "download_share": 0.251
       },
       "advisories": [],
       "disputes": [],
@@ -602,7 +602,7 @@
     },
     {
       "repo": "awgn/statico",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-17T13:27:00Z",
@@ -611,8 +611,8 @@
       },
       "crate": {
         "name": "statico",
-        "downloads": 919,
-        "recent_downloads": 162,
+        "downloads": 920,
+        "recent_downloads": 159,
         "versions": 56,
         "yanked": 0,
         "updated_at": "2026-10-17T13:27:13.840833Z"
@@ -621,7 +621,7 @@
         "stories": 51,
         "comments": 167,
         "stars_per_day": 0.0,
-        "download_share": 0.176
+        "download_share": 0.173
       },
       "advisories": [],
       "disputes": [],
@@ -629,26 +629,26 @@
     },
     {
       "repo": "awslabs/shuttle",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-30T05:48:58Z",
-        "stars": 1110,
+        "pushed_at": "2026-11-05T11:19:04Z",
+        "stars": 1113,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "shuttle",
-        "downloads": 7085504,
-        "recent_downloads": 2267309,
-        "versions": 30,
+        "downloads": 7339778,
+        "recent_downloads": 2399744,
+        "versions": 31,
         "yanked": 0,
-        "updated_at": "2026-10-29T00:55:01.214043Z"
+        "updated_at": "2026-11-05T11:18:34.497717Z"
       },
       "attention": {
         "stories": 1069,
-        "comments": 12483,
+        "comments": 12489,
         "stars_per_day": 0.5,
-        "download_share": 0.320
+        "download_share": 0.327
       },
       "advisories": [],
       "disputes": [],
@@ -656,11 +656,11 @@
     },
     {
       "repo": "bheisler/criterion.rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-04-23T01:57:38Z",
-        "stars": 5546,
+        "stars": 5549,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -677,7 +677,7 @@
     },
     {
       "repo": "bodil/im-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": true,
         "pushed_at": "2024-08-19T20:59:41Z",
@@ -698,26 +698,26 @@
     },
     {
       "repo": "bytecodealliance/wasmtime",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T12:29:46Z",
-        "stars": 18820,
+        "pushed_at": "2026-11-07T10:13:19Z",
+        "stars": 18837,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "wasmtime",
-        "downloads": 42772412,
-        "recent_downloads": 12249261,
-        "versions": 238,
+        "downloads": 43961060,
+        "recent_downloads": 12672872,
+        "versions": 239,
         "yanked": 0,
-        "updated_at": "2026-10-29T18:34:30.348672Z"
+        "updated_at": "2026-11-05T01:22:55.246860Z"
       },
       "attention": {
         "stories": 75,
-        "comments": 622,
+        "comments": 623,
         "stars_per_day": 5.6,
-        "download_share": 0.286
+        "download_share": 0.288
       },
       "advisories": [
         {
@@ -935,7 +935,7 @@
     },
     {
       "repo": "bytedance/monoio",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-16T08:48:43Z",
@@ -944,8 +944,8 @@
       },
       "crate": {
         "name": "monoio",
-        "downloads": 1675830,
-        "recent_downloads": 411925,
+        "downloads": 1713104,
+        "recent_downloads": 412050,
         "versions": 26,
         "yanked": 0,
         "updated_at": "2024-08-20T08:39:14.705845Z"
@@ -953,8 +953,8 @@
       "attention": {
         "stories": 5,
         "comments": 52,
-        "stars_per_day": 2.9,
-        "download_share": 0.246
+        "stars_per_day": 2.8,
+        "download_share": 0.241
       },
       "advisories": [],
       "disputes": [],
@@ -962,26 +962,26 @@
     },
     {
       "repo": "cberner/redb",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T04:39:10Z",
-        "stars": 4891,
+        "pushed_at": "2026-11-09T04:42:52Z",
+        "stars": 4917,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "redb",
-        "downloads": 14995374,
-        "recent_downloads": 6506504,
-        "versions": 78,
+        "downloads": 15640580,
+        "recent_downloads": 6755782,
+        "versions": 79,
         "yanked": 0,
-        "updated_at": "2026-10-13T22:28:27.191131Z"
+        "updated_at": "2026-11-05T23:49:39.251731Z"
       },
       "attention": {
         "stories": 11,
-        "comments": 21,
+        "comments": 22,
         "stars_per_day": 1.7,
-        "download_share": 0.434
+        "download_share": 0.432
       },
       "advisories": [],
       "disputes": [],
@@ -989,26 +989,26 @@
     },
     {
       "repo": "cloudflare/pingora",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-31T02:57:31Z",
-        "stars": 27767,
+        "pushed_at": "2026-11-07T06:08:30Z",
+        "stars": 27835,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "pingora",
-        "downloads": 9871835,
-        "recent_downloads": 1074398,
-        "versions": 12,
+        "downloads": 9965446,
+        "recent_downloads": 1111303,
+        "versions": 13,
         "yanked": 0,
-        "updated_at": "2026-09-09T23:32:29.604429Z"
+        "updated_at": "2026-11-03T00:45:18.502230Z"
       },
       "attention": {
         "stories": 39,
-        "comments": 104,
+        "comments": 105,
         "stars_per_day": 21.7,
-        "download_share": 0.109
+        "download_share": 0.112
       },
       "advisories": [],
       "disputes": [],
@@ -1016,7 +1016,7 @@
     },
     {
       "repo": "cloudwego/sonic-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-11T06:04:37Z",
@@ -1025,8 +1025,8 @@
       },
       "crate": {
         "name": "sonic-rs",
-        "downloads": 8435620,
-        "recent_downloads": 3661907,
+        "downloads": 8644859,
+        "recent_downloads": 3708504,
         "versions": 48,
         "yanked": 0,
         "updated_at": "2026-09-11T08:34:33.860840Z"
@@ -1035,7 +1035,7 @@
         "stories": 6,
         "comments": 1,
         "stars_per_day": 0.8,
-        "download_share": 0.434
+        "download_share": 0.429
       },
       "advisories": [],
       "disputes": [],
@@ -1043,17 +1043,17 @@
     },
     {
       "repo": "cozodb/cozo",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2024-12-04T12:49:06Z",
-        "stars": 4137,
+        "stars": 4145,
         "license": "MPL-2.0"
       },
       "crate": {
         "name": "cozo",
-        "downloads": 120330,
-        "recent_downloads": 19802,
+        "downloads": 122390,
+        "recent_downloads": 20063,
         "versions": 20,
         "yanked": 0,
         "updated_at": "2023-12-11T08:13:14.019443Z"
@@ -1062,7 +1062,7 @@
         "stories": 9,
         "comments": 58,
         "stars_per_day": 2.8,
-        "download_share": 0.165
+        "download_share": 0.164
       },
       "advisories": [],
       "disputes": [
@@ -1078,17 +1078,17 @@
     },
     {
       "repo": "crossbeam-rs/crossbeam",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-11-01T07:56:08Z",
-        "stars": 8635,
+        "stars": 8639,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "crossbeam",
-        "downloads": 155339921,
-        "recent_downloads": 30241292,
+        "downloads": 158248296,
+        "recent_downloads": 31046191,
         "versions": 37,
         "yanked": 0,
         "updated_at": "2026-09-05T17:47:37.499898Z"
@@ -1097,7 +1097,7 @@
         "stories": 16,
         "comments": 207,
         "stars_per_day": 2.1,
-        "download_share": 0.195
+        "download_share": 0.196
       },
       "advisories": [
         {
@@ -1115,17 +1115,17 @@
     },
     {
       "repo": "dimforge/nalgebra",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-09-30T18:43:13Z",
-        "stars": 4809,
+        "stars": 4811,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "nalgebra",
-        "downloads": 99250028,
-        "recent_downloads": 17300198,
+        "downloads": 100899795,
+        "recent_downloads": 17762417,
         "versions": 124,
         "yanked": 0,
         "updated_at": "2026-05-24T16:12:14.939059Z"
@@ -1134,7 +1134,7 @@
         "stories": 8,
         "comments": 57,
         "stars_per_day": 1.0,
-        "download_share": 0.174
+        "download_share": 0.176
       },
       "advisories": [
         {
@@ -1154,11 +1154,11 @@
     },
     {
       "repo": "dimforge/rapier",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-11-01T21:48:29Z",
-        "stars": 6018,
+        "stars": 6049,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -1175,44 +1175,59 @@
     },
     {
       "repo": "emilk/egui",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:05:59Z",
-        "stars": 31921,
+        "pushed_at": "2026-11-09T13:03:34Z",
+        "stars": 32159,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "egui",
-        "downloads": 29489563,
-        "recent_downloads": 8592721,
+        "downloads": 30652901,
+        "recent_downloads": 9358932,
         "versions": 67,
         "yanked": 0,
         "updated_at": "2026-10-15T14:49:16.159284Z"
       },
       "attention": {
-        "stories": 82,
-        "comments": 689,
-        "stars_per_day": 11.2,
-        "download_share": 0.291
+        "stories": 84,
+        "comments": 733,
+        "stars_per_day": 11.3,
+        "download_share": 0.305
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=50421556",
+          "created_at": "2026-11-09T05:52:59Z",
+          "status": "machine-triaged",
+          "p": 0.84
+        },
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=50392548",
+          "created_at": "2026-11-06T14:17:31Z",
+          "status": "needs-review",
+          "p": 0.52
+        }
+      ],
       "flags": []
     },
     {
       "repo": "fjall-rs/fjall",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-25T21:18:29Z",
-        "stars": 2414,
+        "pushed_at": "2026-11-08T23:35:46Z",
+        "stars": 2430,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "fjall",
-        "downloads": 2049453,
-        "recent_downloads": 730065,
+        "downloads": 2123496,
+        "recent_downloads": 762289,
         "versions": 103,
         "yanked": 0,
         "updated_at": "2026-10-25T21:18:52.196587Z"
@@ -1221,7 +1236,7 @@
         "stories": 17,
         "comments": 15,
         "stars_per_day": 2.2,
-        "download_share": 0.356
+        "download_share": 0.359
       },
       "advisories": [],
       "disputes": [],
@@ -1229,17 +1244,17 @@
     },
     {
       "repo": "flamegraph-rs/flamegraph",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-11-02T11:35:53Z",
-        "stars": 6052,
+        "stars": 6055,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "flamegraph",
-        "downloads": 1026094,
-        "recent_downloads": 49193,
+        "downloads": 1030337,
+        "recent_downloads": 47929,
         "versions": 34,
         "yanked": 0,
         "updated_at": "2026-11-02T11:36:07.300552Z"
@@ -1248,7 +1263,7 @@
         "stories": 59,
         "comments": 257,
         "stars_per_day": 2.2,
-        "download_share": 0.048
+        "download_share": 0.047
       },
       "advisories": [],
       "disputes": [],
@@ -1256,17 +1271,17 @@
     },
     {
       "repo": "foyer-rs/foyer",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-09T06:26:48Z",
-        "stars": 1848,
+        "pushed_at": "2026-11-09T03:43:28Z",
+        "stars": 1850,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "foyer",
-        "downloads": 13875275,
-        "recent_downloads": 3925236,
+        "downloads": 14302491,
+        "recent_downloads": 4065093,
         "versions": 69,
         "yanked": 0,
         "updated_at": "2026-09-09T08:25:17.182151Z"
@@ -1274,8 +1289,8 @@
       "attention": {
         "stories": 16,
         "comments": 229,
-        "stars_per_day": 1.5,
-        "download_share": 0.283
+        "stars_per_day": 1.4,
+        "download_share": 0.284
       },
       "advisories": [],
       "disputes": [],
@@ -1283,17 +1298,17 @@
     },
     {
       "repo": "gungraun/gungraun",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T10:36:29Z",
+        "pushed_at": "2026-11-06T12:45:30Z",
         "stars": 341,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "gungraun",
-        "downloads": 1378345,
-        "recent_downloads": 950001,
+        "downloads": 1561058,
+        "recent_downloads": 1074137,
         "versions": 13,
         "yanked": 0,
         "updated_at": "2026-09-26T17:18:08.711102Z"
@@ -1302,7 +1317,7 @@
         "stories": 0,
         "comments": 1,
         "stars_per_day": 0.3,
-        "download_share": 0.689
+        "download_share": 0.688
       },
       "advisories": [],
       "disputes": [],
@@ -1310,11 +1325,11 @@
     },
     {
       "repo": "gyscos/zstd-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-01T17:58:31Z",
-        "stars": 665,
+        "pushed_at": "2026-11-02T16:28:55Z",
+        "stars": 666,
         "license": "BSD-3-Clause"
       },
       "crate": null,
@@ -1331,18 +1346,18 @@
     },
     {
       "repo": "huggingface/candle",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-11-02T12:05:47Z",
-        "stars": 21266,
+        "stars": 21292,
         "license": "Apache-2.0"
       },
       "crate": null,
       "attention": {
-        "stories": 192,
-        "comments": 4219,
-        "stars_per_day": 17.3,
+        "stories": 193,
+        "comments": 4223,
+        "stars_per_day": 17.2,
         "download_share": null
       },
       "advisories": [],
@@ -1352,26 +1367,26 @@
     },
     {
       "repo": "hyperium/hyper",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-30T20:57:46Z",
-        "stars": 16391,
+        "pushed_at": "2026-11-02T16:39:22Z",
+        "stars": 16404,
         "license": "MIT"
       },
       "crate": {
         "name": "hyper",
-        "downloads": 1076487453,
-        "recent_downloads": 261771838,
+        "downloads": 1104765498,
+        "recent_downloads": 274136522,
         "versions": 253,
         "yanked": 0,
         "updated_at": "2026-10-06T15:57:18.927904Z"
       },
       "attention": {
-        "stories": 1811,
-        "comments": 34219,
+        "stories": 1813,
+        "comments": 34265,
         "stars_per_day": 3.7,
-        "download_share": 0.243
+        "download_share": 0.248
       },
       "advisories": [
         {
@@ -1401,17 +1416,17 @@
     },
     {
       "repo": "ibraheemdev/papaya",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-08-21T22:06:43Z",
-        "stars": 958,
+        "stars": 960,
         "license": "MIT"
       },
       "crate": {
         "name": "papaya",
-        "downloads": 14941643,
-        "recent_downloads": 7081336,
+        "downloads": 15656281,
+        "recent_downloads": 7400747,
         "versions": 17,
         "yanked": 0,
         "updated_at": "2026-08-21T22:03:50.199574Z"
@@ -1420,7 +1435,7 @@
         "stories": 18,
         "comments": 186,
         "stars_per_day": 0.9,
-        "download_share": 0.474
+        "download_share": 0.473
       },
       "advisories": [],
       "disputes": [],
@@ -1428,18 +1443,18 @@
     },
     {
       "repo": "ignotusnemo/paramo1d",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-24T22:56:49Z",
-        "stars": 29,
+        "stars": 30,
         "license": "Apache-2.0"
       },
       "crate": null,
       "attention": {
         "stories": 1,
         "comments": 0,
-        "stars_per_day": 3.2,
+        "stars_per_day": 1.9,
         "download_share": null
       },
       "advisories": [],
@@ -1449,18 +1464,18 @@
     },
     {
       "repo": "indexable-inc/blaze",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T03:29:59Z",
-        "stars": 1894,
+        "pushed_at": "2026-11-09T10:06:50Z",
+        "stars": 2090,
         "license": "Apache-2.0"
       },
       "crate": null,
       "attention": {
-        "stories": 447,
-        "comments": 2741,
-        "stars_per_day": 135.3,
+        "stories": 448,
+        "comments": 2748,
+        "stars_per_day": 99.5,
         "download_share": null
       },
       "advisories": [],
@@ -1470,7 +1485,7 @@
     },
     {
       "repo": "indexmap-rs/indexmap",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-09-05T01:53:57Z",
@@ -1479,8 +1494,8 @@
       },
       "crate": {
         "name": "indexmap",
-        "downloads": 1803607738,
-        "recent_downloads": 449180772,
+        "downloads": 1850502979,
+        "recent_downloads": 468706108,
         "versions": 57,
         "yanked": 0,
         "updated_at": "2026-09-05T01:53:48.019655Z"
@@ -1489,7 +1504,7 @@
         "stories": 0,
         "comments": 29,
         "stars_per_day": 0.7,
-        "download_share": 0.249
+        "download_share": 0.253
       },
       "advisories": [],
       "disputes": [],
@@ -1497,7 +1512,7 @@
     },
     {
       "repo": "jackyzha0/eg-strider",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-23T08:36:03Z",
@@ -1508,7 +1523,7 @@
       "attention": {
         "stories": 0,
         "comments": 0,
-        "stars_per_day": 2.0,
+        "stars_per_day": 1.5,
         "download_share": null
       },
       "advisories": [],
@@ -1518,20 +1533,20 @@
     },
     {
       "repo": "ljedrz/nachalnik",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-31T14:22:31Z",
-        "stars": 5,
+        "pushed_at": "2026-11-09T08:28:48Z",
+        "stars": 11,
         "license": "MIT"
       },
       "crate": {
         "name": "nachalnik",
-        "downloads": 706,
-        "recent_downloads": 706,
-        "versions": 24,
+        "downloads": 744,
+        "recent_downloads": 744,
+        "versions": 25,
         "yanked": 0,
-        "updated_at": "2026-10-21T09:27:24.581694Z"
+        "updated_at": "2026-11-05T20:55:49.355499Z"
       },
       "attention": {
         "stories": 2,
@@ -1545,25 +1560,25 @@
     },
     {
       "repo": "longbridge/gpui-kit",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:36:54Z",
-        "stars": 18891,
+        "pushed_at": "2026-11-09T13:04:18Z",
+        "stars": 20062,
         "license": "NOASSERTION"
       },
       "crate": {
         "name": "gpui-kit",
-        "downloads": 235998,
-        "recent_downloads": 235998,
-        "versions": 14,
+        "downloads": 305211,
+        "recent_downloads": 305211,
+        "versions": 15,
         "yanked": 0,
-        "updated_at": "2026-11-02T13:43:39.679537Z"
+        "updated_at": "2026-11-09T09:50:22.442516Z"
       },
       "attention": {
         "stories": 1,
-        "comments": 3,
-        "stars_per_day": 21.7,
+        "comments": 16,
+        "stars_per_day": 22.8,
         "download_share": 1.000
       },
       "advisories": [],
@@ -1572,26 +1587,26 @@
     },
     {
       "repo": "moka-rs/moka",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-08-09T23:17:14Z",
-        "stars": 2720,
+        "stars": 2722,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "moka",
-        "downloads": 152432506,
-        "recent_downloads": 45821647,
+        "downloads": 157421431,
+        "recent_downloads": 48025913,
         "versions": 68,
         "yanked": 0,
         "updated_at": "2026-08-09T23:29:26.591998Z"
       },
       "attention": {
         "stories": 39,
-        "comments": 714,
+        "comments": 722,
         "stars_per_day": 1.1,
-        "download_share": 0.301
+        "download_share": 0.305
       },
       "advisories": [],
       "disputes": [
@@ -1607,7 +1622,7 @@
     },
     {
       "repo": "nnethercote/dhat-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2025-02-20T20:03:09Z",
@@ -1628,26 +1643,26 @@
     },
     {
       "repo": "ntex-rs/ntex",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-01T13:57:13Z",
-        "stars": 2548,
+        "pushed_at": "2026-11-09T12:21:09Z",
+        "stars": 2547,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "ntex",
-        "downloads": 1138991,
-        "recent_downloads": 126505,
-        "versions": 277,
+        "downloads": 1154861,
+        "recent_downloads": 134291,
+        "versions": 279,
         "yanked": 0,
-        "updated_at": "2026-11-01T08:54:57.103274Z"
+        "updated_at": "2026-11-07T20:20:06.247740Z"
       },
       "attention": {
         "stories": 2,
         "comments": 13,
         "stars_per_day": 1.0,
-        "download_share": 0.111
+        "download_share": 0.116
       },
       "advisories": [],
       "disputes": [
@@ -1663,17 +1678,17 @@
     },
     {
       "repo": "nvzqz/divan",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-07-19T21:31:51Z",
-        "stars": 1463,
+        "stars": 1464,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "divan",
-        "downloads": 10522077,
-        "recent_downloads": 4422482,
+        "downloads": 10869803,
+        "recent_downloads": 4505159,
         "versions": 23,
         "yanked": 0,
         "updated_at": "2025-04-10T03:02:21.356522Z"
@@ -1682,7 +1697,7 @@
         "stories": 65,
         "comments": 918,
         "stars_per_day": 1.2,
-        "download_share": 0.420
+        "download_share": 0.414
       },
       "advisories": [],
       "disputes": [],
@@ -1690,17 +1705,17 @@
     },
     {
       "repo": "oconnor663/rfcs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-29T22:22:38Z",
+        "pushed_at": "2026-11-02T22:34:42Z",
         "stars": 0,
         "license": "Apache-2.0"
       },
       "crate": null,
       "attention": {
         "stories": 357,
-        "comments": 5065,
+        "comments": 5071,
         "stars_per_day": 0.0,
         "download_share": null
       },
@@ -1711,17 +1726,17 @@
     },
     {
       "repo": "orlp/foldhash",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-07-03T14:19:29Z",
-        "stars": 388,
+        "stars": 390,
         "license": "Zlib"
       },
       "crate": {
         "name": "foldhash",
-        "downloads": 761692240,
-        "recent_downloads": 305294789,
+        "downloads": 797932747,
+        "recent_downloads": 324728829,
         "versions": 7,
         "yanked": 0,
         "updated_at": "2025-08-23T19:14:01.103482Z"
@@ -1730,7 +1745,7 @@
         "stories": 2,
         "comments": 9,
         "stars_per_day": 0.5,
-        "download_share": 0.401
+        "download_share": 0.407
       },
       "advisories": [],
       "disputes": [],
@@ -1738,26 +1753,26 @@
     },
     {
       "repo": "oxc-project/oxc",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:35:37Z",
-        "stars": 23299,
+        "pushed_at": "2026-11-09T14:22:26Z",
+        "stars": 23381,
         "license": "MIT"
       },
       "crate": {
         "name": "oxc",
-        "downloads": 1915159,
-        "recent_downloads": 633618,
-        "versions": 212,
+        "downloads": 2029941,
+        "recent_downloads": 716062,
+        "versions": 214,
         "yanked": 0,
-        "updated_at": "2026-10-27T03:25:15.462456Z"
+        "updated_at": "2026-11-09T11:12:18.113484Z"
       },
       "attention": {
         "stories": 38,
-        "comments": 123,
+        "comments": 124,
         "stars_per_day": 17.1,
-        "download_share": 0.331
+        "download_share": 0.353
       },
       "advisories": [],
       "disputes": [],
@@ -1765,11 +1780,11 @@
     },
     {
       "repo": "oxigraph/oxigraph",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T06:06:56Z",
-        "stars": 2020,
+        "pushed_at": "2026-11-05T17:14:40Z",
+        "stars": 2029,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -1786,11 +1801,11 @@
     },
     {
       "repo": "pawurb/hotpath-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T00:19:32Z",
-        "stars": 1913,
+        "pushed_at": "2026-11-09T13:56:40Z",
+        "stars": 1919,
         "license": "MIT"
       },
       "crate": null,
@@ -1807,17 +1822,17 @@
     },
     {
       "repo": "petgraph/petgraph",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-31T14:25:47Z",
-        "stars": 4046,
+        "pushed_at": "2026-11-08T17:53:10Z",
+        "stars": 4055,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "petgraph",
-        "downloads": 588495778,
-        "recent_downloads": 135065745,
+        "downloads": 603057099,
+        "recent_downloads": 141314323,
         "versions": 78,
         "yanked": 0,
         "updated_at": "2025-09-30T13:16:04.011947Z"
@@ -1826,7 +1841,7 @@
         "stories": 3,
         "comments": 91,
         "stars_per_day": 0.9,
-        "download_share": 0.230
+        "download_share": 0.234
       },
       "advisories": [],
       "disputes": [],
@@ -1834,26 +1849,26 @@
     },
     {
       "repo": "pola-rs/polars",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:18:32Z",
-        "stars": 40247,
+        "pushed_at": "2026-11-09T13:00:41Z",
+        "stars": 40288,
         "license": "MIT"
       },
       "crate": {
         "name": "polars",
-        "downloads": 16854720,
-        "recent_downloads": 3420081,
+        "downloads": 17273718,
+        "recent_downloads": 3666878,
         "versions": 126,
         "yanked": 0,
         "updated_at": "2026-08-06T09:11:43.305236Z"
       },
       "attention": {
-        "stories": 206,
-        "comments": 1883,
+        "stories": 208,
+        "comments": 1893,
         "stars_per_day": 17.0,
-        "download_share": 0.203
+        "download_share": 0.212
       },
       "advisories": [],
       "disputes": [
@@ -1876,17 +1891,17 @@
     },
     {
       "repo": "pseitz/lz4_flex",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-25T08:44:45Z",
-        "stars": 619,
+        "stars": 621,
         "license": "MIT"
       },
       "crate": {
         "name": "lz4_flex",
-        "downloads": 164419227,
-        "recent_downloads": 45227179,
+        "downloads": 169761673,
+        "recent_downloads": 47864059,
         "versions": 43,
         "yanked": 0,
         "updated_at": "2026-07-14T10:34:14.120407Z"
@@ -1895,7 +1910,7 @@
         "stories": 2,
         "comments": 2,
         "stars_per_day": 0.3,
-        "download_share": 0.275
+        "download_share": 0.282
       },
       "advisories": [
         {
@@ -1907,26 +1922,26 @@
     },
     {
       "repo": "qdrant/qdrant",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:28:14Z",
-        "stars": 35385,
+        "pushed_at": "2026-11-09T14:20:29Z",
+        "stars": 35480,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "qdrant",
-        "downloads": 3177,
-        "recent_downloads": 156,
+        "downloads": 3187,
+        "recent_downloads": 150,
         "versions": 1,
         "yanked": 0,
         "updated_at": "2024-04-18T09:32:08.578958Z"
       },
       "attention": {
         "stories": 204,
-        "comments": 617,
+        "comments": 629,
         "stars_per_day": 15.1,
-        "download_share": 0.049
+        "download_share": 0.047
       },
       "advisories": [],
       "disputes": [
@@ -1949,26 +1964,26 @@
     },
     {
       "repo": "quickwit-oss/tantivy",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-30T14:29:29Z",
-        "stars": 16382,
+        "pushed_at": "2026-11-06T20:02:53Z",
+        "stars": 16412,
         "license": "MIT"
       },
       "crate": {
         "name": "tantivy",
-        "downloads": 21413665,
-        "recent_downloads": 5180064,
+        "downloads": 21868844,
+        "recent_downloads": 5342218,
         "versions": 64,
         "yanked": 0,
         "updated_at": "2026-10-17T11:17:43.527897Z"
       },
       "attention": {
         "stories": 45,
-        "comments": 281,
+        "comments": 282,
         "stars_per_day": 4.1,
-        "download_share": 0.242
+        "download_share": 0.244
       },
       "advisories": [],
       "disputes": [],
@@ -1976,26 +1991,26 @@
     },
     {
       "repo": "quinn-rs/quinn",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:30:39Z",
-        "stars": 5325,
+        "pushed_at": "2026-11-09T13:34:24Z",
+        "stars": 5340,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "quinn",
-        "downloads": 391973228,
-        "recent_downloads": 141266165,
+        "downloads": 407549147,
+        "recent_downloads": 148671694,
         "versions": 41,
         "yanked": 0,
         "updated_at": "2026-09-14T10:08:47.662258Z"
       },
       "attention": {
         "stories": 231,
-        "comments": 1125,
+        "comments": 1126,
         "stars_per_day": 1.7,
-        "download_share": 0.360
+        "download_share": 0.365
       },
       "advisories": [
         {
@@ -2007,17 +2022,17 @@
     },
     {
       "repo": "rayon-rs/rayon",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T18:13:46Z",
-        "stars": 13419,
+        "stars": 13448,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "rayon",
-        "downloads": 638598531,
-        "recent_downloads": 156643141,
+        "downloads": 654644518,
+        "recent_downloads": 163340772,
         "versions": 40,
         "yanked": 0,
         "updated_at": "2026-04-14T00:56:56.454086Z"
@@ -2026,7 +2041,7 @@
         "stories": 58,
         "comments": 680,
         "stars_per_day": 3.0,
-        "download_share": 0.245
+        "download_share": 0.250
       },
       "advisories": [],
       "disputes": [],
@@ -2034,11 +2049,11 @@
     },
     {
       "repo": "rch0wdhury/uringscope",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-08-29T20:01:54Z",
-        "stars": 60,
+        "stars": 61,
         "license": "NOASSERTION"
       },
       "crate": null,
@@ -2055,17 +2070,17 @@
     },
     {
       "repo": "redbadger/crux",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:46:55Z",
-        "stars": 2810,
+        "pushed_at": "2026-11-09T03:18:54Z",
+        "stars": 2827,
         "license": "Apache-2.0"
       },
       "crate": null,
       "attention": {
-        "stories": 318,
-        "comments": 12619,
+        "stories": 321,
+        "comments": 12645,
         "stars_per_day": 1.9,
         "download_share": null
       },
@@ -2076,26 +2091,26 @@
     },
     {
       "repo": "rkyv/rkyv",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-09-25T12:05:05Z",
-        "stars": 4396,
+        "stars": 4398,
         "license": "MIT"
       },
       "crate": {
         "name": "rkyv",
-        "downloads": 179694079,
-        "recent_downloads": 42246753,
+        "downloads": 183102392,
+        "recent_downloads": 42738240,
         "versions": 95,
         "yanked": 0,
         "updated_at": "2026-08-05T12:01:41.931822Z"
       },
       "attention": {
         "stories": 9,
-        "comments": 59,
+        "comments": 61,
         "stars_per_day": 2.0,
-        "download_share": 0.235
+        "download_share": 0.233
       },
       "advisories": [
         {
@@ -2122,11 +2137,11 @@
     },
     {
       "repo": "rust-bio/rust-bio",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-12T11:42:47Z",
-        "stars": 1844,
+        "stars": 1847,
         "license": "MIT"
       },
       "crate": null,
@@ -2143,26 +2158,26 @@
     },
     {
       "repo": "rust-itertools/itertools",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-30T19:41:54Z",
-        "stars": 3177,
+        "stars": 3181,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "itertools",
-        "downloads": 1759229154,
-        "recent_downloads": 425227557,
+        "downloads": 1805100052,
+        "recent_downloads": 445817742,
         "versions": 131,
         "yanked": 0,
         "updated_at": "2026-06-16T15:09:28.880416Z"
       },
       "attention": {
         "stories": 53,
-        "comments": 854,
+        "comments": 855,
         "stars_per_day": 0.7,
-        "download_share": 0.242
+        "download_share": 0.247
       },
       "advisories": [],
       "disputes": [],
@@ -2170,7 +2185,7 @@
     },
     {
       "repo": "rust-lang/hashbrown",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-31T20:12:07Z",
@@ -2179,8 +2194,8 @@
       },
       "crate": {
         "name": "hashbrown",
-        "downloads": 2934592101,
-        "recent_downloads": 833898168,
+        "downloads": 3023447122,
+        "recent_downloads": 872283699,
         "versions": 56,
         "yanked": 0,
         "updated_at": "2026-10-13T12:28:45.005326Z"
@@ -2189,7 +2204,7 @@
         "stories": 13,
         "comments": 121,
         "stars_per_day": 1.0,
-        "download_share": 0.284
+        "download_share": 0.289
       },
       "advisories": [
         {
@@ -2201,17 +2216,17 @@
     },
     {
       "repo": "rust-lang/miri",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T09:21:57Z",
-        "stars": 6708,
+        "pushed_at": "2026-11-09T11:12:48Z",
+        "stars": 6727,
         "license": "Apache-2.0"
       },
       "crate": null,
       "attention": {
         "stories": 52,
-        "comments": 901,
+        "comments": 902,
         "stars_per_day": 1.7,
         "download_share": null
       },
@@ -2222,26 +2237,26 @@
     },
     {
       "repo": "rust-lang/regex",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-28T22:10:59Z",
-        "stars": 4048,
+        "pushed_at": "2026-11-07T20:07:36Z",
+        "stars": 4054,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "regex",
-        "downloads": 1335098667,
-        "recent_downloads": 306218394,
+        "downloads": 1366479223,
+        "recent_downloads": 318324134,
         "versions": 169,
         "yanked": 0,
         "updated_at": "2026-07-15T20:19:35.162139Z"
       },
       "attention": {
         "stories": 1782,
-        "comments": 20673,
+        "comments": 20696,
         "stars_per_day": 0.9,
-        "download_share": 0.229
+        "download_share": 0.233
       },
       "advisories": [
         {
@@ -2253,17 +2268,17 @@
     },
     {
       "repo": "rust-ndarray/ndarray",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T14:54:56Z",
-        "stars": 4338,
+        "stars": 4345,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "ndarray",
-        "downloads": 141084023,
-        "recent_downloads": 33625830,
+        "downloads": 144563949,
+        "recent_downloads": 35072955,
         "versions": 93,
         "yanked": 0,
         "updated_at": "2026-01-10T23:19:18.256265Z"
@@ -2272,7 +2287,7 @@
         "stories": 17,
         "comments": 304,
         "stars_per_day": 1.0,
-        "download_share": 0.238
+        "download_share": 0.243
       },
       "advisories": [],
       "disputes": [
@@ -2288,7 +2303,7 @@
     },
     {
       "repo": "rust-num/num-bigint",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-08-21T20:38:09Z",
@@ -2297,8 +2312,8 @@
       },
       "crate": {
         "name": "num-bigint",
-        "downloads": 707016959,
-        "recent_downloads": 192301467,
+        "downloads": 729992230,
+        "recent_downloads": 204900861,
         "versions": 35,
         "yanked": 0,
         "updated_at": "2026-07-05T01:20:47.603095Z"
@@ -2307,7 +2322,7 @@
         "stories": 1,
         "comments": 7,
         "stars_per_day": 0.2,
-        "download_share": 0.272
+        "download_share": 0.281
       },
       "advisories": [],
       "disputes": [],
@@ -2315,17 +2330,17 @@
     },
     {
       "repo": "samueltardieu/pathfinding",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-23T12:50:36Z",
-        "stars": 1084,
+        "stars": 1085,
         "license": ""
       },
       "crate": null,
       "attention": {
         "stories": 202,
-        "comments": 1343,
+        "comments": 1345,
         "stars_per_day": 0.3,
         "download_share": null
       },
@@ -2336,11 +2351,11 @@
     },
     {
       "repo": "sarah-quinones/faer-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-22T02:29:50Z",
-        "stars": 2579,
+        "stars": 2583,
         "license": "MIT"
       },
       "crate": null,
@@ -2365,7 +2380,7 @@
     },
     {
       "repo": "sarah-quinones/pulp",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-09-08T11:23:22Z",
@@ -2374,17 +2389,17 @@
       },
       "crate": {
         "name": "pulp",
-        "downloads": 35178842,
-        "recent_downloads": 17290011,
+        "downloads": 37063374,
+        "recent_downloads": 18301076,
         "versions": 84,
         "yanked": 0,
         "updated_at": "2026-06-20T00:52:15.348522Z"
       },
       "attention": {
         "stories": 140,
-        "comments": 3206,
+        "comments": 3214,
         "stars_per_day": 0.3,
-        "download_share": 0.491
+        "download_share": 0.494
       },
       "advisories": [],
       "disputes": [],
@@ -2392,11 +2407,11 @@
     },
     {
       "repo": "servo/rust-smallvec",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T08:08:06Z",
-        "stars": 1762,
+        "pushed_at": "2026-11-08T09:39:14Z",
+        "stars": 1765,
         "license": "Apache-2.0"
       },
       "crate": null,
@@ -2413,26 +2428,26 @@
     },
     {
       "repo": "sharkdp/hyperfine",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-11-01T03:02:36Z",
-        "stars": 29199,
+        "stars": 29231,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "hyperfine",
-        "downloads": 766610,
-        "recent_downloads": 128530,
+        "downloads": 773642,
+        "recent_downloads": 126277,
         "versions": 31,
         "yanked": 0,
         "updated_at": "2026-10-07T21:17:20.921878Z"
       },
       "attention": {
         "stories": 14,
-        "comments": 337,
+        "comments": 338,
         "stars_per_day": 9.1,
-        "download_share": 0.168
+        "download_share": 0.163
       },
       "advisories": [],
       "disputes": [],
@@ -2440,7 +2455,7 @@
     },
     {
       "repo": "simd-lite/simd-json",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-27T22:19:48Z",
@@ -2449,8 +2464,8 @@
       },
       "crate": {
         "name": "simd-json",
-        "downloads": 24005514,
-        "recent_downloads": 6223544,
+        "downloads": 24651001,
+        "recent_downloads": 6427535,
         "versions": 120,
         "yanked": 0,
         "updated_at": "2026-10-27T22:19:36.419570Z"
@@ -2459,7 +2474,7 @@
         "stories": 3,
         "comments": 32,
         "stars_per_day": 0.5,
-        "download_share": 0.259
+        "download_share": 0.261
       },
       "advisories": [
         {
@@ -2471,26 +2486,26 @@
     },
     {
       "repo": "slatedb/slatedb",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T00:22:52Z",
-        "stars": 3607,
+        "pushed_at": "2026-11-07T23:41:12Z",
+        "stars": 3632,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "slatedb",
-        "downloads": 2240750,
-        "recent_downloads": 1542010,
-        "versions": 34,
+        "downloads": 2429463,
+        "recent_downloads": 1619253,
+        "versions": 36,
         "yanked": 0,
-        "updated_at": "2026-09-29T15:59:49.636719Z"
+        "updated_at": "2026-11-07T23:16:03.979931Z"
       },
       "attention": {
         "stories": 13,
         "comments": 68,
         "stars_per_day": 3.8,
-        "download_share": 0.688
+        "download_share": 0.667
       },
       "advisories": [],
       "disputes": [],
@@ -2498,53 +2513,61 @@
     },
     {
       "repo": "slint-ui/slint",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:48:34Z",
-        "stars": 24362,
+        "pushed_at": "2026-11-09T14:00:31Z",
+        "stars": 24487,
         "license": "NOASSERTION"
       },
       "crate": {
         "name": "slint",
-        "downloads": 2316854,
-        "recent_downloads": 894135,
+        "downloads": 2430507,
+        "recent_downloads": 975205,
         "versions": 52,
         "yanked": 0,
         "updated_at": "2026-09-21T08:52:15.993358Z"
       },
       "attention": {
-        "stories": 77,
-        "comments": 493,
+        "stories": 78,
+        "comments": 520,
         "stars_per_day": 10.3,
-        "download_share": 0.386
+        "download_share": 0.401
       },
       "advisories": [],
-      "disputes": [],
+      "disputes": [
+        {
+          "source": "hn",
+          "url": "https://news.ycombinator.com/item?id=50392548",
+          "created_at": "2026-11-06T14:17:31Z",
+          "status": "needs-review",
+          "p": 0.56
+        }
+      ],
       "flags": []
     },
     {
       "repo": "spacejam/sled",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-04-04T14:52:13Z",
-        "stars": 9104,
+        "stars": 9107,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "sled",
-        "downloads": 17599799,
-        "recent_downloads": 3750818,
+        "downloads": 17793114,
+        "recent_downloads": 3655785,
         "versions": 105,
         "yanked": 0,
         "updated_at": "2024-10-11T14:17:55.198028Z"
       },
       "attention": {
         "stories": 98,
-        "comments": 985,
+        "comments": 986,
         "stars_per_day": 2.3,
-        "download_share": 0.213
+        "download_share": 0.205
       },
       "advisories": [],
       "disputes": [],
@@ -2552,7 +2575,7 @@
     },
     {
       "repo": "srijs/rust-crc32fast",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-11-01T20:18:40Z",
@@ -2573,17 +2596,17 @@
     },
     {
       "repo": "tkaitchuck/aHash",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2025-11-21T02:04:40Z",
-        "stars": 1347,
+        "stars": 1349,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "ahash",
-        "downloads": 877078675,
-        "recent_downloads": 182255455,
+        "downloads": 895943691,
+        "recent_downloads": 189897636,
         "versions": 95,
         "yanked": 0,
         "updated_at": "2025-05-08T05:05:32.999746Z"
@@ -2592,7 +2615,7 @@
         "stories": 2,
         "comments": 35,
         "stars_per_day": 0.5,
-        "download_share": 0.208
+        "download_share": 0.212
       },
       "advisories": [],
       "disputes": [],
@@ -2600,26 +2623,26 @@
     },
     {
       "repo": "tokio-rs/axum",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-01T22:08:20Z",
-        "stars": 27682,
+        "pushed_at": "2026-11-08T21:13:57Z",
+        "stars": 27759,
         "license": "MIT"
       },
       "crate": {
         "name": "axum",
-        "downloads": 560560148,
-        "recent_downloads": 148928568,
+        "downloads": 577733759,
+        "recent_downloads": 157166863,
         "versions": 94,
         "yanked": 0,
         "updated_at": "2026-04-14T07:55:20.258398Z"
       },
       "attention": {
         "stories": 136,
-        "comments": 741,
+        "comments": 742,
         "stars_per_day": 14.0,
-        "download_share": 0.266
+        "download_share": 0.272
       },
       "advisories": [],
       "disputes": [
@@ -2635,26 +2658,26 @@
     },
     {
       "repo": "tokio-rs/io-uring",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-09-07T15:45:01Z",
-        "stars": 1764,
+        "pushed_at": "2026-11-08T08:17:29Z",
+        "stars": 1769,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "io-uring",
-        "downloads": 66472723,
-        "recent_downloads": 16463014,
+        "downloads": 68498702,
+        "recent_downloads": 17451750,
         "versions": 51,
         "yanked": 0,
         "updated_at": "2026-09-07T15:48:45.032143Z"
       },
       "attention": {
         "stories": 336,
-        "comments": 2801,
+        "comments": 2808,
         "stars_per_day": 0.7,
-        "download_share": 0.248
+        "download_share": 0.255
       },
       "advisories": [],
       "disputes": [
@@ -2670,26 +2693,26 @@
     },
     {
       "repo": "tokio-rs/tokio",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-10-31T16:16:34Z",
-        "stars": 33565,
+        "pushed_at": "2026-11-09T12:34:00Z",
+        "stars": 33732,
         "license": "MIT"
       },
       "crate": {
         "name": "tokio",
-        "downloads": 1138183497,
-        "recent_downloads": 285840942,
+        "downloads": 1167891437,
+        "recent_downloads": 297835176,
         "versions": 201,
         "yanked": 0,
         "updated_at": "2026-10-21T21:05:43.950213Z"
       },
       "attention": {
         "stories": 290,
-        "comments": 3093,
+        "comments": 3103,
         "stars_per_day": 9.1,
-        "download_share": 0.251
+        "download_share": 0.255
       },
       "advisories": [
         {
@@ -2734,26 +2757,26 @@
     },
     {
       "repo": "tracel-ai/burn",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T13:43:38Z",
-        "stars": 16212,
+        "pushed_at": "2026-11-09T14:17:58Z",
+        "stars": 16263,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "burn",
-        "downloads": 2074157,
-        "recent_downloads": 886129,
+        "downloads": 2195092,
+        "recent_downloads": 978932,
         "versions": 50,
         "yanked": 0,
         "updated_at": "2026-10-29T13:05:00.090838Z"
       },
       "attention": {
-        "stories": 2208,
-        "comments": 67909,
+        "stories": 2211,
+        "comments": 67992,
         "stars_per_day": 10.3,
-        "download_share": 0.427
+        "download_share": 0.446
       },
       "advisories": [],
       "disputes": [],
@@ -2761,26 +2784,26 @@
     },
     {
       "repo": "verus-lang/verus",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T06:05:38Z",
-        "stars": 3536,
+        "pushed_at": "2026-11-09T04:30:30Z",
+        "stars": 3617,
         "license": "MIT"
       },
       "crate": {
         "name": "verus",
-        "downloads": 2830,
-        "recent_downloads": 160,
+        "downloads": 2839,
+        "recent_downloads": 164,
         "versions": 1,
         "yanked": 0,
         "updated_at": "2024-03-13T18:59:33.987196Z"
       },
       "attention": {
         "stories": 22,
-        "comments": 205,
-        "stars_per_day": 1.9,
-        "download_share": 0.057
+        "comments": 207,
+        "stars_per_day": 2.0,
+        "download_share": 0.058
       },
       "advisories": [],
       "disputes": [],
@@ -2788,10 +2811,10 @@
     },
     {
       "repo": "vigna/sux-rs",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-01T18:36:16Z",
+        "pushed_at": "2026-11-03T19:01:11Z",
         "stars": 80,
         "license": "Apache-2.0"
       },
@@ -2809,26 +2832,26 @@
     },
     {
       "repo": "winnow-rs/winnow",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-01T04:41:14Z",
+        "pushed_at": "2026-11-05T18:11:37Z",
         "stars": 979,
         "license": "NOASSERTION"
       },
       "crate": {
         "name": "winnow",
-        "downloads": 1107118390,
-        "recent_downloads": 344659855,
-        "versions": 111,
+        "downloads": 1144923386,
+        "recent_downloads": 362239837,
+        "versions": 112,
         "yanked": 0,
-        "updated_at": "2026-07-13T14:31:41.405838Z"
+        "updated_at": "2026-11-05T01:18:41.061954Z"
       },
       "attention": {
         "stories": 10,
         "comments": 360,
         "stars_per_day": 0.7,
-        "download_share": 0.311
+        "download_share": 0.316
       },
       "advisories": [],
       "disputes": [],
@@ -2836,7 +2859,7 @@
     },
     {
       "repo": "xacrimon/dashmap",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-21T14:28:51Z",
@@ -2845,8 +2868,8 @@
       },
       "crate": {
         "name": "dashmap",
-        "downloads": 435631771,
-        "recent_downloads": 100369432,
+        "downloads": 446168334,
+        "recent_downloads": 104672482,
         "versions": 85,
         "yanked": 0,
         "updated_at": "2026-05-17T21:28:34.356251Z"
@@ -2855,7 +2878,7 @@
         "stories": 7,
         "comments": 26,
         "stars_per_day": 1.6,
-        "download_share": 0.230
+        "download_share": 0.235
       },
       "advisories": [
         {
@@ -2882,17 +2905,17 @@
     },
     {
       "repo": "ybouane/flashraw",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
         "pushed_at": "2026-10-25T13:45:41Z",
-        "stars": 115,
+        "stars": 122,
         "license": "Apache-2.0"
       },
       "crate": {
         "name": "flashraw",
-        "downloads": 302,
-        "recent_downloads": 302,
+        "downloads": 518,
+        "recent_downloads": 518,
         "versions": 2,
         "yanked": 0,
         "updated_at": "2026-10-25T13:46:24.273835Z"
@@ -2900,7 +2923,7 @@
       "attention": {
         "stories": 2,
         "comments": 0,
-        "stars_per_day": 3.7,
+        "stars_per_day": 3.2,
         "download_share": 1.000
       },
       "advisories": [],
@@ -2909,18 +2932,18 @@
     },
     {
       "repo": "zed-industries/zed",
-      "observed_at": "2026-11-02",
+      "observed_at": "2026-11-09",
       "github": {
         "archived": false,
-        "pushed_at": "2026-11-02T12:57:30Z",
-        "stars": 92545,
+        "pushed_at": "2026-11-09T14:10:42Z",
+        "stars": 94562,
         "license": "NOASSERTION"
       },
       "crate": null,
       "attention": {
         "stories": 692,
-        "comments": 10414,
-        "stars_per_day": 44.5,
+        "comments": 10486,
+        "stars_per_day": 45.3,
         "download_share": null
       },
       "advisories": [],
