@@ -17,7 +17,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
 | `c-binding` | zstd-safe |  |
-| `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
+| `cache-conscious-layout` | hashbrown, taffy, eg-strider, radixox |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
@@ -60,7 +60,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `invariants-as-tests` | nachalnik |  |
 | `inverted-index` | tantivy |  |
 | `io-driver` | tokio |  |
-| `io-uring` | glommio, monoio, io-uring, statico, plumbrs |  |
+| `io-uring` | glommio, monoio, io-uring, statico, plumbrs, radixox |  |
 | `jit` | wasmtime, blaze |  |
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn |  |
@@ -83,7 +83,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `pgo` | cargo-pgo |  |
 | `poseidon2-gf2` | paramo1d |  |
 | `prefilter` | regex |  |
-| `prefix-keys` | bbtree |  |
+| `prefix-keys` | bbtree, radixox |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
 | `python-bridge` | rustworkx |  |
@@ -109,7 +109,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `succinct` | sux |  |
 | `table-driven` | crc32fast |  |
 | `tape-representation` | simd-json |  |
-| `thread-per-core` | glommio, monoio, statico |  |
+| `thread-per-core` | glommio, monoio, statico, radixox |  |
 | `tls-13` | quinn |  |
 | `typed-effects` | crux |  |
 | `typed-parse-direct` | sonic-rs |  |

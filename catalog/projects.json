@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "radixox",
+      "url": "https://github.com/JoshuaBOUCHAT/radixox",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Redis/Valkey-protocol in-memory key-value store: keys ordered in an adaptive radix tree, hand-written io_uring loop on one serving thread, libc-free static binary, plus prefix-pruned SCAN and KRANGE pagination Redis lacks",
+      "blazing": "311,910 ops/s unpipelined and 3.08M pipelined (depth 32) on 1 core vs Valkey 9.1.2's 190,864 / 2.15M, prefix `SCAN` 4 ms vs 121 ms over 1M keys — loopback, memtier 2.4.2, 1M×100-byte keys, one run per point, reproducible via `scripts/readme_bench.sh` ([methodology](https://github.com/JoshuaBOUCHAT/radixox#benchmarks)); discloses its losses (`appendfsync always` on one connection: Valkey +64%, BGSAVE p99.99 1.21 ms vs 0.88 ms).",
+      "arch": ["io-uring", "thread-per-core", "prefix-keys", "cache-conscious-layout"]
     }
   ]
 }
