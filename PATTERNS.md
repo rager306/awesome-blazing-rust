@@ -8,7 +8,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `alloc-tracking` | divan, dhat, hotpath-rs |  |
 | `arrangement-indexing` | differential-dataflow |  |
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
-| `automata-compilation` | regex, aho-corasick |  |
+| `automata-compilation` | regex, aho-corasick, wordchipper |  |
 | `backend-trait` | candle, burn |  |
 | `batching` | io-uring |  |
 | `bitmap-index` | roaring-rs |  |
@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, wordchipper |  |
 | `datalog` | cozo |  |
 | `declarative-dsl` | slint |  |
 | `density-dependent` | roaring-rs |  |
@@ -74,7 +74,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `miri-in-ci` | miri |  |
 | `multi-core-hash` | blake3 |  |
 | `no-python` | candle |  |
-| `no-std-friendly` | arkworks |  |
+| `no-std-friendly` | arkworks, wordchipper |  |
 | `object-storage` | SlateDB |  |
 | `own-renderer` | zed |  |
 | `parallel-algos` | rustworkx |  |
