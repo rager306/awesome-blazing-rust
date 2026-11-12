@@ -4,7 +4,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 
 | Pattern | Used by | Removes |
 | --- | --- | --- |
-| `aes-ni` | ahash |  |
+| `aes-ni` | ahash, fastdedup |  |
 | `alloc-tracking` | divan, dhat, hotpath-rs |  |
 | `arrangement-indexing` | differential-dataflow |  |
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
@@ -20,7 +20,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
-| `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
+| `columnar` | tantivy, polars, apache-arrow-rs, datafusion, fastdedup |  |
 | `columnar-layout-optional` | ndarray |  |
 | `combinators` | winnow, ntex |  |
 | `compact-index` | indexmap |  |
