@@ -911,6 +911,15 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "alyze",
+      "url": "https://github.com/turbopuffer/alyze",
+      "section": "Candidates",
+      "type": "case-study",
+      "description": "UAX #29-compliant word/sentence tokenizer and full-text analysis pipeline (lowercasing, ASCII folding, English stemming, stopword removal) built on a hand-rolled DFA (MIT, in production at turbopuffer as the word_v4 tokenizer, active: last push 2026-10-28)",
+      "blazing": "over 64 MiB of English Wikipedia text, author's `cargo bench` (M5 Pro, median of 16 samples, [benchmarks](https://github.com/turbopuffer/alyze#benchmarks), repro `cargo bench --bench wikipedia`): word break 508 MiB/s, sentence break 465 MiB/s, tokenize-only analysis 415 MiB/s falling to 126 MiB/s for the full pipeline - the per-stage table shows stemming is the costly step (283 → 132 MiB/s); no external tokenizer baseline is named, so this is absolute throughput, not a win over a competitor.",
+      "arch": ["automata-compilation"]
     }
   ]
 }

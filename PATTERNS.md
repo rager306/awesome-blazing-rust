@@ -8,7 +8,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `alloc-tracking` | divan, dhat, hotpath-rs |  |
 | `arrangement-indexing` | differential-dataflow |  |
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
-| `automata-compilation` | regex, aho-corasick |  |
+| `automata-compilation` | regex, aho-corasick, alyze |  |
 | `backend-trait` | candle, burn |  |
 | `batching` | io-uring |  |
 | `bitmap-index` | roaring-rs |  |
