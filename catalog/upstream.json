@@ -42,7 +42,7 @@
   {"repo": "huggingface/candle", "tag": "0.11.0"},
   {"repo": "hyperium/hyper", "tag": "v1.12.0"},
   {"repo": "ibraheemdev/papaya", "tag": "v0.2.5"},
-  {"repo": "ignotusnemo/paramo1d", "tag": "v0.1.0"},
+  {"repo": "ignotusnemo/paramo1d", "tag": "v0.1.1"},
   {"repo": "indexable-inc/blaze", "tag": "v0.20261027.0"},
   {"repo": "indexmap-rs/indexmap", "tag": "v1.1.0"},
   {"repo": "jackyzha0/eg-strider", "tag": "(no-tags)"},
@@ -50,7 +50,7 @@
   {"repo": "longbridge/gpui-kit", "tag": "v0.9.1"},
   {"repo": "moka-rs/moka", "tag": "v0.12.16"},
   {"repo": "nnethercote/dhat-rs", "tag": "0.3.3"},
-  {"repo": "ntex-rs/ntex", "tag": "ntex-v4.7.1"},
+  {"repo": "ntex-rs/ntex", "tag": "bytes-v1.15.2"},
   {"repo": "nvzqz/divan", "tag": "v0.1.21"},
   {"repo": "oconnor663/rfcs", "tag": "(no-tags)"},
   {"repo": "orlp/foldhash", "tag": "v0.2.0"},
@@ -94,5 +94,5 @@
   {"repo": "winnow-rs/winnow", "tag": "v1.0.5"},
   {"repo": "xacrimon/dashmap", "tag": "v6.2.2"},
   {"repo": "ybouane/flashraw", "tag": "v0.2.0"},
-  {"repo": "zed-industries/zed", "tag": "v1.27.0"}
+  {"repo": "zed-industries/zed", "tag": "v1.28.1"}
 ]
