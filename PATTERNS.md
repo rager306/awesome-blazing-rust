@@ -77,7 +77,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `no-std-friendly` | arkworks |  |
 | `object-storage` | SlateDB |  |
 | `own-renderer` | zed |  |
-| `parallel-algos` | rustworkx |  |
+| `parallel-algos` | rustworkx, rust-graph |  |
 | `partitioned` | fjall |  |
 | `perf-integration` | cargo-flamegraph |  |
 | `pgo` | cargo-pgo |  |
@@ -86,7 +86,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
-| `python-bridge` | rustworkx |  |
+| `python-bridge` | rustworkx, rust-graph |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
 | `query-optimization` | polars, datafusion |  |
