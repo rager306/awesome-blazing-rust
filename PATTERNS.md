@@ -69,7 +69,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `lock-free-parallel-walk` | ripgrep |  |
 | `lsm` | fjall, SlateDB |  |
 | `lsm-plus-btree` | sled |  |
-| [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
+| [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d, sd |  |
 | `merkle-tree` | blake3 |  |
 | `miri-in-ci` | miri |  |
 | `multi-core-hash` | blake3 |  |
