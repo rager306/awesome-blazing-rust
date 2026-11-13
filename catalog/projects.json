@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "apache/iggy",
+      "url": "https://github.com/apache/iggy",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Apache message streaming platform (Kafka-style pub/sub server) rebuilt on a thread-per-core shared-nothing architecture over io_uring via the compio runtime",
+      "blazing": "at a matched ~1,000 MB/s per node write load, v0.7.0 (thread-per-core) vs v0.5.0 (tokio) cut p99 tail latency 4.52→1.82 ms at 32 producers/32 streams, and with fsync-per-batch raised throughput 931→1,102 MB/s per node while halving p95; consumer reads reached 3,361 MB/s on 16 consumers (full percentile tables per run in the [migration post](https://iggy.apache.org/blogs/2026/02/27/thread-per-core-io_uring/), every run published at benchmarks.iggy.apache.org).",
+      "arch": ["thread-per-core", "io-uring", "sharding", "batching"]
     }
   ]
 }
