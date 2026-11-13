@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "orx-parallel",
+      "url": "https://github.com/orxfun/orx-parallel",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "rayon-style parallel iterators with exposed tuning knobs (thread count, chunk size, ordering)",
+      "blazing": "author-run criterion benches on default settings at n=65,536: `.flat_map().collect()` 57.0µs vs rayon 492.2µs (8.6×), `.filter().collect()` 2.50µs vs 12.58µs (5×) ([benchmark tables](https://github.com/orxfun/orx-parallel#performance-and-benchmarks), [bench sources](https://github.com/orxfun/orx-parallel/tree/main/benches)); the same tables print rayon winning several large-input runs.",
+      "arch": ["data-parallel"]
     }
   ]
 }
