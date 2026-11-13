@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "lance",
+      "url": "https://github.com/lance-format/lance",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Apache-2.0 Rust-core lakehouse columnar format for multimodal AI datasets: vector search, full-text search, and versioned (time-travel) tables, with Python/Java bindings over the Rust core",
+      "blazing": "~1 ms average nearest-neighbor latency over 100 sampled queries on SIFT1M (1M 128-D vectors) on a 2023 M2 MacBook Air, with recall-vs-latency curves published; README reports 100x faster random access and 2x-8x faster scans than Parquet ([benchmarks](https://github.com/lance-format/lance#benchmarks)).",
+      "arch": ["columnar", "quantization"]
     }
   ]
 }
