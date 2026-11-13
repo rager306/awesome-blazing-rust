@@ -40,7 +40,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
 | `extensible` | datafusion |  |
-| `feature-gated-safety` | lz4_flex |  |
+| `feature-gated-safety` | lz4_flex, zenflate |  |
 | [`findings-as-verdicts`](decisions/002-findings-as-verdicts.md) | uringscope, uringscope SKILL.md |  |
 | `finite-fields` | arkworks |  |
 | `finite-state-transducer` | fst |  |
@@ -85,7 +85,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefilter` | regex |  |
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
-| `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq, zenflate |  |
 | `python-bridge` | rustworkx |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
@@ -94,11 +94,11 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `read-optimized` | papaya |  |
 | `recursive-proofs` | paramo1d |  |
 | `relative-pointers` | rkyv |  |
-| `runtime-dispatch` | faer, pulp |  |
+| `runtime-dispatch` | faer, pulp, zenflate |  |
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, zenflate |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
