@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "fastdedup",
+      "url": "https://github.com/wapplewhite4/fastdedup",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "single-machine CLI that strips exact and near-duplicate documents from ML training datasets (JSONL, gzip, Parquet) with a Bloom-filter hash pass and a MinHash + LSH pass",
+      "blazing": "on FineWeb sample-10BT (14.8M records, 29 GB, one Hetzner CCX43) exact dedup took 2m55s with 688 MB peak RAM on one core vs 7m55s and 21.9 GB for a DuckDB + SHA-256 baseline on 4+ cores (2.7x, both found exactly 51,392 duplicates); fuzzy MinHash dedup finished in 36m44s while the datatrove reference baseline, run locally with 1 task, was killed at 3h50m still in stage 1 - with the honest trade-off that fastdedup holds a 23 GB in-memory LSH index where datatrove spills to disk at 1.1 GB ([methodology + reproduce scripts](https://github.com/wapplewhite4/fastdedup/blob/main/benchmarks/README.md)).",
+      "arch": ["aes-ni", "columnar"]
     }
   ]
 }
