@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, flock |  |
 | `datalog` | cozo |  |
 | `declarative-dsl` | slint |  |
 | `density-dependent` | roaring-rs |  |
@@ -42,7 +42,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `extensible` | datafusion |  |
 | `feature-gated-safety` | lz4_flex |  |
 | [`findings-as-verdicts`](decisions/002-findings-as-verdicts.md) | uringscope, uringscope SKILL.md |  |
-| `finite-fields` | arkworks |  |
+| `finite-fields` | arkworks, flock |  |
 | `finite-state-transducer` | fst |  |
 | `generic-graph` | petgraph |  |
 | `generic-vertices` | pathfinding |  |
@@ -92,13 +92,13 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `query-optimization` | polars, datafusion |  |
 | `rank-select` | sux |  |
 | `read-optimized` | papaya |  |
-| `recursive-proofs` | paramo1d |  |
+| `recursive-proofs` | paramo1d, flock |  |
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, flock |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
