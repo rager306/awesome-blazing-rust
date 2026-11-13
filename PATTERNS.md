@@ -65,7 +65,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn |  |
 | `kernel-matrix-in-ci` | uringscope |  |
-| `lock-free` | crossbeam |  |
+| `lock-free` | crossbeam, zero-pool |  |
 | `lock-free-parallel-walk` | ripgrep |  |
 | `lsm` | fjall, SlateDB |  |
 | `lsm-plus-btree` | sled |  |
