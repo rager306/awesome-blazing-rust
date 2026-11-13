@@ -17,7 +17,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
 | `c-binding` | zstd-safe |  |
-| `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
+| `cache-conscious-layout` | hashbrown, taffy, eg-strider, rust-tango |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
@@ -65,7 +65,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn |  |
 | `kernel-matrix-in-ci` | uringscope |  |
-| `lock-free` | crossbeam |  |
+| `lock-free` | crossbeam, rust-tango |  |
 | `lock-free-parallel-walk` | ripgrep |  |
 | `lsm` | fjall, SlateDB |  |
 | `lsm-plus-btree` | sled |  |
@@ -74,7 +74,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `miri-in-ci` | miri |  |
 | `multi-core-hash` | blake3 |  |
 | `no-python` | candle |  |
-| `no-std-friendly` | arkworks |  |
+| `no-std-friendly` | arkworks, rust-tango |  |
 | `object-storage` | SlateDB |  |
 | `own-renderer` | zed |  |
 | `parallel-algos` | rustworkx |  |
@@ -85,7 +85,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefilter` | regex |  |
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
-| `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq, rust-tango |  |
 | `python-bridge` | rustworkx |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, rust-tango |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
