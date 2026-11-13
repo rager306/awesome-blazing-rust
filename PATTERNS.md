@@ -9,7 +9,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `arrangement-indexing` | differential-dataflow |  |
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
 | `automata-compilation` | regex, aho-corasick |  |
-| `backend-trait` | candle, burn |  |
+| `backend-trait` | candle, burn, rustls |  |
 | `batching` | io-uring |  |
 | `bitmap-index` | roaring-rs |  |
 | `branchless` | memchr, foldhash |  |
@@ -110,7 +110,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `table-driven` | crc32fast |  |
 | `tape-representation` | simd-json |  |
 | `thread-per-core` | glommio, monoio, statico |  |
-| `tls-13` | quinn |  |
+| `tls-13` | quinn, rustls |  |
 | `typed-effects` | crux |  |
 | `typed-parse-direct` | sonic-rs |  |
 | `typegen` | crux |  |
