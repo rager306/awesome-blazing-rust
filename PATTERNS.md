@@ -36,7 +36,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `density-dependent` | roaring-rs |  |
 | `dst-in-ci` | shuttle |  |
 | `elm-architecture` | crux |  |
-| `embedded` | cozo |  |
+| `embedded` | cozo, lkv |  |
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
 | `extensible` | datafusion |  |
@@ -91,7 +91,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `quantization` | qdrant |  |
 | `query-optimization` | polars, datafusion |  |
 | `rank-select` | sux |  |
-| `read-optimized` | papaya |  |
+| `read-optimized` | papaya, lkv |  |
 | `recursive-proofs` | paramo1d |  |
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, lkv |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
