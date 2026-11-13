@@ -10,7 +10,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
 | `automata-compilation` | regex, aho-corasick |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring |  |
+| `batching` | io-uring, apache/iggy |  |
 | `bitmap-index` | roaring-rs |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
@@ -60,7 +60,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `invariants-as-tests` | nachalnik |  |
 | `inverted-index` | tantivy |  |
 | `io-driver` | tokio |  |
-| `io-uring` | glommio, monoio, io-uring, statico, plumbrs |  |
+| `io-uring` | glommio, monoio, io-uring, statico, plumbrs, apache/iggy |  |
 | `jit` | wasmtime, blaze |  |
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn |  |
@@ -96,7 +96,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio |  |
+| `sharding` | dashmap, glommio, apache/iggy |  |
 | `shuttle-in-ci` | bbtree |  |
 | `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
@@ -109,7 +109,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `succinct` | sux |  |
 | `table-driven` | crc32fast |  |
 | `tape-representation` | simd-json |  |
-| `thread-per-core` | glommio, monoio, statico |  |
+| `thread-per-core` | glommio, monoio, statico, apache/iggy |  |
 | `tls-13` | quinn |  |
 | `typed-effects` | crux |  |
 | `typed-parse-direct` | sonic-rs |  |
