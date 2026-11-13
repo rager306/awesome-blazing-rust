@@ -148,6 +148,43 @@ pub fn parse_patterns(patterns: &str) -> Vec<PatternRow> {
     rows
 }
 
+/// `catalog/patterns.json` -> typed specs. A tolerant scan of the layout the
+/// writer emits, the same contract style as the upstream projection.
+pub fn parse_pattern_specs(raw: &str) -> Vec<PatternSpec> {
+    let mut out: Vec<PatternSpec> = Vec::new();
+    let mut current: Option<PatternSpec> = None;
+    for line in raw.lines() {
+        let t = line.trim();
+        if t.starts_with('"') && t.contains("\": {") && !t.starts_with("\"meta\"") {
+            if let Some(spec) = current.take() {
+                out.push(spec);
+            }
+            // the tag is the text between the first and second quote
+            let tag = t.split('"').nth(1).map(str::to_string).unwrap_or_default();
+            current = Some(PatternSpec {
+                tag,
+                ..Default::default()
+            });
+            continue;
+        }
+        if let Some(spec) = current.as_mut() {
+            for (key, slot) in [("removes", 0), ("fails_when", 1)] {
+                if let Some(rest) = t.strip_prefix(&format!("\"{key}\": \"")) {
+                    let v = rest.trim_end_matches(',').trim_end_matches('"');
+                    if slot == 0 {
+                        spec.removes = v.to_string();
+                    } else {
+                        spec.fails_when = v.to_string();
+                    }
+                }
+            }
+        }
+    }
+    if let Some(spec) = current.take() {
+        out.push(spec);
+    }
+    out
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -210,40 +247,4 @@ Intro line.
         assert_eq!(d.kind(), crate::domain::model::Kind::CaseStudy);
         assert_eq!(d.blazing, "handles every tier.");
     }
-}
-
-
-/// `catalog/patterns.json` -> typed specs. A tolerant scan of the layout the
-/// writer emits, the same contract style as the upstream projection.
-pub fn parse_pattern_specs(raw: &str) -> Vec<PatternSpec> {
-    let mut out: Vec<PatternSpec> = Vec::new();
-    let mut current: Option<PatternSpec> = None;
-    for line in raw.lines() {
-        let t = line.trim();
-        if t.starts_with('"') && t.contains("\": {") && !t.starts_with("\"meta\"") {
-            if let Some(spec) = current.take() {
-                out.push(spec);
-            }
-            // the tag is the text between the first and second quote
-            let tag = t
-                .split('"')
-                .nth(1)
-                .map(str::to_string)
-                .unwrap_or_default();
-            current = Some(PatternSpec { tag, ..Default::default() });
-            continue;
-        }
-        if let Some(spec) = current.as_mut() {
-            for (key, slot) in [("removes", 0), ("fails_when", 1)] {
-                if let Some(rest) = t.strip_prefix(&format!("\"{key}\": \"")) {
-                    let v = rest.trim_end_matches(',').trim_end_matches('"');
-                    if slot == 0 { spec.removes = v.to_string(); } else { spec.fails_when = v.to_string(); }
-                }
-            }
-        }
-    }
-    if let Some(spec) = current.take() {
-        out.push(spec);
-    }
-    out
 }

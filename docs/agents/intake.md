@@ -35,7 +35,9 @@ One line, house format:
 - [name](url) - what it is, one dense sentence. **Blazing:** the measurement with real numbers, the named baseline, and a methodology link. **Measured by:** author|third-party|catalog. **Type:** measured|tool|case-study. **Arch:** `tag`, `tag`.
 ```
 
-- Numbers with context ("12x vs X at 96 threads"), never "very fast".
+- For measured comparisons, put `vs` or `against` and the named baseline close
+  to the numbers in `**Blazing:**` ("12x vs X at 96 threads"), never just
+  "very fast".
 - `**Measured by:**` is required whenever `**Type:** measured` - `author` for
   the project's own benchmarks, `third-party` for someone else's run,
   `catalog` only when a `runs/` artifact from this repository is the source.

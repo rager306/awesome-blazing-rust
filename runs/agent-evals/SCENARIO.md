@@ -32,15 +32,44 @@ prompt, model or tool changes, and the result is written next to this file.
 
 ## A/B: does the catalog index in the prompt change outcomes?
 
-Measured by `ab-index.sh`: each fixture runs twice — the policy file only
-(baseline) and the policy file with `llms.txt` appended (treatment). One run per
-cell, five fixtures, the verdict recorded verbatim.
+`ab-index.sh` runs each fixture twice: the policy file only (baseline), and
+that policy with `llms.txt` appended (treatment). Both cells run with the
+repository root as their working directory. The baseline can still read
+`llms.txt` using the permitted tools, so this compares prompt inclusion, not
+access to the index. Both cells also have the same repository, tool and CLI
+configuration, which can affect results.
 
-Question it answers: does an inlined catalog index (passive context) change
-whether the agent produces a card at all — Vercel's 2026 finding was that
-discretionary retrieval fails silently in the majority of cases.
+This A/B script is separate from the card-quality checks above: it checks only
+whether the output matches the fixture's expected card or skip. The model's
+result must be a JSON object with a string `card`, a null or string `skip`, and
+a string `notes`. For a card fixture, a nonempty `card` and empty or null
+`skip` pass; for a skip fixture, a nonempty `skip` and empty `card` pass.
+Whitespace-only values count as empty. Process errors, timeouts, model errors
+and unparseable, missing-field or wrongly typed responses are INCONCLUSIVE. A
+parsed response that does not match the expectation fails.
 
-Limits: one run per cell, so the numbers are directional. A real claim needs
-several runs per cell and a report of the abstention (INCONCLUSIVE) rate — an
-INCONCLUSIVE cell is environment noise, not an outcome, and must not be counted
-as pass or fail.
+Run `runs/agent-evals/ab-index.sh [output-parent-directory]`; the default parent
+is `/tmp`. It needs Python 3, `claude`, credentials, and access to the permitted
+Claude tools. The permitted `Bash(gh api *)` tool is not a read-only sandbox:
+`gh api` can make write requests, and the agent can read local files. Run only
+in a trusted, suitably isolated environment with least-privilege credentials.
+Each invocation creates a new private `ab-index-*` directory and
+prints its path. `report.md` links to each cell's `evidence.json`, which records
+the expectation, verdict, reason, process status and parsed response. Each cell
+also contains captured CLI stdout (`stdout.json`, including the model response
+and any metadata returned by the CLI) and stderr (`stderr.txt`). The report
+identifies the requested `ANTHROPIC_MODEL`, or `default`; the actual model is
+available only if the CLI includes it in its response. A timeout is 420 seconds
+per cell. The CLI's `--max-turns` is 20.
+
+Scoring uses the original response in memory. Captured output is redacted for
+credential-like environment values and common API token formats before being
+written, so it is not byte-for-byte raw. This is
+best effort, not a guarantee: model output or errors may contain other sensitive
+information. Inspect artifacts before sharing them, and do not use sensitive
+fixtures or credentials in prompts. No environment dump or full prompt is
+saved.
+
+One run per cell is directional, not proof of an index effect. Multiple runs
+and a report of the INCONCLUSIVE rate are needed; inconclusive results can have
+several causes and must not be counted as pass or fail.

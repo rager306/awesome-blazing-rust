@@ -214,32 +214,88 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+          # Read every page before creating anything. A failed or malformed read
+          # must stop the run rather than silently treating history as empty.
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/issues?state=all&labels=card-intake&per_page=100" > intake-pages.json
+          python3 - <<'PYEOF'
+          import json
+          import re
+
+          repo_pattern = r'https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?'
+
+          def normalize(url):
+              return url.lower().rstrip('/').removesuffix('.git')
+
+          with open('catalog/projects.json') as f:
+              catalog = json.load(f)['projects']
+          seen = {normalize(p['url']) for p in catalog}
+          with open('intake-pages.json') as f:
+              pages = json.load(f)
+          if not isinstance(pages, list) or not pages or any(not isinstance(page, list) for page in pages):
+              raise ValueError('invalid intake issue pages')
+          for page in pages:
+              for issue in page:
+                  if not isinstance(issue, dict) or 'body' not in issue:
+                      raise ValueError('invalid intake issue')
+                  if 'pull_request' in issue:
+                      continue
+                  body = issue['body']
+                  if body is None:
+                      continue
+                  if not isinstance(body, str):
+                      raise ValueError('invalid intake issue body')
+                  # Both auto-created issues and GitHub issue forms are used.
+                  field = re.search(r'(?im)^(?:\*\*Repository URL\*\*|###[ \t]+Repository URL)[ \t]*\r?\n(?:[ \t]*\r?\n)?([^\r\n]*)', body)
+                  if field:
+                      match = re.search(repo_pattern, field.group(1), re.IGNORECASE)
+                      if match:
+                          seen.add(normalize(match.group()))
+          with open('seen-repos.txt', 'w') as f:
+              f.write(''.join(url + '\n' for url in sorted(seen)))
+
+          with open('candidates.json') as f:
+              candidates = json.load(f)
+          if not isinstance(candidates, list):
+              raise ValueError('candidates must be an array')
+          required = ('name', 'repo_url', 'benchmark_url', 'what', 'why', 'source_url')
+          valid = []
+          for candidate in candidates[:5]:
+              if (not isinstance(candidate, dict)
+                  or any(not isinstance(candidate.get(k), str) or not candidate[k].strip()
+                         or '\n' in candidate[k] or '\r' in candidate[k] for k in required)
+                  or not re.fullmatch(repo_pattern, candidate['repo_url'], re.IGNORECASE)):
+                  print('skip invalid candidate')
+                  continue
+              owner, repo = candidate['repo_url'].rstrip('/').rsplit('/', 2)[-2:]
+              if owner in ('.', '..') or repo.lower().removesuffix('.git') in ('', '.', '..'):
+                  print('skip invalid candidate repository')
+                  continue
+              provider = candidate.get('provider')
+              if provider is None:
+                  candidate['provider'] = 'unknown'
+              elif not isinstance(provider, str) or '\n' in provider or '\r' in provider:
+                  print('skip invalid candidate provider')
+                  continue
+              valid.append(candidate)
+          with open('valid-candidates.jsonl', 'w') as f:
+              for candidate in valid:
+                  f.write(json.dumps(candidate, ensure_ascii=False) + '\n')
+          PYEOF
           norm() { # lowercase, strip trailing slash and .git suffix
             tr '[:upper:]' '[:lower:]' <<<"$1" | sed -e 's#/$##' -e 's#\.git$##'
           }
-          CATALOG_REPOS=$(python3 -c "import json;print('\n'.join(p['url'] for p in json.load(open('catalog/projects.json'))['projects']))")
-          repo_urls_from_bodies() { # $1 = gh issue JSON; prints only the Repository URL field
-            jq -r '.[].body' <<<"$1" | awk '/^\*\*Repository URL\*\*$/{getline; print}' | grep -o 'https://github.com/[^ )]*' || true
-          }
-          OPEN_JSON=$(gh issue list --label card-intake --state open --json body || echo '[]')
-          CLOSED_JSON=$(gh issue list --label card-intake --state closed --json body || echo '[]')
-          OPEN_URLS=$(repo_urls_from_bodies "$OPEN_JSON")
-          CLOSED_URLS=$(repo_urls_from_bodies "$CLOSED_JSON")
-          echo "open intakes: $(wc -l <<<"$OPEN_URLS"), closed intakes: $(wc -l <<<"$CLOSED_URLS")"
-          mapfile -t ITEMS < <(jq -c '.[0:5][]' candidates.json)
+          mapfile -t ITEMS < valid-candidates.jsonl
           CREATED=0
           for c in "${ITEMS[@]}"; do
             [ "$CREATED" -ge 3 ] && { echo 'cap: 3 intake issues per run'; break; }
             REPO=$(jq -r '.repo_url' <<<"$c")
             NREPO=$(norm "$REPO")
             NAME=$(jq -r '.name' <<<"$c")
-            DUP=0
-            while IFS= read -r u; do [ "$(norm "$u")" = "$NREPO" ] && DUP=1 && break; done <<<"$CATALOG_REPOS"
-            [ "$DUP" = 1 ] && { echo "skip (in catalog): $REPO"; continue; }
-            while IFS= read -r u; do [ "$(norm "$u")" = "$NREPO" ] && DUP=1 && break; done <<<"$OPEN_URLS"
-            [ "$DUP" = 1 ] && { echo "skip (open intake): $REPO"; continue; }
-            while IFS= read -r u; do [ "$(norm "$u")" = "$NREPO" ] && DUP=1 && break; done <<<"$CLOSED_URLS"
-            [ "$DUP" = 1 ] && { echo "skip (decided intake): $REPO"; continue; }
+            if grep -Fxq -- "$NREPO" seen-repos.txt; then
+              echo "skip (already seen): $REPO"
+              continue
+            fi
             {
               echo "**Repository URL**"
               echo "$REPO"
@@ -262,11 +318,18 @@ jobs:
               echo "_Auto-discovered by the discovery agent on $(date -u +%F). The intake agent drafts a card; a maintainer merges._"
             } > issue-body.md
             ISSUE_URL=$(gh issue create --title "Suggest a project: ${NAME} (auto-discovered)" \
-              --body-file issue-body.md --label card-intake) && CREATED=$((CREATED+1))
+              --body-file issue-body.md --label card-intake)
+            CREATED=$((CREATED+1))
+            printf '%s\n' "$NREPO" >> seen-repos.txt
             # GITHUB_TOKEN events cannot trigger workflows (anti-recursion), so
             # chain the Intake run explicitly - workflow_dispatch is the exception.
-            gh workflow run intake.yml --repo "${{ github.repository }}" \
-              -f issue_number="$(basename "$ISSUE_URL")"
+            ISSUE_NUMBER=$(basename "$ISSUE_URL")
+            if ! gh workflow run intake.yml --repo "${{ github.repository }}" \
+              -f issue_number="$ISSUE_NUMBER"; then
+              gh issue comment "$ISSUE_NUMBER" --body "Intake workflow dispatch failed or its result is unknown. Check Actions before retrying to avoid a duplicate run. If no intake run was started, retry with workflow_dispatch for intake.yml and issue_number=$ISSUE_NUMBER." || true
+              echo "::error::intake dispatch failed or its result is unknown for issue #$ISSUE_NUMBER"
+              exit 1
+            fi
           done
           echo "intake issues created: $CREATED"
       - name: Upload run log

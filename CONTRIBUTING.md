@@ -65,7 +65,9 @@ Paths are relative to the repository root, discovered by walking up from the cur
 CI runs:
 
 - `awesome-lint` — README structure and link format
-- `lychee` — link checking (weekly; broken links auto-open an issue)
+- `abr check` and projection regeneration — catalog consistency and deterministic derived files
+- `python3 -m unittest discover -s tests -v` — offline workflow and evaluation regressions
+- `lychee` — daily link checking; failures open or update an issue
 
 ## Run code quality gates (`runs/`)
 

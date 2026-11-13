@@ -25,15 +25,12 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+permissions: {}
 
 concurrency:
-  # One group per issue: a shared group makes GitHub cancel the older PENDING
-  # run when discovery dispatches several intakes at once.
+  # Serialize runs for the same issue; the queue holds up to 100 pending runs.
   group: intake-${{ github.event.issue.number || inputs.issue_number }}
+  queue: max
   cancel-in-progress: false
 
 jobs:
@@ -41,15 +38,20 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'card-intake'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    outputs:
+      skip: ${{ steps.gate.outputs.skip }}
+      repo: ${{ steps.gate.outputs.repo }}
+      repo_id: ${{ steps.gate.outputs.repo_id }}
+      meta: ${{ steps.gate.outputs.meta_json }}
+      existing: ${{ steps.preflight.outputs.exists }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - name: Build abr CLI
-        run: cd cli && cargo build --release
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code@2.1.311
+          persist-credentials: false
       - name: Freshness and duplicate gate (pipeline-side, deterministic)
         id: gate
         env:
@@ -58,14 +60,39 @@ jobs:
         run: |
           set -o pipefail
           BODY=$(gh issue view "$ISSUE_NUMBER" --json body --jq .body)
-          REPO=$(awk '/^\*\*Repository URL\*\*$/{getline; print}' <<<"$BODY" | grep -o 'https://github.com/[^ )]*' | head -1 || true)
+          REPO=$(python3 -c '
+          import re, sys
+          body = sys.stdin.read()
+          field = re.search(r"(?im)^(?:\*\*Repository URL\*\*|###[ \t]+Repository URL)[ \t]*\r?\n(?:[ \t]*\r?\n)?([^\r\n]*)", body)
+          url = re.search(r"https://github\.com/[^ )]*", field.group(1), re.IGNORECASE) if field else None
+          print(url.group(0) if url else "")' <<<"$BODY")
           if [ -z "$REPO" ]; then
             echo "::error::no repository URL in issue #$ISSUE_NUMBER"
             gh issue comment "$ISSUE_NUMBER" --body "No **Repository URL** field found in this issue - nothing to research."
             exit 1
           fi
-          SLUG=$(sed -e 's#https://github.com/##' -e 's#/$##' -e 's#\.git$##' <<<"$REPO")
+          SLUG=$(sed -e 's#https://github.com/##I' -e 's#/$##' -e 's#\.git$##I' <<<"$REPO")
+          if [[ ! "$SLUG" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; then
+            echo "::error::invalid GitHub repository URL"
+            exit 1
+          fi
+          if ! META=$(gh api "repos/$SLUG" --jq '{id, full_name, html_url, archived, pushed_at, stargazers_count, license: .license.spdx_id, language}'); then
+            echo "::error::could not fetch freshness metadata for $SLUG"
+            exit 1
+          fi
+          if ! jq -e '(.id | type == "number" and . > 0 and floor == .) and (.full_name | type == "string" and test("^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"))' <<<"$META" >/dev/null; then
+            echo "::error::incomplete repository identity for $SLUG"
+            exit 1
+          fi
+          SLUG=$(jq -r '.full_name' <<<"$META")
+          REPO_ID=$(jq -r '.id' <<<"$META")
+          if ! python3 -c 'import re,sys; ids={int(x) for x in re.findall(r"<!--\s*abr-repo-id:\s*(\d+)\s*-->", sys.stdin.read(), re.I)}; sys.exit(0 if not ids or ids == {int(sys.argv[1])} else 1)' "$REPO_ID" <<<"$BODY"; then
+            echo "::error::issue repository ID conflicts with GitHub metadata"
+            exit 1
+          fi
+          META=$(jq -c . <<<"$META")
           echo "repo=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "repo_id=$REPO_ID" >> "$GITHUB_OUTPUT"
           # duplicate: already in the catalog
           if python3 -c "
           import json,sys
@@ -77,35 +104,78 @@ jobs:
             echo "skip=duplicate" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          META=$(gh api "repos/$SLUG" --jq '{archived, pushed_at, stargazers_count, license: .license.spdx_id, language}' 2>/dev/null || echo '{}')
+          if ! jq -e '.archived | type == "boolean"' <<<"$META" >/dev/null; then
+            echo "::error::incomplete freshness metadata for $SLUG"
+            exit 1
+          fi
           echo "meta=$META"
-          ARCHIVED=$(jq -r '.archived // false' <<<"$META")
-          PUSHED=$(jq -r '.pushed_at // ""' <<<"$META")
+          ARCHIVED=$(jq -r '.archived' <<<"$META")
           if [ "$ARCHIVED" = "true" ]; then
             gh issue comment "$ISSUE_NUMBER" --body "SKIP: \`$SLUG\` is archived - no card drafted by the freshness gate."
             gh issue close "$ISSUE_NUMBER"
             echo "skip=archived" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [ -n "$PUSHED" ]; then
-            DAYS=$(( ( $(date -u +%s) - $(date -u -d "$PUSHED" +%s) ) / 86400 ))
-            echo "last push $PUSHED (${DAYS}d ago)"
-            if [ "$DAYS" -gt 365 ]; then
-              gh issue comment "$ISSUE_NUMBER" --body "SKIP: \`$SLUG\` is stale (last push $PUSHED, ${DAYS}d ago) - no card drafted by the freshness gate."
-              gh issue close "$ISSUE_NUMBER"
-              echo "skip=stale" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
+          if ! jq -e '.pushed_at | type == "string" and length > 0' <<<"$META" >/dev/null; then
+            echo "::error::incomplete freshness metadata for $SLUG"
+            exit 1
+          fi
+          PUSHED=$(jq -r '.pushed_at' <<<"$META")
+          if ! PUSHED_SECONDS=$(date -u -d "$PUSHED" +%s); then
+            echo "::error::invalid push date in freshness metadata for $SLUG"
+            exit 1
+          fi
+          DAYS=$(( ( $(date -u +%s) - PUSHED_SECONDS ) / 86400 ))
+          echo "last push $PUSHED (${DAYS}d ago)"
+          if [ "$DAYS" -gt 365 ]; then
+            gh issue comment "$ISSUE_NUMBER" --body "SKIP: \`$SLUG\` is stale (last push $PUSHED, ${DAYS}d ago) - no card drafted by the freshness gate."
+            gh issue close "$ISSUE_NUMBER"
+            echo "skip=stale" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           echo "skip=" >> "$GITHUB_OUTPUT"
           echo "meta_json=$META" >> "$GITHUB_OUTPUT"
-      - name: Research and draft the card text
+      - name: Check for an existing draft before research
+        id: preflight
         if: steps.gate.outputs.skip == ''
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
           REPO_SLUG: ${{ steps.gate.outputs.repo }}
-          REPO_META: ${{ steps.gate.outputs.meta_json }}
+          REPO_ID: ${{ steps.gate.outputs.repo_id }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: python3 .github/scripts/intake-dedup.py
+
+  research:
+    needs: draft-card
+    if: needs.draft-card.result == 'success' && needs.draft-card.outputs.skip == '' && needs.draft-card.outputs.existing == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    outputs:
+      artifact: ${{ steps.artifact-name.outputs.name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build abr CLI
+        run: cd cli && cargo build --release
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code@2.1.311
+      # The model's Bash tools and provider credential remain a separate risk;
+      # a read-only GitHub token limits repository mutations, not exfiltration.
+      - name: Research and draft the card text
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+          REPO_SLUG: ${{ needs.draft-card.outputs.repo }}
+          REPO_META: ${{ needs.draft-card.outputs.meta }}
           ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
           ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
           ANTHROPIC_MODEL: glm-5.3-flash
@@ -134,7 +204,7 @@ jobs:
 
           Study 2-3 existing cards in README.md first. The house format is one line:
             - [name](url) - what it is, one dense sentence. **Blazing:** the measurement with real numbers, the named baseline, and a methodology link. **Type:** measured|tool|case-study. **Arch:** \`tag\`, \`tag\`.
-          Rules for the line: numbers with context ("12x vs X at 96 threads", not "very fast"); every link must be one you actually opened; tags must come from PATTERNS.md.
+          Rules for the line: for measured comparisons, put "vs" or "against" and the named baseline close to the numbers in **Blazing:** ("12x vs X at 96 threads", not "very fast"); every link must be one you actually opened; tags must come from PATTERNS.md.
 
           Then return ONLY this JSON object (no fences, no prose around it):
           {"skip": null or "short reason the project does not fit the catalog",
@@ -162,6 +232,7 @@ jobs:
           }
           set +e
           OUT=$(run_agent); RC=$?
+          printf '%s\n' "$OUT" > agent-attempt-1.md
           if [ "$RC" = 124 ]; then
             echo "::warning::research hit the ${ATTEMPT_TIMEOUT}s cap"
           fi
@@ -171,6 +242,7 @@ jobs:
           if [ "$RC" = 0 ] && ! grep -q '"card"' <<<"$OUT"; then
             echo "first attempt had no card object; retrying once"
             OUT=$(run_agent); RC=$?
+            printf '%s\n' "$OUT" > agent-attempt-2.md
           fi
           set -e
           if [ -z "$OUT" ]; then
@@ -178,39 +250,121 @@ jobs:
           fi
           printf '%s\n' "$OUT" > agent-result.md
           python3 - <<'PYEOF'
-          import json, re, sys
+          import json, sys
           raw = open('agent-result.md').read()
-          start, end = raw.find('{'), raw.rfind('}')
+          decoder = json.JSONDecoder(strict=False)
           data = None
-          if 0 <= start < end:
+          for start, char in enumerate(raw):
+              if char != '{':
+                  continue
               try:
-                  data = json.loads(raw[start:end+1], strict=False)
-              except Exception:
-                  data = None
-          if not isinstance(data, dict):
+                  candidate, _ = decoder.raw_decode(raw, start)
+              except json.JSONDecodeError:
+                  continue
+              if (isinstance(candidate, dict) and isinstance(candidate.get('card'), str)
+                      and (candidate.get('skip') is None or isinstance(candidate['skip'], str))):
+                  data = candidate
+                  break
+          if data is None:
               open('card.json','w').write('{"skip": null, "card": "", "what": "", "why": "", "weak": "the agent returned no parsable JSON"}')
               print('AGENT OUTPUT NOT VALID JSON - see agent-result.md')
               sys.exit(0)
           json.dump(data, open('card.json','w'))
           print(json.dumps(data, ensure_ascii=False)[:600])
           PYEOF
-      - name: Insert the card and run the gates
-        if: steps.gate.outputs.skip == ''
+      - name: Set research artifact name
+        id: artifact-name
+        if: always()
+        run: echo "name=intake-research-${{ github.run_id }}-${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
+      - name: Upload research
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact-name.outputs.name }}
+          if-no-files-found: warn
+          path: |
+            agent-result.md
+            agent-attempt-1.md
+            agent-attempt-2.md
+            card.json
+
+  finalize:
+    needs: [draft-card, research]
+    if: needs.draft-card.result == 'success' && needs.research.result == 'success' && needs.draft-card.outputs.skip == '' && needs.draft-card.outputs.existing == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    # The queue holds up to 100 pending jobs; research is retained if it overflows.
+    concurrency:
+      group: intake-finalize
+      queue: max
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Refresh main for finalization
+        run: |
+          git fetch -q origin main
+          git checkout --detach origin/main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check research artifact reference
+        env:
+          ARTIFACT_NAME: ${{ needs.research.outputs.artifact }}
+        run: |
+          if [ -z "$ARTIFACT_NAME" ]; then
+            echo "::error::research artifact reference unavailable; rerun all jobs, not only failed jobs"
+            exit 1
+          fi
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.research.outputs.artifact }}
+      - name: Confirm issue is open
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+          REPO_ID: ${{ needs.draft-card.outputs.repo_id }}
+          TARGET_REPOSITORY: ${{ github.repository }}
         run: |
-          set -o pipefail
+          [[ "$ISSUE_NUMBER" =~ ^[1-9][0-9]*$ ]] || exit 1
+          python3 .github/scripts/intake-issue-identity.py
+          state=$(gh issue view "$ISSUE_NUMBER" --json state --jq .state)
+          if [ "$state" != OPEN ]; then
+            echo "::error::issue is no longer open; refusing finalization"
+            exit 1
+          fi
+      - name: Resolve existing draft safely
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+          REPO_SLUG: ${{ needs.draft-card.outputs.repo }}
+          REPO_ID: ${{ needs.draft-card.outputs.repo_id }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: python3 .github/scripts/intake-dedup.py
+      - name: Insert the card and run the gates
+        if: steps.existing.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+          REPO_SLUG: ${{ needs.draft-card.outputs.repo }}
+          REPO_ID: ${{ needs.draft-card.outputs.repo_id }}
+        run: |
+          set -eo pipefail
           CARD=$(jq -r '.card // ""' card.json)
           SKIP=$(jq -r '.skip // ""' card.json)
           if [ -n "$SKIP" ]; then
-            gh issue comment "$ISSUE_NUMBER" --body "Agent verdict: **does-not-fit** - $SKIP"
-            gh issue close "$ISSUE_NUMBER"
+            gh issue comment "$ISSUE_NUMBER" --body "Agent proposal: **does-not-fit** - $SKIP. A maintainer should review this proposal; the issue remains open. See the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
             echo "skip=agent" >> "$GITHUB_ENV"
             exit 0
           fi
           if [ -z "$CARD" ]; then
-            gh issue comment "$ISSUE_NUMBER" --body "The research agent produced no card this run (no parsable JSON after one retry) - see the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+            gh issue comment "$ISSUE_NUMBER" --body "The research agent produced no card this run (no valid card JSON) - see the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
             exit 1
           fi
           # Structural check before the card touches README: house markers present.
@@ -218,6 +372,26 @@ jobs:
             grep -qF "$marker" <<<"$CARD" || { echo "::error::card is missing $marker"; exit 1; }
           done
           grep -q '^- \[' <<<"$CARD" || { echo "::error::card is not a '- [name](url)' line"; exit 1; }
+          python3 .github/scripts/intake-card-identity.py
+          # Branch from the same latest main whose scripts performed the checks.
+          BRANCH="agent/card-repo-${REPO_ID}"
+          git checkout -b "$BRANCH"
+          git branch --set-upstream-to=origin/main "$BRANCH"
+          # The catalog stores URLs, not immutable IDs; old renamed URLs may
+          # evade this check. Flag that limit explicitly for maintainer review.
+          echo "::warning::catalog URLs are compared by canonical spelling only; a historical alias may hide a duplicate"
+          if python3 -c '
+          import json,sys
+          slug=sys.argv[1].lower()
+          urls=[p["url"].lower().rstrip("/").removesuffix(".git") for p in json.load(open("catalog/projects.json"))["projects"]]
+          sys.exit(0 if "https://github.com/"+slug in urls else 3)' "$REPO_SLUG"; then
+            echo "Repository is already in the catalog; leaving the issue unchanged."
+            exit 0
+          else
+            rc=$?
+            [ "$rc" -eq 3 ] || exit "$rc"
+          fi
+          (cd cli && cargo build --release)
           python3 - <<'PYEOF'
           import re
           card = __import__('json').load(open('card.json'))['card'].strip()
@@ -234,6 +408,7 @@ jobs:
           ./cli/target/release/abr catalog
           ./cli/target/release/abr patterns
           ./cli/target/release/abr llms
+          git add README.md catalog PATTERNS.md llms.txt
           echo "### Gates (run in the pipeline at this commit)" > gates.md
           FAIL=0
           if ./cli/target/release/abr check > gate-abr.log 2>&1; then
@@ -268,30 +443,30 @@ jobs:
           cat pr-verify.md
           cat gates.md
       - name: Open draft PR
-        if: steps.gate.outputs.skip == ''
+        if: steps.existing.outputs.exists == 'false' && env.skip != 'agent'
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+          REPO_ID: ${{ needs.draft-card.outputs.repo_id }}
+          REPO_SLUG: ${{ needs.draft-card.outputs.repo }}
         run: |
-          if git diff --quiet -- README.md; then
+          set -eo pipefail
+          if git diff --cached --quiet -- README.md; then
             echo "no card in the tree (agent skipped or failed) - nothing to open"
             exit 0
           fi
-          BRANCH="agent/card-${ISSUE_NUMBER}-${{ github.run_id }}"
-          # Base the branch on CURRENT main: a card run takes minutes, and a
-          # branch lagging behind main shows the workflow files as reverted,
-          # which GitHub rejects for a GitHub App push.
-          git stash push -q -- README.md catalog PATTERNS.md llms.txt
-          git fetch -q origin main
-          git checkout -B "$BRANCH" origin/main
-          git stash pop -q
+          BRANCH="agent/card-repo-${REPO_ID}"
+          # The gates ran against this staged tree on the updated base.
+          git diff --exit-code
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md catalog PATTERNS.md llms.txt
           git commit -qm "Draft card from issue #${ISSUE_NUMBER}"
-          git push origin "$BRANCH"
+          git push --force-with-lease="refs/heads/$BRANCH:" origin "HEAD:refs/heads/$BRANCH"
           {
             echo "Draft card from #${ISSUE_NUMBER}."
+            echo
+            echo "Repository: https://github.com/${REPO_SLUG}"
+            echo "<!-- abr-repo-id: ${REPO_ID} -->"
             echo
             echo "## What this is"
             echo
@@ -302,6 +477,8 @@ jobs:
             cat pr-why.md
             echo
             echo "## What to check before merging"
+            echo
+            echo "The catalog duplicate check compares URLs, not repository IDs. Check for an entry under an older repository name."
             echo
             cat pr-weak.md
             echo
@@ -327,15 +504,15 @@ jobs:
             echo
             echo "Closes #${ISSUE_NUMBER}"
           } > pr-body.md
-          gh pr create --title "Card draft from issue #${ISSUE_NUMBER}" \
+          gh pr create --draft --title "Card draft from issue #${ISSUE_NUMBER}" \
             --body-file pr-body.md --head "$BRANCH" --label card-draft
           gh issue comment "$ISSUE_NUMBER" --body "Draft PR opened: ${{ github.server_url }}/${{ github.repository }}/pull/$(gh pr view --json number -q .number) - a maintainer review merges it into the catalog."
       - name: Upload run log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: intake-run
+          name: intake-finalize-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            agent-result.md
-            card.json
             gates.md
+            gate-abr.log
+            gate-awesome.log
