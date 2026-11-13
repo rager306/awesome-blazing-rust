@@ -11,7 +11,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `automata-compilation` | regex, aho-corasick |  |
 | `backend-trait` | candle, burn |  |
 | `batching` | io-uring |  |
-| `bitmap-index` | roaring-rs |  |
+| `bitmap-index` | roaring-rs, SeekStorm |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
 | `btf-probe` | uringscope |  |
@@ -58,7 +58,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `inline-keys` | bbtree |  |
 | `inline-storage` | smallvec |  |
 | `invariants-as-tests` | nachalnik |  |
-| `inverted-index` | tantivy |  |
+| `inverted-index` | tantivy, SeekStorm |  |
 | `io-driver` | tokio |  |
 | `io-uring` | glommio, monoio, io-uring, statico, plumbrs |  |
 | `jit` | wasmtime, blaze |  |
@@ -96,9 +96,9 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio |  |
+| `sharding` | dashmap, glommio, SeekStorm |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, SeekStorm |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
