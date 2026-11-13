@@ -911,6 +911,16 @@
       "description": "non-cryptographic Rust hash-map hasher built on a folded 64×64→128-bit multiply with per-map random seeds, the successor design to ahash and deliberately not DoS-resistant",
       "blazing": "author benchmark ([README](https://github.com/orlp/foldhash#performance), crate 0.2.0, Xeon 8481C with `-C target-cpu=native`, stable Rust 1.80.1, 16 key types × 4 map operations, full tables in a linked gist): geometric mean 6.21 ns/op for foldhash-f (7.56 for foldhash-q) vs aHash 8.74 ns and SipHash-1-3 28.70 ns; aHash wins only on medium-long strings when AES-NI is enabled, and the README does not state which crate version the run used.",
       "arch": ["branchless", "quality-vs-speed"]
+    },
+    {
+      "name": "qj",
+      "url": "https://github.com/6/qj",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "jq-compatible JSON processor: a drop-in CLI re-implementing jq's filter language in Rust on the C++ simdjson parser (FFI), with mmap I/O, Rayon-parallel NDJSON evaluation and on-demand raw-byte field extraction (no license file detected on GitHub, 21 stars, active: last push 2026-10-15)",
+      "blazing": "author hyperfine benchmarks on an M4 MacBook Pro over a 3.4 GB GitHub-Archive NDJSON file (1.2M records) against jq, jaq and gojq ([benchmarks](https://github.com/6/qj#benchmarks), full results in `benches/`): `select(.type==\"PushEvent\")` 190 ms vs jq 36.4 s (~190x), with jaq at 10.4 s and gojq at 22.8 s; `.actor.login` 196 ms vs 21.7 s; on a single 49 MB JSON file 2-25x vs jq and 1-6x vs jaq, narrowing to ~2-3x in slurp mode - README reports 100% pass on jq's official test suite and trades ~300 MB RSS for the speed vs jq's ~5 MB.",
+      "arch": ["c-binding", "simd", "work-stealing", "zero-copy"]
     }
   ]
 }
