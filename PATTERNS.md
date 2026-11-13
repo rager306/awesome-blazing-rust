@@ -7,10 +7,10 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `aes-ni` | ahash |  |
 | `alloc-tracking` | divan, dhat, hotpath-rs |  |
 | `arrangement-indexing` | differential-dataflow |  |
-| `async-native` | quinn, hyper, ntex, plumbrs |  |
+| `async-native` | quinn, hyper, ntex, plumbrs, redistill |  |
 | `automata-compilation` | regex, aho-corasick |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring |  |
+| `batching` | io-uring, redistill |  |
 | `bitmap-index` | roaring-rs |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
@@ -96,7 +96,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio |  |
+| `sharding` | dashmap, glommio, redistill |  |
 | `shuttle-in-ci` | bbtree |  |
 | `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
