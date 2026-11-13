@@ -30,9 +30,9 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, ast-grep |  |
 | `datalog` | cozo |  |
-| `declarative-dsl` | slint |  |
+| `declarative-dsl` | slint, ast-grep |  |
 | `density-dependent` | roaring-rs |  |
 | `dst-in-ci` | shuttle |  |
 | `elm-architecture` | crux |  |
