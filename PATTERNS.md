@@ -16,7 +16,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `broad-phase-narrow-phase` | rapier |  |
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
-| `c-binding` | zstd-safe |  |
+| `c-binding` | zstd-safe, NumKong |  |
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
@@ -63,7 +63,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `io-uring` | glommio, monoio, io-uring, statico, plumbrs |  |
 | `jit` | wasmtime, blaze |  |
 | `join-split` | rayon |  |
-| `kernel-fusion` | burn |  |
+| `kernel-fusion` | burn, NumKong |  |
 | `kernel-matrix-in-ci` | uringscope |  |
 | `lock-free` | crossbeam |  |
 | `lock-free-parallel-walk` | ripgrep |  |
@@ -94,11 +94,11 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `read-optimized` | papaya |  |
 | `recursive-proofs` | paramo1d |  |
 | `relative-pointers` | rkyv |  |
-| `runtime-dispatch` | faer, pulp |  |
+| `runtime-dispatch` | faer, pulp, NumKong |  |
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, NumKong |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
