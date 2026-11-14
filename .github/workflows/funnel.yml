@@ -6,10 +6,9 @@ name: Funnel
 # updated in place instead of a new one each week.
 #
 # Columns answer one question: which search provider earns its free tier?
-#   found   = candidates the discovery agent returned (labelled per provider
-#             in the intake issue body, "Found via")
-#   drafted = intake opened a card PR
-#   merged  = a maintainer merged it
+#   found   = intake issues (labelled per provider in the issue body, "Found via")
+#   drafted = intake issues referenced by at least one card-draft PR
+#   merged  = intake issues referenced by at least one merged card-draft PR
 # A provider that never passes drafted/merged is noise, not discovery.
 
 on:
@@ -36,7 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set -o pipefail
+          set -e -o pipefail
           gh issue list --label card-intake --state all --limit 500 \
             --json number,title,state,body,createdAt,closedAt > intakes.json
           gh pr list --label card-draft --state all --limit 500 \
@@ -52,20 +51,19 @@ jobs:
 
           found = collections.Counter(provider(i['body']) for i in intakes)
 
-          # An intake issue is "drafted" if a card-draft PR references it.
-          drafted_by = collections.Counter()
-          merged_by = collections.Counter()
-          issue_provider = {}
-          for i in intakes:
-              issue_provider[str(i['number'])] = provider(i['body'])
+          # Count each intake once per stage, even when it has multiple PRs.
+          issue_provider = {str(i['number']): provider(i['body']) for i in intakes}
+          drafted_issues, merged_issues = set(), set()
           for p in drafts:
               m = re.search(r'issue #(\d+)', p['title'])
-              if not m:
+              if not m or m.group(1) not in issue_provider:
                   continue
-              prov = issue_provider.get(m.group(1), 'unknown')
-              drafted_by[prov] += 1
+              issue_number = m.group(1)
+              drafted_issues.add(issue_number)
               if p['mergedAt']:
-                  merged_by[prov] += 1
+                  merged_issues.add(issue_number)
+          drafted_by = collections.Counter(issue_provider[n] for n in drafted_issues)
+          merged_by = collections.Counter(issue_provider[n] for n in merged_issues)
 
           rows = []
           for prov in sorted(found, key=lambda p: (-found[p], p)):
@@ -80,14 +78,16 @@ jobs:
               '',
               f'Generated {datetime.datetime.now(datetime.UTC):%Y-%m-%d} from '
               f'{total} intake issues and {len(drafts)} card-draft PRs.',
+              'Each list is capped at 500; additional issues or PRs may be omitted. '
+              'Rates apply only to these retrieved records.',
               '',
-              '| Provider | found | drafted | merged | draft rate | merge rate |',
+              '| Provider | found (issues) | drafted (issues) | merged (issues) | draft rate | merge rate |',
               '| --- | --- | --- | --- | --- | --- |',
               *rows,
               '',
-              'A provider with a high `found` count and a low draft rate is '
-              'producing hits that do not survive verification. Close it down '
-              'or tighten its queries before renewing any paid tier.',
+              'A low draft rate in these retrieved records may warrant reviewing '
+              'the provider and its queries. This report does not establish why '
+              'an issue did not reach a later stage.',
               '',
               '_Deterministic report: numbers come from issue bodies and PR '
               'titles only._',

@@ -54,27 +54,39 @@ rejection. The two inconclusive runs produced no card object at all.
 
 ## A/B: catalog index in the prompt vs without
 
-Run: 2026-10-31, five fixtures, one run per cell, harness `ab-index.sh`.
-Baseline: the policy file only. Treatment: the policy file with `llms.txt`
-appended. The hypothesis came from Vercel's 2026 eval, where discretionary
-retrieval failed silently in the majority of cases.
+Reported run: 2026-10-31, model `glm-5.3-flash`, five fixtures, one run
+per cell, harness `ab-index.sh` as recorded in commit `1840b8e`. Baseline:
+the policy file only. Treatment: the policy file with `llms.txt` appended.
+
+The checked-in [A/B results](ab-results.md) and the original version of this
+report disagree about the `facebook/react` cells. Both were introduced in commit
+`1840b8e`; no raw model responses or tool traces for this run were found in
+`runs/agent-evals/`, and that harness version writes verdicts, not responses,
+to its output file. The actual outcomes for those two cells are **unknown**; neither
+account establishes which configuration refused or drafted a card.
 
 | Fixture | Expected | Baseline | With index |
 |---|---|---|---|
-| `astral-sh/uv` | card | PASS | PASS |
-| `nushell/nushell` | card | PASS | PASS |
-| `serde-rs/serde` | card | PASS | PASS |
-| `bodil/im-rs` (archived) | skip | PASS | PASS |
-| `facebook/react` (not Rust) | card -> refuse | **FAIL** | PASS |
+| `astral-sh/uv` | card | PASS (both reports) | PASS (both reports) |
+| `nushell/nushell` | card | PASS (both reports) | PASS (both reports) |
+| `serde-rs/serde` | card | PASS (both reports) | PASS (both reports) |
+| `bodil/im-rs` (archived) | skip | PASS (both reports) | PASS (both reports) |
+| `facebook/react` (not Rust) | skip | unknown: reports FAIL / PASS | unknown: reports PASS / FAIL |
 
-The one divergence is the informative cell: without the index, the agent drafted
-a card for `facebook/react` - a JavaScript project - which is exactly the
-silent scope failure the catalog exists to prevent. With the index, it refused.
+For `facebook/react`, the two values in each unknown cell are, respectively,
+the original version of this report and `ab-results.md`. Even if a FAIL were
+confirmed, that harness version's skip check only establishes that the parsed output
+did not contain a nonempty skip reason and an empty card; it does not by itself
+establish that a card was drafted. For a card fixture, that version checked only
+that the parsed card field was nonempty, even if a skip reason was also present.
+Unlike `run.sh` at the time, that version of `ab-index.sh` did not check card
+markers, links, or `abr check` for its PASS verdicts.
 
-Directional, not statistical: five fixtures, one run per cell, and the INCONCLUSIVE
-rate means a missing row is not evidence of failure. The harness records this as
-`runs/agent-evals/ab-index.sh`; rerun it before drawing conclusions from a single
-sweep.
+The conflicting record cannot support a conclusion about whether the index helped
+or hurt. One run per cell is also too small to establish an effect. Future runs
+need retained per-cell responses, tool traces, and verdicts to resolve discrepancies;
+INCONCLUSIVE means the harness found no parsable flat JSON object with a `card`
+key, not proof of either an environment failure or a model failure.
 
 Process notes from the run: the first sweep was unusable because the table
 recorded raw JSON instead of verdicts (`verdict_of` was defined but never

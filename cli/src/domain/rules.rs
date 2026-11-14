@@ -130,15 +130,6 @@ fn normalize_url(url: &str) -> String {
     u
 }
 
-pub fn check(
-    model: &Model,
-    patterns: &[PatternRow],
-    catalog_on_disk: Option<&str>,
-    catalog_fresh: &str,
-) -> Vec<Violation> {
-    check_with_specs(model, patterns, catalog_on_disk, catalog_fresh, &[])
-}
-
 pub fn check_with_specs(
     model: &Model,
     patterns: &[PatternRow],
@@ -334,6 +325,14 @@ pub fn check_with_specs(
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn check(
+        model: &Model,
+        patterns: &[PatternRow],
+        catalog_on_disk: Option<&str>,
+        catalog_fresh: &str,
+    ) -> Vec<Violation> {
+        check_with_specs(model, patterns, catalog_on_disk, catalog_fresh, &[])
+    }
 
     fn entry(name: &str, arch: &[&str], blazing: &str) -> super::super::model::Entry {
         entry_typed(name, arch, blazing, None)

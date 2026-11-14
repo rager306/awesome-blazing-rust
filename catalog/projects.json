@@ -913,14 +913,24 @@
       "arch": ["branchless", "quality-vs-speed"]
     },
     {
+      "name": "graphrs",
+      "url": "https://github.com/malcolmvr/graphrs",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "NetworkX-style Rust graph library whose Dijkstra shortest-path and centrality algorithms run rayon-parallel",
+      "blazing": "author benchmark, betweenness centrality on a 2,000-node/199,702-edge random graph in 670 ms vs igraph 8,280 ms and NetworkX 294,397 ms, though graph-tool 478 ms stays ahead (10 timed runs with mean/std, AWS m5d.4xlarge 16 vCPU, versions pinned, [methodology](https://github.com/malcolmvr/graphrs/blob/main/performance.md)).",
+      "arch": ["parallel-algos", "work-stealing", "generic-graph"]
+    },
+    {
       "name": "SurrealKV",
       "url": "https://github.com/surrealdb/surrealkv",
       "section": "Candidates",
       "type": "measured",
       "measured_by": "author",
-      "description": "SurrealDB's Rust LSM storage engine, written in-house to replace the C++ RocksDB library, with a radix-tree memtable, a commit ring that batches a burst of commits into one disk flush, and opt-in time-travel versioning",
-      "blazing": "vs RocksDB at synchronous durability (each engine flushes before acknowledging), crud-bench on a bare-metal Threadripper 9970X, 500k keys, 48 threads: 7.95× point reads, 6.10× updates, 8.24× deletes, 73.7× point reads vs SlateDB - while reporting 1.88× slower creates than RocksDB without sync ([methodology + one-command repro](https://surrealdb.com/blog/we-are-replacing-rocksdb-with-surrealkv-1-0)).",
-      "arch": ["lsm", "batching", "read-optimized"]
+      "description": "Rust embedded LSM key-value engine with a radix-tree memtable, batched commit ring, and opt-in versioning",
+      "blazing": "author [crud-bench](https://surrealdb.com/blog/we-are-replacing-rocksdb-with-surrealkv-1-0) on a Threadripper 9970X, 500k keys, 48 workers and 128 clients: with synchronous durability, point reads 7.95×, updates 6.10× and deletes 8.24× faster than RocksDB, and point reads 73.7× faster than SlateDB on local disk; without synchronous durability, creates were 1.88× slower than RocksDB, keys-only scans of the first 100 entries reached 2,313,942/s, and LMDB led several scan shapes. Each figure is a single run; SurrealKV used non-default value separation and a larger memtable, and non-sync crash guarantees differ.",
+      "arch": ["lsm", "batching", "embedded"]
     }
   ]
 }
