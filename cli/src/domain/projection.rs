@@ -66,7 +66,11 @@ fn index_table(model: &Model, specs: &[super::model::PatternSpec]) -> String {
             Some((_, path)) => format!("[`{tag}`]({path})"),
             None => format!("`{tag}`"),
         };
-        let removes = specs.iter().find(|s| s.tag == *tag).map(|s| s.removes.as_str()).unwrap_or("");
+        let removes = specs
+            .iter()
+            .find(|s| s.tag == *tag)
+            .map(|s| s.removes.as_str())
+            .unwrap_or("");
         rows.push(format!("| {label} | {} | {removes} |", names.join(", ")));
     }
     let head = "# Architecture Patterns Index\n\nThe second axis of this list: **how** the speed is achieved. Patterns with a link have a full write-up in [decisions/](decisions/) - problem, technique, evidence, trade-offs. New entries must only use tags from this table (add a row via PR).\n\n| Pattern | Used by | Removes |\n| --- | --- | --- |\n";

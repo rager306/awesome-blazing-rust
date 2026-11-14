@@ -10,7 +10,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `async-native` | quinn, hyper, ntex, plumbrs |  |
 | `automata-compilation` | regex, aho-corasick |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring |  |
+| `batching` | io-uring, SurrealKV |  |
 | `bitmap-index` | roaring-rs |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
@@ -36,7 +36,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `density-dependent` | roaring-rs |  |
 | `dst-in-ci` | shuttle |  |
 | `elm-architecture` | crux |  |
-| `embedded` | cozo |  |
+| `embedded` | cozo, SurrealKV |  |
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
 | `extensible` | datafusion |  |
@@ -44,7 +44,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | [`findings-as-verdicts`](decisions/002-findings-as-verdicts.md) | uringscope, uringscope SKILL.md |  |
 | `finite-fields` | arkworks |  |
 | `finite-state-transducer` | fst |  |
-| `generic-graph` | petgraph |  |
+| `generic-graph` | petgraph, graphrs |  |
 | `generic-vertices` | pathfinding |  |
 | `gpu-rendered-ui` | zed, gpui-kit, dbdelve |  |
 | `hamt` | im |  |
@@ -67,7 +67,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `kernel-matrix-in-ci` | uringscope |  |
 | `lock-free` | crossbeam |  |
 | `lock-free-parallel-walk` | ripgrep |  |
-| `lsm` | fjall, SlateDB |  |
+| `lsm` | fjall, SlateDB, SurrealKV |  |
 | `lsm-plus-btree` | sled |  |
 | [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
 | `merkle-tree` | blake3 |  |
@@ -77,7 +77,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `no-std-friendly` | arkworks |  |
 | `object-storage` | SlateDB |  |
 | `own-renderer` | zed |  |
-| `parallel-algos` | rustworkx |  |
+| `parallel-algos` | rustworkx, graphrs |  |
 | `partitioned` | fjall |  |
 | `perf-integration` | cargo-flamegraph |  |
 | `pgo` | cargo-pgo |  |
@@ -121,7 +121,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `views` | ndarray |  |
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
-| `work-stealing` | tokio, rayon, pingora, ruff, may_minihttp |  |
+| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp |  |
 | `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
 | `zero-macro-ergonomics` | axum |  |
 
