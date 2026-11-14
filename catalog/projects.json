@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "solar",
+      "url": "https://github.com/paradigmxyz/solar",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "modular Solidity compiler in Rust, a drop-in compile-time replacement for solc workloads (ABI, bytecode, IR)",
+      "blazing": "~40x faster than solc at generating ABI in the repo's hyperfine benchmark, and the Paradigm launch post reports >41x vs solc on Solady's ABI; a compile-time/gas/size suite against solc (legacy and via-IR pipelines), slang and oksolc runs in CI with methodology in [benches/runtime/README.md](https://github.com/paradigmxyz/solar/blob/main/benches/runtime/README.md).",
+      "arch": ["pure-rust-port", "statistical-rigor"]
     }
   ]
 }
