@@ -85,7 +85,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefilter` | regex |  |
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
-| `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq, solar |  |
 | `python-bridge` | rustworkx |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
@@ -102,7 +102,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
-| `statistical-rigor` | hyperfine, criterion |  |
+| `statistical-rigor` | hyperfine, criterion, solar |  |
 | `storage-backend-flag` | oxigraph |  |
 | `stringview` | apache-arrow-rs, datafusion |  |
 | `structural-sharing` | im |  |
