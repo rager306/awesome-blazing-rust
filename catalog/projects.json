@@ -941,6 +941,15 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "molar",
+      "url": "https://github.com/yesint/molar",
+      "section": "Candidates",
+      "type": "case-study",
+      "description": "memory-safe molecular-dynamics trajectory analysis and modeling library in Rust (successor of the C++ Pteros library), with Python bindings",
+      "blazing": "a peer-reviewed paper reports it outperforming popular molecular analysis libraries, but the numbers live in the paper's tables, not the repo README; baselines and per-task figures unverified by us ([J Comput Chem 2025;46(1):e27536](https://doi.org/10.1002/jcc.27536)).",
+      "arch": ["data-parallel", "python-bridge"]
     }
   ]
 }

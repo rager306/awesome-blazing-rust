@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, molar |  |
 | `datalog` | cozo |  |
 | `declarative-dsl` | slint |  |
 | `density-dependent` | roaring-rs |  |
@@ -86,7 +86,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `prefix-keys` | bbtree |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
-| `python-bridge` | rustworkx |  |
+| `python-bridge` | rustworkx, molar |  |
 | `quality-vs-speed` | qdrant, foldhash |  |
 | `quantization` | qdrant |  |
 | `query-optimization` | polars, datafusion |  |
