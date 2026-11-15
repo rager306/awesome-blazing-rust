@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "sparx",
+      "url": "https://github.com/alexfaisca/sparx",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "parallel, memory-mapped static sparse-graph analytics in Rust with Python bindings: Louvain/Leiden, k-cores/trusses, PageRank, HyperBall, shortest paths, connected/biconnected components",
+      "blazing": "biconnected components of a 148M-edge graph in 2.2 s against NetworKit 11.3's 49 s (23x faster), unweighted shortest paths 2x-47x faster, and on the 50M-node graph 1-2.5 s vs 14-82 s for components/clustering/shortest paths, 32 threads, best-of-3-5 wall time on a shared CSR (methodology: [README benchmarks](https://github.com/alexfaisca/sparx#benchmarks-against-networkit)).",
+      "arch": ["parallel-algos", "generic-graph", "zero-copy", "cache-conscious-layout"]
     }
   ]
 }
