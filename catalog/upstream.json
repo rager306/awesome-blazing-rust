@@ -96,6 +96,6 @@
   {"repo": "vigna/sux-rs", "tag": "0.15.4"},
   {"repo": "winnow-rs/winnow", "tag": "v1.0.5"},
   {"repo": "xacrimon/dashmap", "tag": "v6.2.2"},
-  {"repo": "ybouane/flashraw", "tag": "v0.3.0"},
+  {"repo": "ybouane/flashraw", "tag": "v0.3.1"},
   {"repo": "zed-industries/zed", "tag": "v1.28.1"}
 ]
