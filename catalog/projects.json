@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "mzstd",
+      "url": "https://github.com/M-Compressors/mzstd",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Zstandard (RFC 8878) encoder/decoder in 100% safe Rust, byte-identical to C zstd 1.5.7, with runtime-dispatched SIMD, no_std and caller-scheduled parallel compression",
+      "blazing": "author benchmark (Ryzen 9 7950X, 2026-10-30): median 1.256x compression and 1.502x decompression speed vs C zstd 1.5.7 across 192 dataset/level pairs with byte-identical frames; an [lzbench run on the 212 MB Silesia corpus](https://github.com/M-Compressors/mzstd/blob/main/docs/benchmarks/lzbench-2026-11-12.md) shows 4.9-24.7% faster compression at levels 11-22 and decompression within 6.4% of C, with methodology, shared-host variance notes and raw per-round output published ([benchmark section](https://github.com/M-Compressors/mzstd#benchmarks)).",
+      "arch": ["simd", "data-parallel", "pure-rust-port", "no-std-friendly"]
     }
   ]
 }
