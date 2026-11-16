@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "ffind",
+      "url": "https://github.com/Sqrilizz/ffind",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "multi-threaded Linux file finder that walks directories with raw getdents64/statx syscalls, work-stealing traversal, and hierarchical .gitignore support",
+      "blazing": "hyperfine substring search over ~300,000 files in /usr/share, warm cache (--warmup 3): 16.4 ± 1.2 ms vs 51.3 ± 3.8 ms for fd (3.1x) and 181.0 ± 3.8 ms for GNU find (11x), at 6.5 MiB vs fd's 74.2 MiB memory peak ([benchmarks](https://github.com/Sqrilizz/ffind#benchmarks)); the lead over fd shrinks to 1.25x in the extension-search scenario.",
+      "arch": ["lock-free-parallel-walk", "work-stealing", "simd"]
     }
   ]
 }

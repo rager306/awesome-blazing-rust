@@ -66,7 +66,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `kernel-fusion` | burn |  |
 | `kernel-matrix-in-ci` | uringscope |  |
 | `lock-free` | crossbeam |  |
-| `lock-free-parallel-walk` | ripgrep |  |
+| `lock-free-parallel-walk` | ripgrep, ffind |  |
 | `lsm` | fjall, SlateDB, SurrealKV |  |
 | `lsm-plus-btree` | sled |  |
 | [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
@@ -98,7 +98,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, ffind |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
@@ -121,7 +121,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `views` | ndarray |  |
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
-| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp |  |
+| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind |  |
 | `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
 | `zero-macro-ergonomics` | axum |  |
 
