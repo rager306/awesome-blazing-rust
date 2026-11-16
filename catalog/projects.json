@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "fast-grep-rust",
+      "url": "https://github.com/gmilano/fast-grep-rust",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "grep-style code search with a persistent trigram index (line-level postings, Roaring bitmaps, mmap, Rayon-verified SIMD matching) built for repeated searches in large repos",
+      "blazing": "on the Linux kernel 6.6 tree (81,690 files, Apple M1 Pro, warm cache), indexed search finds `TODO` in 97 ms — 25x vs ripgrep (which scans with no index) and 6.2x vs ugrep, the only other indexed grep (1.9–9.6x across five patterns), with costs stated: ~60 s one-time build, ~2.9 GB index on disk ([benchmarks](https://github.com/gmilano/fast-grep-rust#benchmarks)).",
+      "arch": ["inverted-index", "bitmap-index", "simd", "zero-copy"]
     }
   ]
 }
