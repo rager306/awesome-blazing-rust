@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "orion",
+      "url": "https://github.com/kmesh-net/orion",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Rust rewrite of the Envoy proxy (xDS-configured L7 HTTP/TLS proxy aimed at Kubernetes gateways)",
+      "blazing": "2x-4x throughput and latency vs Envoy under wrk at 2048-16384 connections, scaling 1-32 proxy cores ([methodology](https://github.com/kmesh-net/orion/blob/main/docs/performance/performance.md)); results are published as charts, not tables.",
+      "arch": ["thread-per-core", "async-native", "zero-copy"]
     }
   ]
 }

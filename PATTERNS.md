@@ -7,7 +7,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `aes-ni` | ahash |  |
 | `alloc-tracking` | divan, dhat, hotpath-rs |  |
 | `arrangement-indexing` | differential-dataflow |  |
-| `async-native` | quinn, hyper, ntex, plumbrs |  |
+| `async-native` | quinn, hyper, ntex, plumbrs, orion |  |
 | `automata-compilation` | regex, aho-corasick |  |
 | `backend-trait` | candle, burn |  |
 | `batching` | io-uring, SurrealKV |  |
@@ -109,7 +109,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `succinct` | sux |  |
 | `table-driven` | crc32fast |  |
 | `tape-representation` | simd-json |  |
-| `thread-per-core` | glommio, monoio, statico |  |
+| `thread-per-core` | glommio, monoio, statico, orion |  |
 | `tls-13` | quinn |  |
 | `typed-effects` | crux |  |
 | `typed-parse-direct` | sonic-rs |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
