@@ -207,8 +207,12 @@ jobs:
               except Exception:
                   pass
           if not ok:
+              # Distinguish "agent found nothing" from "we cannot tell what the
+              # agent found". The downstream pipeline treats [] as no findings,
+              # which is the safe direction, but the run log must show why.
               open('candidates.json', 'w').write('[]')
-              print('AGENT OUTPUT NOT VALID JSON (kept empty) - see discovery-stream.jsonl artifact')
+              print('TRIAGE: agent output was not parsable as JSON - recording as no findings')
+              print('TRIAGE: this is an agent/format failure, not an empty result. Check discovery-stream.jsonl')
           PYEOF
       - name: Open intake issues for new candidates
         env:
