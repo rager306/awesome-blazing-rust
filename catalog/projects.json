@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "cesiumdb",
+      "url": "https://github.com/siennathesane/cesiumdb",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "beta embedded LSM-tree key-value store on a custom mmap-backed lock-free filesystem, ordered by a hybrid logical clock instead of MVCC",
+      "blazing": "fillrandom ~452K ops/s vs RocksDB 9.9.3 ~105K (4.3x) and overwrite ~470K vs ~108K (4.4x) at 8 threads, 400 B values, ~5 GiB dataset on Apple M1 Pro, reproducible via the repo's `compare_bench.sh` (fillrandom/overwrite/readrandom/readwhilewriting), per the [README](https://github.com/siennathesane/cesiumdb).",
+      "arch": ["lsm", "embedded"]
     }
   ]
 }
