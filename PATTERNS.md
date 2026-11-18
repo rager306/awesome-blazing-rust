@@ -36,7 +36,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `density-dependent` | roaring-rs |  |
 | `dst-in-ci` | shuttle |  |
 | `elm-architecture` | crux |  |
-| `embedded` | cozo, SurrealKV |  |
+| `embedded` | cozo, SurrealKV, mace |  |
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
 | `extensible` | datafusion |  |
@@ -68,7 +68,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `lock-free` | crossbeam |  |
 | `lock-free-parallel-walk` | ripgrep |  |
 | `lsm` | fjall, SlateDB, SurrealKV |  |
-| `lsm-plus-btree` | sled |  |
+| `lsm-plus-btree` | sled, mace |  |
 | [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
 | `merkle-tree` | blake3 |  |
 | `miri-in-ci` | miri |  |

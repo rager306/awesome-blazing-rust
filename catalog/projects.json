@@ -941,6 +941,16 @@
       "description": "HTTP/1.1 server library using stackful coroutines on the `may` runtime, ported from tokio_minihttp",
       "blazing": "author [wrk results published by January 2018](https://github.com/Xudong-Huang/may_minihttp/blob/72c3de2b4e/README.md) show 116,182 req/s vs tokio_minihttp's 100,651 on a localhost hello-world endpoint (one server worker, one client thread, 200 connections, one displayed 10-second sample each); hardware, versions and further repetitions are unspecified.",
       "arch": ["work-stealing"]
+    },
+    {
+      "name": "mace",
+      "url": "https://github.com/abbycin/mace",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "embedded transactional key-value storage engine in pure Rust: log-structured ordered index with MVCC snapshot isolation, large values kept out of the index, merge operators",
+      "blazing": "2,941,301 vs 1,100,399 ops/s against RocksDB at 8 threads (95% read / 5% update, 16B keys / 128B values over 1M keys) and 4,038,680 vs 180,538 ops/s reading after 1000 merges per key (~22x); RocksDB wins 1-thread merges (282,164 vs 192,250). Methodology: [kv_bench report](https://abbycin.github.io/kv_bench/index.html).",
+      "arch": ["lsm-plus-btree", "embedded"]
     }
   ]
 }
