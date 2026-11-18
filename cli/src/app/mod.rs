@@ -146,43 +146,79 @@ fn record_claims(io: &(impl Source + Sink), checks: &[(String, signals::ClaimChe
     let by_name: std::collections::BTreeMap<&str, &signals::ClaimCheck> =
         checks.iter().map(|(n, c)| (n.as_str(), c)).collect();
     let model = markdown::parse_readme(&load(io, README));
+
+    // Build a lookup from repo slug -> entry name -> claim check
+    let mut slug_to_name = std::collections::BTreeMap::new();
+    for e in &model.entries {
+        if let Some(slug) = crate::domain::upstream::repo_slug(&e.url) {
+            slug_to_name.insert(slug, e.name.clone());
+        }
+    }
+
+    // Scan the JSON line by line. Track the current repo. When we hit a
+    // "claim" field inside an object we just emitted a repo for, skip it —
+    // we will write our own version right after the "repo" line.
+    let mut out = String::new();
     let mut updated = 0usize;
-    let mut text = String::new();
+    let mut current_repo: Option<String> = None;
+    let mut skip_claim = false;
+
     for line in raw.lines() {
         let trimmed = line.trim();
-        let repo = trimmed
-            .strip_prefix("\"repo\": \"")
-            .and_then(|r| r.split('"').next());
-        if let Some(repo) = repo {
-            if let Some(entry) = model
-                .entries
-                .iter()
-                .find(|e| crate::domain::upstream::repo_slug(&e.url).as_deref() == Some(repo))
-            {
-                if let Some(check) = by_name.get(entry.name.as_str()) {
-                    text.push_str(line);
-                    text.push('\n');
-                    text.push_str(&format!(
-                        "      \"claim\": {{\"numbers_found\": {}, \"numbers_total\": {}{}}},\n",
-                        check.numbers_found,
-                        check.numbers_total,
-                        match check.support {
+        let indent = line.len() - line.trim_start().len();
+
+        // Detect repo start
+        if let Some(rest) = trimmed.strip_prefix("\"repo\": \"") {
+            if let Some(slug) = rest.split('"').next() {
+                current_repo = Some(slug.to_string());
+                // If this repo has a check, emit the line then the claim field
+                if let Some(entry) = model
+                    .entries
+                    .iter()
+                    .find(|e| crate::domain::upstream::repo_slug(&e.url).as_deref() == Some(slug))
+                {
+                    if let Some(check) = by_name.get(entry.name.as_str()) {
+                        out.push_str(line);
+                        out.push('\n');
+                        let support = match check.support {
                             Some(p) => format!(", \"support\": {p:.2}"),
                             None => String::new(),
-                        }
-                    ));
-                    updated += 1;
-                    continue;
+                        };
+                        out.push_str(&format!(
+                            "      \"claim\": {{\"numbers_found\": {}, \"numbers_total\": {}}}{}\n",
+                            check.numbers_found, check.numbers_total, support
+                        ));
+                        updated += 1;
+                        skip_claim = true;
+                        continue;
+                    }
                 }
             }
         }
-        text.push_str(line);
-        text.push('\n');
+
+        // Skip an existing "claim" field inside the current repo's object
+        if skip_claim && trimmed.starts_with("\"claim\"") {
+            // Skip this line and its closing brace line if present
+            continue;
+        }
+        if skip_claim && trimmed.starts_with("\"unavailable\"") {
+            // This comes after claim in the original layout — we're past the claim field
+            skip_claim = false;
+        }
+        // End of the current object
+        if trimmed == "}" && indent <= 4 {
+            skip_claim = false;
+        }
+
+        out.push_str(line);
+        out.push('\n');
     }
-    io.write(SIGNALS, &text);
+
+    io.write(SIGNALS, &out);
     eprintln!("verify: recorded claim checks for {updated} repos in {SIGNALS}");
 }
 
+/// Provenance check: does each measured card's number appear at its source?
 /// Provenance check: does each measured card's number appear at its source?
 ///
 /// Advisory by design. A pass means the figure was not invented or transposed;
