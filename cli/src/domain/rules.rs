@@ -338,6 +338,14 @@ mod tests {
         entry_typed(name, arch, blazing, None)
     }
 
+    fn model_with(entries: Vec<crate::domain::model::Entry>) -> Model {
+        Model {
+            sections: vec![],
+            entries,
+            section_item_counts: std::collections::BTreeMap::new(),
+        }
+    }
+
     fn entry_typed(
         name: &str,
         arch: &[&str],
@@ -372,10 +380,7 @@ mod tests {
 
     #[test]
     fn empty_claim_on_measured_is_now_reachable() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![entry_typed("x", &[], "", Some(Kind::Measured))],
-        };
+        let m = model_with(vec![entry_typed("x", &[], "", Some(Kind::Measured))]);
         let v = check(&m, &[], None, "{}");
         assert!(v.iter().any(|x| x.code == "MEASURED_EMPTY_CLAIM"));
     }
@@ -384,10 +389,7 @@ mod tests {
     fn removing_claim_does_not_change_type() {
         // same card, claim removed: the type stays Measured (explicit) and
         // the rule fires instead of the card quietly becoming a case-study
-        let m = Model {
-            sections: vec![],
-            entries: vec![entry_typed("x", &[], "", Some(Kind::Measured))],
-        };
+        let m = model_with(vec![entry_typed("x", &[], "", Some(Kind::Measured))]);
         let v = check(&m, &[], None, "{}");
         assert!(v.iter().any(|x| x.code == "MEASURED_EMPTY_CLAIM"));
         assert!(!v.iter().any(|x| x.code == "MISSING_TYPE"));
@@ -395,45 +397,38 @@ mod tests {
 
     #[test]
     fn missing_type_marker_is_a_violation() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![entry("x", &[], "10x")],
-        };
+        let m = model_with(vec![entry("x", &[], "10x")]);
         let v = check(&m, &[], None, "{}");
         assert!(v.iter().any(|x| x.code == "MISSING_TYPE"));
     }
 
     #[test]
     fn measured_numbers_need_a_named_baseline() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![entry_typed(
-                "x",
-                &[],
-                "3x faster on tier two",
-                Some(Kind::Measured),
-            )],
-        };
+        let m = model_with(vec![entry_typed(
+            "x",
+            &[],
+            "3x faster on tier two",
+            Some(Kind::Measured),
+        )]);
         let v = check(&m, &[], None, "{}");
         assert!(v.iter().any(|x| x.code == "MEASURED_NO_BASELINE"));
     }
 
     #[test]
     fn skill_type_and_section_must_agree() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![entry_typed("skill x", &[], "", Some(Kind::AgentSkill))],
-        };
+        let m = model_with(vec![entry_typed(
+            "skill x",
+            &[],
+            "",
+            Some(Kind::AgentSkill),
+        )]);
         let v = check(&m, &[], None, "{}");
         assert!(v.iter().any(|x| x.code == "SKILL_OUTSIDE_SECTION"));
     }
 
     #[test]
     fn missing_tag_is_violation() {
-        let m = Model {
-            sections: vec!["S".into()],
-            entries: vec![entry("x", &["unindexed-tag"], "10x")],
-        };
+        let m = model_with(vec![entry("x", &["unindexed-tag"], "10x")]);
         let v = check(&m, &[], None, "{}");
         assert!(v.iter().any(|x| x.code == "TAG_NOT_INDEXED"));
         assert!(v.iter().any(|x| x.code == "CATALOG_MISSING"));
@@ -441,10 +436,7 @@ mod tests {
 
     #[test]
     fn stale_catalog_detected() {
-        let m = Model {
-            sections: vec!["S".into()],
-            entries: vec![entry("x", &["t"], "10x")],
-        };
+        let m = model_with(vec![entry("x", &["t"], "10x")]);
         let patterns = vec![PatternRow {
             tag: "t".into(),
             has_decision_link: false,
@@ -456,15 +448,12 @@ mod tests {
 
     #[test]
     fn measured_needs_a_named_measurer() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![entry_typed(
-                "x",
-                &[],
-                "3x vs baseline",
-                Some(Kind::Measured),
-            )],
-        };
+        let m = model_with(vec![entry_typed(
+            "x",
+            &[],
+            "3x vs baseline",
+            Some(Kind::Measured),
+        )]);
         let v = check(&m, &[], Some("x"), "x");
         assert!(v.iter().any(|x| x.code == "MEASURED_NO_PROVENANCE"));
     }
@@ -473,10 +462,7 @@ mod tests {
     fn provenance_on_a_case_study_is_a_violation() {
         let mut e = entry_typed("x", &[], "claim", Some(Kind::CaseStudy));
         e.measured_by = Some(Provenance::Author);
-        let m = Model {
-            sections: vec![],
-            entries: vec![e],
-        };
+        let m = model_with(vec![e]);
         let v = check(&m, &[], Some("x"), "x");
         assert!(v.iter().any(|x| x.code == "PROVENANCE_ON_UNMEASURED"));
     }
@@ -490,19 +476,13 @@ mod tests {
             Some(Kind::Measured),
         );
         e.measured_by = Some(Provenance::Catalog);
-        let m = Model {
-            sections: vec![],
-            entries: vec![e],
-        };
+        let m = model_with(vec![e]);
         let v = check(&m, &[], Some("x"), "x");
         assert!(v.iter().any(|x| x.code == "CATALOG_RUN_UNLINKED"));
 
         let mut linked = entry_typed("x", &[], "see runs/x/RESULTS.md", Some(Kind::Measured));
         linked.measured_by = Some(Provenance::Catalog);
-        let m = Model {
-            sections: vec![],
-            entries: vec![linked],
-        };
+        let m = model_with(vec![linked]);
         assert!(check(&m, &[], Some("x"), "x")
             .iter()
             .all(|v| v.code != "CATALOG_RUN_UNLINKED"));
@@ -526,13 +506,10 @@ mod tests {
             ("b", "https://github.com/Apache/datafusion/"),
             ("b", "https://github.com/apache/datafusion.git"),
         ] {
-            let m = Model {
-                sections: vec![],
-                entries: vec![
-                    mk("a", "https://github.com/apache/datafusion"),
-                    mk(second_name, second_url),
-                ],
-            };
+            let m = model_with(vec![
+                mk("a", "https://github.com/apache/datafusion"),
+                mk(second_name, second_url),
+            ]);
             let v = check(&m, &[], Some("x"), "x");
             assert!(
                 v.iter().any(|x| x.code == "DUPLICATE_ENTRY"),
@@ -553,13 +530,10 @@ mod tests {
             declared: Some(Kind::CaseStudy),
             measured_by: None,
         };
-        let m = Model {
-            sections: vec![],
-            entries: vec![
-                mk("a", "https://github.com/apache/datafusion"),
-                mk("b", "https://github.com/apache/datafusion-cli"),
-            ],
-        };
+        let m = model_with(vec![
+            mk("a", "https://github.com/apache/datafusion"),
+            mk("b", "https://github.com/apache/datafusion-cli"),
+        ]);
         let v = check(&m, &[], Some("x"), "x");
         assert!(!v.iter().any(|x| x.code == "DUPLICATE_ENTRY"));
     }
@@ -597,19 +571,16 @@ mod tests {
 
     #[test]
     fn contested_signal_blocks_a_measured_card() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![super::super::model::Entry {
-                name: "fast thing".into(),
-                url: "https://github.com/Fast/thing".into(),
-                section: "S".into(),
-                description: "d".into(),
-                blazing: "3x vs baseline".into(),
-                arch: vec![],
-                declared: Some(Kind::Measured),
-                measured_by: None,
-            }],
-        };
+        let m = model_with(vec![super::super::model::Entry {
+            name: "fast thing".into(),
+            url: "https://github.com/Fast/thing".into(),
+            section: "S".into(),
+            description: "d".into(),
+            blazing: "3x vs baseline".into(),
+            arch: vec![],
+            declared: Some(Kind::Measured),
+            measured_by: None,
+        }]);
         let signals = vec![SignalRow {
             repo: "fast/thing".into(),
             flags: vec![],
@@ -621,10 +592,12 @@ mod tests {
 
     #[test]
     fn contested_signal_does_not_block_a_case_study() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![entry_typed("thing", &[], "claim", Some(Kind::CaseStudy))],
-        };
+        let m = model_with(vec![entry_typed(
+            "thing",
+            &[],
+            "claim",
+            Some(Kind::CaseStudy),
+        )]);
         let signals = vec![SignalRow {
             repo: "example.com".into(),
             flags: vec!["contested".into()],
@@ -635,10 +608,7 @@ mod tests {
 
     #[test]
     fn unknown_signal_flag_is_a_violation() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![],
-        };
+        let m = model_with(vec![]);
         let signals = vec![SignalRow {
             repo: "a/b".into(),
             flags: vec!["feels-hypey".into()],
@@ -650,10 +620,7 @@ mod tests {
 
     #[test]
     fn unknown_pattern_reference_detected() {
-        let m = Model {
-            sections: vec![],
-            entries: vec![],
-        };
+        let m = model_with(vec![]);
         let patterns = vec![PatternRow {
             tag: "t".into(),
             has_decision_link: false,

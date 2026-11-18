@@ -125,10 +125,12 @@ pub fn llms(model: &Model) -> Artifact {
 mod tests {
     use super::{catalog, patterns_doc};
     use crate::domain::model::{Entry, Model};
+    use std::collections::BTreeMap;
 
     fn model() -> Model {
         Model {
             sections: vec!["S".into()],
+            section_item_counts: BTreeMap::new(),
             entries: vec![Entry {
                 declared: None,
                 measured_by: None,
