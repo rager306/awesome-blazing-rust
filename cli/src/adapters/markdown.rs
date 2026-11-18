@@ -4,6 +4,7 @@
 //! testable without any filesystem.
 
 use crate::domain::model::{Entry, Kind, Model, PatternRow, PatternSpec, Provenance};
+use std::collections::BTreeMap;
 
 /// A tag token must be lowercase alnum or '-', otherwise it is prose that
 /// leaked out of a backtick pair - never a tag.
@@ -28,12 +29,16 @@ fn parse_arch_tags(arch_tail: &str) -> Vec<String> {
 pub fn parse_readme(readme: &str) -> Model {
     let mut model = Model::default();
     let mut section = String::new();
+    let mut item_counts: BTreeMap<String, usize> = BTreeMap::new();
     for line in readme.lines() {
         if let Some(s) = line.strip_prefix("## ") {
             section = s.trim().to_string();
             if section != "Contents" && !model.sections.contains(&section) {
                 model.sections.push(section.clone());
             }
+        }
+        if line.strip_prefix("- [").is_some() && !section.is_empty() {
+            *item_counts.entry(section.clone()).or_insert(0) += 1;
         }
         if let Some(rest) = line.strip_prefix("- [") {
             let close = match rest.find(']') {
@@ -109,6 +114,7 @@ pub fn parse_readme(readme: &str) -> Model {
             });
         }
     }
+    model.section_item_counts = item_counts;
     model
 }
 

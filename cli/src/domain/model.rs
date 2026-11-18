@@ -96,6 +96,12 @@ impl Entry {
 pub struct Model {
     pub sections: Vec<String>,
     pub entries: Vec<Entry>,
+    /// Count of `- [text](url)` list items per section. A section with no
+    /// parsed entries but with list items is counted here: `Wow & Humor` and
+    /// `See also` have real content that doesn't match the standard card
+    /// format, and a projection that says "0 entries" for a section with
+    /// seven cards is lying to the reader.
+    pub section_item_counts: std::collections::BTreeMap<String, usize>,
 }
 
 impl Model {
@@ -114,7 +120,13 @@ impl Model {
     }
 
     pub fn count_in_section(&self, section: &str) -> usize {
-        self.entries.iter().filter(|e| e.section == section).count()
+        // Prefer the parsed entry count; fall back to list-item count for
+        // sections whose content doesn't match the standard card format.
+        let parsed = self.entries.iter().filter(|e| e.section == section).count();
+        if parsed > 0 {
+            return parsed;
+        }
+        self.section_item_counts.get(section).copied().unwrap_or(0)
     }
 }
 

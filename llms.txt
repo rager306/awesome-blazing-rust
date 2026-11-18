@@ -36,12 +36,12 @@
 - Agent Skills (1 entries)
 - UI & Apps (5 entries)
 - Benchmarking & Toolchain (4 entries)
-- Wow & Humor (0 entries)
-- Recipes (0 entries)
+- Wow & Humor (7 entries)
+- Recipes (4 entries)
 - Measured Caveats (0 entries)
 - Fresh (7 entries)
 - Candidates (12 entries)
-- See also (0 entries)
+- See also (3 entries)
 - Contributing (0 entries)
 
 ## For agents
