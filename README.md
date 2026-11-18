@@ -1,8 +1,8 @@
 # Awesome Blazing Rust [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
-> Rust projects that **prove** their speed. Every entry ships measured numbers - and the architectural tricks behind them are named.
+> A catalog of Rust projects where every speed claim is traced to a measurement: who ran it, on what hardware, against what baseline, and where the advantage stops. Architecture patterns are named; entries without a traceable claim are tagged as case studies.
 
-**The rule: no numbers, no entry.** Projects without public benchmarks live in the Candidates section until they show evidence. Each entry carries a `Blazing:` line (the measurement), a `Measured by:` line (who ran it) and an `Arch:` line (the patterns - indexed in [PATTERNS.md](PATTERNS.md)).
+**The rule: every speed claim must name its source.** Entries with a traceable measurement are tagged `measured`; architectural insights and tools are tagged `case-study` or `tool`. Projects without a public benchmark live in the Candidates section until they show evidence. Each entry carries a `Blazing:` line (the measurement), a `Measured by:` line (who ran it) and an `Arch:` line (the patterns - indexed in [PATTERNS.md](PATTERNS.md)).
 
 **Why this list exists.** "Blazingly fast" became a meme before it became a claim: there is a GitHub topic for it, a satirical awesome-list, and a README line that means "written in Rust" more often than it means "measured". This catalog is the counter-move - the same projects, but only with a number, a baseline, a named measurer and a link to the method. A card without those is a case study, not a measurement.
 

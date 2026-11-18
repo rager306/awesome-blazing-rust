@@ -1,6 +1,6 @@
 # awesome-blazing-rust
 
-> Rust projects that prove their speed. Every entry ships measured numbers; every trick is named. Rule: no numbers, no entry.
+> A catalog of Rust projects where every speed claim is traced to a measurement: who ran it, on what hardware, against what baseline, and where the advantage stops.
 
 ## How to consume this repository
 
