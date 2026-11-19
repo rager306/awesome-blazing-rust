@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "burrmill",
+      "url": "https://github.com/nuthatch-org/burrmill",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "pure-Rust analytical SQL engine over sealed Parquet segments, speaking DuckDB's dialect with refuse-on-overflow integer arithmetic, built to replace DuckDB inside nuthatch",
+      "blazing": "warm whole-view run on a 32-core ThinkPad, 22 of 22 views byte-identical to DuckDB at time-weighted 0.63x DuckDB's total time, and 32.9 vs 15.1 qps with 3.9 vs 15.4 GB at 32 clients (`docs/bench/engine-views-thinkpad-2026-09-27.txt`), published beside its own counter-evidence: 1.54x against DuckDB before the plan fixes landed and about 2.5x DuckDB's per-statement time through nuthatch's production path on 2026-10-01 ([methodology](https://github.com/nuthatch-org/burrmill/blob/main/docs/bench/method.md)).",
+      "arch": ["columnar", "query-optimization", "memory-bounded-streaming"]
     }
   ]
 }
