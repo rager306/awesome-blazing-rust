@@ -36,7 +36,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `density-dependent` | roaring-rs |  |
 | `dst-in-ci` | shuttle |  |
 | `elm-architecture` | crux |  |
-| `embedded` | cozo, SurrealKV, cesiumdb, mace |  |
+| `embedded` | cozo, SurrealKV, canopydb, cesiumdb, mace |  |
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
 | `extensible` | datafusion, vortex |  |
