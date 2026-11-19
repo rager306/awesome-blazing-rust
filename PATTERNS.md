@@ -54,11 +54,11 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `hyaline-reclamation` | papaya |  |
 | `hybrid-cache` | foyer |  |
 | `immediate-mode` | egui |  |
-| `incremental-view-maintenance` | differential-dataflow, eg-strider |  |
+| `incremental-view-maintenance` | differential-dataflow, eg-strider, unumsearch |  |
 | `inline-keys` | bbtree |  |
 | `inline-storage` | smallvec |  |
 | `invariants-as-tests` | nachalnik |  |
-| `inverted-index` | tantivy, fast-grep-rust |  |
+| `inverted-index` | tantivy, fast-grep-rust, unumsearch |  |
 | `io-driver` | tokio |  |
 | `io-uring` | glommio, monoio, io-uring, statico, plumbrs, apache/iggy, radixox, spargio |  |
 | `jit` | wasmtime, blaze |  |
@@ -82,7 +82,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `perf-integration` | cargo-flamegraph |  |
 | `pgo` | cargo-pgo |  |
 | `poseidon2-gf2` | paramo1d |  |
-| `prefilter` | regex |  |
+| `prefilter` | regex, unumsearch |  |
 | `prefix-keys` | bbtree, radixox |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq, mzstd, solar, rust-tango |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex, unumsearch |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
