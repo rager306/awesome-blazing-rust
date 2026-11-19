@@ -184,9 +184,13 @@ fn record_claims(io: &(impl Source + Sink), checks: &[(String, signals::ClaimChe
                             Some(p) => format!(", \"support\": {p:.2}"),
                             None => String::new(),
                         };
+                        // Comma BEFORE the claim field (it closes the "repo" line above);
+                        // support goes INSIDE the claim object, not after it.
                         out.push_str(&format!(
-                            "      \"claim\": {{\"numbers_found\": {}, \"numbers_total\": {}}}{}\n",
-                            check.numbers_found, check.numbers_total, support
+                            "      \"claim\": {{\"numbers_found\": {}, \"numbers_total\": {}{}}},\n",
+                            check.numbers_found,
+                            check.numbers_total,
+                            support
                         ));
                         updated += 1;
                         skip_claim = true;
@@ -205,8 +209,8 @@ fn record_claims(io: &(impl Source + Sink), checks: &[(String, signals::ClaimChe
             // This comes after claim in the original layout — we're past the claim field
             skip_claim = false;
         }
-        // End of the current object
-        if trimmed == "}" && indent <= 4 {
+        // Reset at the object's closing brace (or any line that ends the object)
+        if trimmed == "}" || trimmed == "}," {
             skip_claim = false;
         }
 
