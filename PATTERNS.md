@@ -12,7 +12,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `backend-trait` | candle, burn |  |
 | `batching` | io-uring, SurrealKV, apache/iggy, lionturtle, emdb, redistill |  |
 | `bitmap-index` | roaring-rs, fast-grep-rust |  |
-| `branchless` | memchr, foldhash |  |
+| `branchless` | memchr, foldhash, speedy |  |
 | `broad-phase-narrow-phase` | rapier |  |
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, mzstd, molar, wordchipper, gzippy, flock, ForkUnion |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, mzstd, molar, wordchipper, gzippy, flock, ForkUnion, speedy |  |
 | `datalog` | cozo |  |
 | `declarative-dsl` | slint |  |
 | `density-dependent` | roaring-rs |  |
@@ -98,7 +98,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock, speedy |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex, speedy |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
