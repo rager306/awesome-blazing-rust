@@ -1,5 +1,15 @@
 # Provenance and entailment: 23 measured cards
 
+> **Update 2026-11-19 — the storage contract.** The verify results now have a
+> durable home: `signals::apply_claims` parses the signals document, replaces
+> each named repo's claim in place, re-parses its own output as a write gate,
+> and `signals::carry_absent` keeps rows a partial (`--only`/`--limit`) run did
+> not fetch. Both scenarios were added as failing tests first (duplicate claim
+> keys; absent repos dropped), then fixed via a JSON parser over the same
+> `Value` tree the writer emits — 59 → 67 tests. The CanopyDB card from the
+> verified PR #21 draft landed in Candidates (128 entries); the false close
+> comments on issues #19/#20 were corrected in place.
+
 Run: 2026-10-31, `abr verify --entail` over the whole catalog.
 Two questions, deliberately separate:
 

@@ -933,6 +933,16 @@
       "arch": ["lsm", "batching", "embedded"]
     },
     {
+      "name": "canopydb",
+      "url": "https://github.com/arthurprs/canopydb",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "embedded multi-tree ACID key-value storage engine (MVCC B+tree, optional WAL, MIT) in pure Rust; early-stage, single-maintainer",
+      "blazing": "reruns redb's `lmdb_benchmark` (sync commits, in-memory-fit workload, i9-12900H, turbo off): fastest individual writes 404ms vs lmdb 879ms and redb 553ms; fastest int_benchmark bulk load 576ms vs lmdb 746ms; 2nd to lmdb on 32-thread random reads 234ms vs 156ms, beating redb 349ms and rocksdb 616ms - [methodology + reproduce](https://github.com/arthurprs/canopydb/blob/master/BENCHMARKS.md).",
+      "arch": ["embedded"]
+    },
+    {
       "name": "may_minihttp",
       "url": "https://github.com/Xudong-Huang/may_minihttp",
       "section": "Candidates",

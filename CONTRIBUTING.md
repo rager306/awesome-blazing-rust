@@ -1,6 +1,6 @@
 # Contributing
 
-**The one rule: no numbers, no entry.** Every entry must link a public benchmark, measurement, or documented performance claim (the project's own README/blog counts if methodology is stated).
+**The one rule: every number is traceable.** A `measured` entry must link a public benchmark, measurement, or documented performance claim (the project's own README/blog counts if methodology is stated). An entry that describes speed without a traceable claim is welcome - as a `case-study`, and the card must say so.
 
 ## Entry types
 

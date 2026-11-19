@@ -26,7 +26,7 @@ pub fn catalog(model: &Model) -> Artifact {
         (
             "rule",
             Value::Str(
-                "no numbers, no entry - measured entries carry claim+source; others are case-studies or tools"
+                "every speed claim is traced to a measurement: who ran it, on what hardware, against what baseline; entries without a traceable claim are case-studies or tools"
                     .into(),
             ),
         ),
