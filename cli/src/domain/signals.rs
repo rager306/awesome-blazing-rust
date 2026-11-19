@@ -317,6 +317,131 @@ pub fn parse_previous_with_claims(
     (v, n, claims)
 }
 
+/// Apply claim checks to a signals document: each named repo's claim is
+/// replaced in place, or inserted right after its "repo" field when the row
+/// had none. Repos without a check are left untouched. The document is
+/// parsed, modified as data, rendered by the shared writer, and re-parsed as
+/// a validity gate before the caller may write it.
+pub fn apply_claims(raw: &str, checks: &[(String, ClaimCheck)]) -> Result<String, String> {
+    use super::json::Value;
+    let by_slug: std::collections::BTreeMap<&str, &ClaimCheck> =
+        checks.iter().map(|(s, c)| (s.as_str(), c)).collect();
+    let mut doc = super::json::parse(raw)?;
+    if let Value::Obj(top) = &mut doc {
+        if let Some(Value::Block(rows)) = top.iter_mut().find(|(k, _)| k == "repos").map(|(_, v)| v)
+        {
+            for row in rows.iter_mut() {
+                let Value::Obj(fields) = row else {
+                    continue;
+                };
+                let slug = fields.iter().find_map(|(k, v)| match (k.as_str(), v) {
+                    ("repo", Value::Str(s)) => Some(s.clone()),
+                    _ => None,
+                });
+                let Some(slug) = slug else {
+                    continue;
+                };
+                let Some(check) = by_slug.get(slug.as_str()) else {
+                    continue;
+                };
+                let claim = claim_value(check);
+                match fields.iter().position(|(k, _)| k == "claim") {
+                    Some(i) => fields[i].1 = claim,
+                    None => {
+                        let at = fields
+                            .iter()
+                            .position(|(k, _)| k == "repo")
+                            .map(|i| i + 1)
+                            .unwrap_or(0);
+                        fields.insert(at, ("claim".to_string(), claim));
+                    }
+                }
+            }
+        }
+    }
+    let mut out = doc.render();
+    out.push('\n');
+    super::json::parse(&out)
+        .map_err(|e| format!("rendered signals document does not re-parse: {e}"))?;
+    Ok(out)
+}
+
+fn claim_value(c: &ClaimCheck) -> super::json::Value {
+    use super::json::Value;
+    let mut f = vec![
+        ("numbers_found", Value::num(c.numbers_found)),
+        ("numbers_total", Value::num(c.numbers_total)),
+    ];
+    if let Some(p) = c.support {
+        f.push(("support", Value::Num(format!("{p:.2}"))));
+    }
+    Value::obj(f)
+}
+
+/// Carry over rows from `previous` whose repo is absent from `doc`, so a
+/// partial collection (`--only`, `--limit`) cannot erase repos it did not
+/// fetch. The carried rows keep their last-known data, claim, and verdict;
+/// the row count in the meta block is corrected to match.
+pub fn carry_absent(doc: &str, previous: &str) -> Result<String, String> {
+    use super::json::Value;
+    let mut d = super::json::parse(doc)?;
+    let prev = super::json::parse(previous)?;
+    let Value::Obj(top) = &mut d else {
+        return Err("signals document is not an object".to_string());
+    };
+    let Some(ri) = top.iter().position(|(k, _)| k == "repos") else {
+        return Err("signals document has no repos block".to_string());
+    };
+    let meta_i = top.iter().position(|(k, _)| k == "meta");
+    let Value::Block(rows) = &mut top[ri].1 else {
+        return Err("signals document has no repos block".to_string());
+    };
+    let Value::Obj(ptop) = prev else {
+        return Err("previous signals document is not an object".to_string());
+    };
+    let Some(Value::Block(prows)) = ptop.iter().find(|(k, _)| k == "repos").map(|(_, v)| v) else {
+        return Err("previous signals document has no repos block".to_string());
+    };
+    let have: std::collections::BTreeSet<String> = rows
+        .iter()
+        .filter_map(|r| match r {
+            Value::Obj(f) => f.iter().find_map(|(k, v)| match (k.as_str(), v) {
+                ("repo", Value::Str(s)) => Some(s.clone()),
+                _ => None,
+            }),
+            _ => None,
+        })
+        .collect();
+    let mut carried = 0usize;
+    for row in prows {
+        let slug = match row {
+            Value::Obj(f) => f.iter().find_map(|(k, v)| match (k.as_str(), v) {
+                ("repo", Value::Str(s)) => Some(s.clone()),
+                _ => None,
+            }),
+            _ => None,
+        };
+        if let Some(s) = slug {
+            if !have.contains(&s) {
+                rows.push(row.clone());
+                carried += 1;
+            }
+        }
+    }
+    if let Some(mi) = meta_i {
+        if let Value::Obj(meta) = &mut top[mi].1 {
+            if let Some((_, count)) = meta.iter_mut().find(|(k, _)| k == "repos") {
+                *count = Value::num(have.len() + carried);
+            }
+        }
+    }
+    let mut out = d.render();
+    out.push('\n');
+    super::json::parse(&out)
+        .map_err(|e| format!("rendered signals document does not re-parse: {e}"))?;
+    Ok(out)
+}
+
 /// Deterministic projection: rows sorted by repo, fixed key order, two-space
 /// indent - the shape `catalog/signals.schema.json` describes and the scanner
 /// in `rules::parse_signals` reads.
@@ -634,6 +759,130 @@ mod tests {
         assert_eq!(
             notes.get("owner/repo").map(String::as_str),
             Some("checked by hand")
+        );
+    }
+
+    #[test]
+    fn verify_update_replaces_a_claim_the_general_writer_wrote() {
+        let row = SignalRow {
+            repo: "a/b".into(),
+            observed_at: "2026-10-31".into(),
+            claim: Some(ClaimCheck {
+                numbers_found: 9,
+                numbers_total: 11,
+                support: Some(0.96),
+            }),
+            ..Default::default()
+        };
+        let old = json(&[row], "2026-10-31T00:00:00Z", false);
+        let doc = apply_claims(
+            &old,
+            &[(
+                "a/b".into(),
+                ClaimCheck {
+                    numbers_found: 1,
+                    numbers_total: 2,
+                    support: None,
+                },
+            )],
+        )
+        .expect("apply succeeds");
+        assert_eq!(
+            doc.matches("\"claim\"").count(),
+            1,
+            "duplicate claim keys:\n{doc}"
+        );
+        assert!(doc.contains("\"numbers_found\": 1"), "{doc}");
+        assert!(!doc.contains("\"numbers_found\": 9"), "{doc}");
+        assert!(!doc.contains("0.96"), "stale support survived:\n{doc}");
+    }
+
+    #[test]
+    fn claims_update_touches_only_the_named_repo() {
+        let mk = |repo: &str, nf: usize, nt: usize| SignalRow {
+            repo: repo.into(),
+            observed_at: "2026-10-31".into(),
+            claim: Some(ClaimCheck {
+                numbers_found: nf,
+                numbers_total: nt,
+                support: None,
+            }),
+            ..Default::default()
+        };
+        let old = json(
+            &[mk("a/aa", 1, 1), mk("b/bb", 2, 2)],
+            "2026-10-31T00:00:00Z",
+            false,
+        );
+        let doc = apply_claims(
+            &old,
+            &[(
+                "b/bb".into(),
+                ClaimCheck {
+                    numbers_found: 7,
+                    numbers_total: 9,
+                    support: Some(0.5),
+                },
+            )],
+        )
+        .expect("apply succeeds");
+        let a =
+            &doc[doc.find("\"repo\": \"a/aa\"").unwrap()..doc.find("\"repo\": \"b/bb\"").unwrap()];
+        assert!(
+            a.contains("\"numbers_found\": 1"),
+            "neighbor changed:\n{doc}"
+        );
+        assert!(
+            !a.contains("\"numbers_found\": 7"),
+            "check leaked into neighbor:\n{doc}"
+        );
+        assert!(doc.contains("\"support\": 0.50"), "{doc}");
+    }
+
+    #[test]
+    fn partial_collection_carries_absent_repos() {
+        let mk = |repo: &str, ts: &str, nf: usize, nt: usize| SignalRow {
+            repo: repo.into(),
+            observed_at: ts.into(),
+            claim: Some(ClaimCheck {
+                numbers_found: nf,
+                numbers_total: nt,
+                support: None,
+            }),
+            ..Default::default()
+        };
+        let full = json(
+            &[
+                mk("a/aa", "2026-10-30", 1, 1),
+                mk("b/bb", "2026-10-30", 2, 2),
+            ],
+            "2026-10-30T00:00:00Z",
+            false,
+        );
+        let partial = json(
+            &[mk("a/aa", "2026-11-19", 1, 1)],
+            "2026-11-19T00:00:00Z",
+            false,
+        );
+        let merged = carry_absent(&partial, &full).expect("merge succeeds");
+        assert!(
+            merged.contains("\"repo\": \"b/bb\""),
+            "absent repo dropped:\n{merged}"
+        );
+        assert!(merged.contains("2026-10-30"), "carried row lost its date");
+        assert!(
+            merged.contains("\"numbers_found\": 2"),
+            "carried row lost its claim"
+        );
+        let fresh = &merged[merged.find("\"repo\": \"a/aa\"").unwrap()
+            ..merged.find("\"repo\": \"b/bb\"").unwrap()];
+        assert!(
+            fresh.contains("2026-11-19"),
+            "fetched row was overwritten by the stale one:\n{merged}"
+        );
+        assert!(
+            merged.contains("\"repos\": 2"),
+            "row count not updated:\n{merged}"
         );
     }
 

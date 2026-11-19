@@ -143,86 +143,40 @@ pub fn run(cmd: Cmd, io: &(impl Source + Sink)) -> Report {
 /// rewrite data it did not measure.
 fn record_claims(io: &(impl Source + Sink), checks: &[(String, signals::ClaimCheck)]) {
     let raw = io.read_opt(SIGNALS).unwrap_or_default();
+    if raw.is_empty() {
+        eprintln!("verify: no {SIGNALS} to record into");
+        return;
+    }
     let by_name: std::collections::BTreeMap<&str, &signals::ClaimCheck> =
         checks.iter().map(|(n, c)| (n.as_str(), c)).collect();
     let model = markdown::parse_readme(&load(io, README));
 
-    // Build a lookup from repo slug -> entry name -> claim check
-    let mut slug_to_name = std::collections::BTreeMap::new();
+    // Checks arrive keyed by entry name; the signals file keys rows by slug.
+    let mut slug_checks: Vec<(String, signals::ClaimCheck)> = Vec::new();
     for e in &model.entries {
         if let Some(slug) = crate::domain::upstream::repo_slug(&e.url) {
-            slug_to_name.insert(slug, e.name.clone());
-        }
-    }
-
-    // Scan the JSON line by line. Track the current repo. When we hit a
-    // "claim" field inside an object we just emitted a repo for, skip it —
-    // we will write our own version right after the "repo" line.
-    let mut out = String::new();
-    let mut updated = 0usize;
-    let mut current_repo: Option<String> = None;
-    let mut skip_claim = false;
-
-    for line in raw.lines() {
-        let trimmed = line.trim();
-        let indent = line.len() - line.trim_start().len();
-
-        // Detect repo start
-        if let Some(rest) = trimmed.strip_prefix("\"repo\": \"") {
-            if let Some(slug) = rest.split('"').next() {
-                current_repo = Some(slug.to_string());
-                // If this repo has a check, emit the line then the claim field
-                if let Some(entry) = model
-                    .entries
-                    .iter()
-                    .find(|e| crate::domain::upstream::repo_slug(&e.url).as_deref() == Some(slug))
-                {
-                    if let Some(check) = by_name.get(entry.name.as_str()) {
-                        out.push_str(line);
-                        out.push('\n');
-                        let support = match check.support {
-                            Some(p) => format!(", \"support\": {p:.2}"),
-                            None => String::new(),
-                        };
-                        // Comma BEFORE the claim field (it closes the "repo" line above);
-                        // support goes INSIDE the claim object, not after it.
-                        out.push_str(&format!(
-                            "      \"claim\": {{\"numbers_found\": {}, \"numbers_total\": {}{}}},\n",
-                            check.numbers_found,
-                            check.numbers_total,
-                            support
-                        ));
-                        updated += 1;
-                        skip_claim = true;
-                        continue;
-                    }
-                }
+            if let Some(check) = by_name.get(e.name.as_str()) {
+                slug_checks.push((slug.to_string(), (*check).clone()));
             }
         }
-
-        // Skip an existing "claim" field inside the current repo's object
-        if skip_claim && trimmed.starts_with("\"claim\"") {
-            // Skip this line and its closing brace line if present
-            continue;
-        }
-        if skip_claim && trimmed.starts_with("\"unavailable\"") {
-            // This comes after claim in the original layout — we're past the claim field
-            skip_claim = false;
-        }
-        // Reset at the object's closing brace (or any line that ends the object)
-        if trimmed == "}" || trimmed == "}," {
-            skip_claim = false;
-        }
-
-        out.push_str(line);
-        out.push('\n');
     }
 
-    io.write(SIGNALS, &out);
-    eprintln!("verify: recorded claim checks for {updated} repos in {SIGNALS}");
+    match signals::apply_claims(&raw, &slug_checks) {
+        Ok(out) => {
+            io.write(SIGNALS, &out);
+            eprintln!(
+                "verify: recorded claim checks for {} repos in {SIGNALS}",
+                slug_checks.len()
+            );
+        }
+        // The re-parse gate refused the merge; the previous file stays as-is.
+        Err(e) => {
+            eprintln!("verify: refused to write {SIGNALS}: {e}");
+            std::process::exit(1);
+        }
+    }
 }
 
-/// Provenance check: does each measured card's number appear at its source?
 /// Provenance check: does each measured card's number appear at its source?
 ///
 /// Advisory by design. A pass means the figure was not invented or transposed;
@@ -461,12 +415,21 @@ pub fn run_signals(
 
     let generated_at = format!("{}T00:00:00Z", observed);
     let doc = signals::json(&rows, &generated_at, triage_on);
+    // A partial run (--only/--limit) must not erase the repos it did not
+    // fetch: their last-known rows, with claims and verdicts, carry over.
+    let doc = match signals::carry_absent(&doc, &previous) {
+        Ok(merged) => merged,
+        Err(e) => {
+            eprintln!("signals: carrying absent rows failed ({e}); writing the fetched set only");
+            doc
+        }
+    };
     io.write(SIGNALS, &doc);
 
     let flagged = rows.iter().filter(|r| !r.flags.is_empty()).count();
     let with_crate = rows.iter().filter(|r| r.krate.is_some()).count();
     let mut summary = format!(
-        "signals: {} repos, {} with a crate, {} flagged; triage {}; wrote {SIGNALS}",
+        "signals: {} fetched, {} with a crate, {} flagged; triage {}; wrote {SIGNALS}",
         rows.len(),
         with_crate,
         flagged,
