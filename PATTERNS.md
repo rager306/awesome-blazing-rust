@@ -4,23 +4,23 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 
 | Pattern | Used by | Removes |
 | --- | --- | --- |
-| `aes-ni` | ahash |  |
+| `aes-ni` | ahash, fastdedup |  |
 | `alloc-tracking` | divan, dhat, hotpath-rs |  |
 | `arrangement-indexing` | differential-dataflow |  |
-| `async-native` | quinn, hyper, ntex, plumbrs |  |
-| `automata-compilation` | regex, aho-corasick |  |
+| `async-native` | quinn, hyper, ntex, plumbrs, orion, redistill |  |
+| `automata-compilation` | regex, aho-corasick, alyze, wordchipper |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring, SurrealKV |  |
-| `bitmap-index` | roaring-rs |  |
+| `batching` | io-uring, SurrealKV, apache/iggy, lionturtle, emdb, redistill |  |
+| `bitmap-index` | roaring-rs, fast-grep-rust |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
-| `c-binding` | zstd-safe |  |
-| `cache-conscious-layout` | hashbrown, taffy, eg-strider |  |
+| `c-binding` | zstd-safe, lionturtle, NumKong, ForkUnion |  |
+| `cache-conscious-layout` | hashbrown, taffy, eg-strider, sparx, radixox, rust-tango, ForkUnion |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
-| `columnar` | tantivy, polars, apache-arrow-rs, datafusion |  |
+| `columnar` | tantivy, polars, apache-arrow-rs, datafusion, fastdedup, vortex |  |
 | `columnar-layout-optional` | ndarray |  |
 | `combinators` | winnow, ntex |  |
 | `compact-index` | indexmap |  |
@@ -30,21 +30,21 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, mzstd, molar, wordchipper, gzippy, flock, ForkUnion |  |
 | `datalog` | cozo |  |
 | `declarative-dsl` | slint |  |
 | `density-dependent` | roaring-rs |  |
 | `dst-in-ci` | shuttle |  |
 | `elm-architecture` | crux |  |
-| `embedded` | cozo, SurrealKV |  |
+| `embedded` | cozo, SurrealKV, cesiumdb, mace |  |
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
-| `extensible` | datafusion |  |
+| `extensible` | datafusion, vortex |  |
 | `feature-gated-safety` | lz4_flex |  |
 | [`findings-as-verdicts`](decisions/002-findings-as-verdicts.md) | uringscope, uringscope SKILL.md |  |
-| `finite-fields` | arkworks |  |
+| `finite-fields` | arkworks, flock |  |
 | `finite-state-transducer` | fst |  |
-| `generic-graph` | petgraph, graphrs |  |
+| `generic-graph` | petgraph, graphrs, sparx |  |
 | `generic-vertices` | pathfinding |  |
 | `gpu-rendered-ui` | zed, gpui-kit, dbdelve |  |
 | `hamt` | im |  |
@@ -58,58 +58,58 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `inline-keys` | bbtree |  |
 | `inline-storage` | smallvec |  |
 | `invariants-as-tests` | nachalnik |  |
-| `inverted-index` | tantivy |  |
+| `inverted-index` | tantivy, fast-grep-rust |  |
 | `io-driver` | tokio |  |
-| `io-uring` | glommio, monoio, io-uring, statico, plumbrs |  |
+| `io-uring` | glommio, monoio, io-uring, statico, plumbrs, apache/iggy, radixox, spargio |  |
 | `jit` | wasmtime, blaze |  |
 | `join-split` | rayon |  |
-| `kernel-fusion` | burn |  |
+| `kernel-fusion` | burn, NumKong |  |
 | `kernel-matrix-in-ci` | uringscope |  |
-| `lock-free` | crossbeam |  |
-| `lock-free-parallel-walk` | ripgrep |  |
-| `lsm` | fjall, SlateDB, SurrealKV |  |
-| `lsm-plus-btree` | sled |  |
+| `lock-free` | crossbeam, zero-pool, rust-tango, ForkUnion, emdb |  |
+| `lock-free-parallel-walk` | ripgrep, ffind |  |
+| `lsm` | fjall, SlateDB, SurrealKV, cesiumdb |  |
+| `lsm-plus-btree` | sled, mace |  |
 | [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
 | `merkle-tree` | blake3 |  |
 | `miri-in-ci` | miri |  |
 | `multi-core-hash` | blake3 |  |
 | `no-python` | candle |  |
-| `no-std-friendly` | arkworks |  |
+| `no-std-friendly` | arkworks, mzstd, wordchipper, rust-tango |  |
 | `object-storage` | SlateDB |  |
 | `own-renderer` | zed |  |
-| `parallel-algos` | rustworkx, graphrs |  |
+| `parallel-algos` | rustworkx, graphrs, sparx |  |
 | `partitioned` | fjall |  |
 | `perf-integration` | cargo-flamegraph |  |
 | `pgo` | cargo-pgo |  |
 | `poseidon2-gf2` | paramo1d |  |
 | `prefilter` | regex |  |
-| `prefix-keys` | bbtree |  |
+| `prefix-keys` | bbtree, radixox |  |
 | [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
-| `pure-rust-port` | lz4_flex, gitoxide, jaq |  |
-| `python-bridge` | rustworkx |  |
-| `quality-vs-speed` | qdrant, foldhash |  |
-| `quantization` | qdrant |  |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq, mzstd, solar, rust-tango |  |
+| `python-bridge` | rustworkx, molar |  |
+| `quality-vs-speed` | qdrant, foldhash, pgvectorscale |  |
+| `quantization` | qdrant, pgvectorscale |  |
 | `query-optimization` | polars, datafusion |  |
 | `rank-select` | sux |  |
 | `read-optimized` | papaya |  |
-| `recursive-proofs` | paramo1d |  |
+| `recursive-proofs` | paramo1d, flock |  |
 | `relative-pointers` | rkyv |  |
-| `runtime-dispatch` | faer, pulp |  |
+| `runtime-dispatch` | faer, pulp, NumKong |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio |  |
+| `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
-| `statistical-rigor` | hyperfine, criterion |  |
+| `statistical-rigor` | hyperfine, criterion, solar |  |
 | `storage-backend-flag` | oxigraph |  |
 | `stringview` | apache-arrow-rs, datafusion |  |
 | `structural-sharing` | im |  |
 | `succinct` | sux |  |
 | `table-driven` | crc32fast |  |
 | `tape-representation` | simd-json |  |
-| `thread-per-core` | glommio, monoio, statico |  |
+| `thread-per-core` | glommio, monoio, statico, orion, apache/iggy, radixox |  |
 | `tls-13` | quinn |  |
 | `typed-effects` | crux |  |
 | `typed-parse-direct` | sonic-rs |  |
@@ -121,8 +121,8 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `views` | ndarray |  |
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
-| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff |  |
+| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
