@@ -209,8 +209,6 @@ pub fn bucket(p: Option<f64>) -> Bucket {
     }
 }
 
-/// Verdicts and notes a human wrote are preserved across recollects: a
-/// scheduled job must not overwrite a maintainer's decision.
 pub fn parse_previous(
     raw: &str,
 ) -> (
@@ -221,23 +219,21 @@ pub fn parse_previous(
     let mut notes = std::collections::BTreeMap::new();
     let mut repo: Option<String> = None;
     for line in raw.lines() {
-        let t = line.trim();
-        if let Some(rest) = t.strip_prefix("\"repo\": \"") {
+        let trimmed = line.trim();
+        if let Some(rest) = trimmed.strip_prefix("\"repo\": \"") {
             repo = rest.split('"').next().map(str::to_string);
             continue;
         }
         let Some(current) = repo.as_ref() else {
             continue;
         };
-        if let Some(rest) = t.strip_prefix("\"verdict\": \"") {
+        if let Some(rest) = trimmed.strip_prefix("\"verdict\": \"") {
             if let Some(v) = rest.split('"').next() {
                 if !v.is_empty() {
                     verdicts.insert(current.clone(), v.to_string());
                 }
             }
-        } else if let Some(rest) = t.strip_prefix("\"notes\": \"") {
-            // The writer emits `"notes": "..."` on one line, optionally followed
-            // by a comma; escaped quotes inside a note are not re-read.
+        } else if let Some(rest) = trimmed.strip_prefix("\"notes\": \"") {
             let v = rest.trim_end().trim_end_matches(',').trim_end_matches('"');
             if !v.is_empty() {
                 notes.insert(current.clone(), v.to_string());
@@ -245,6 +241,80 @@ pub fn parse_previous(
         }
     }
     (verdicts, notes)
+}
+
+/// Parse claim check data alongside verdicts and notes.
+/// Returns (verdicts, notes, claims) - each keyed by repo slug.
+pub fn parse_previous_with_claims(
+    raw: &str,
+) -> (
+    std::collections::BTreeMap<String, String>,
+    std::collections::BTreeMap<String, String>,
+    std::collections::BTreeMap<String, ClaimCheck>,
+) {
+    let (v, n) = parse_previous(raw);
+    // Re-scan for claim blocks: "claim": { "numbers_found": N, "numbers_total": N, "support": P }
+    let mut claims = std::collections::BTreeMap::new();
+    let mut repo: Option<String> = None;
+    let mut found_nf = None;
+    let mut found_nt = None;
+    let mut found_support = None;
+    for line in raw.lines() {
+        let trimmed = line.trim();
+        if let Some(rest) = trimmed.strip_prefix("\"repo\": \"") {
+            if let Some(slug) = rest.split('"').next() {
+                repo = Some(slug.to_string());
+            }
+            continue;
+        }
+        let Some(current) = repo.as_ref() else {
+            continue;
+        };
+        if let Some(rest) = trimmed.strip_prefix("\"claim\": {") {
+            if let Some(nf) = rest
+                .strip_prefix("{\"numbers_found\": ")
+                .and_then(|r| r.split(", ").next())
+            {
+                found_nf = nf.parse::<usize>().ok();
+            }
+            continue;
+        }
+        if let Some(rest) = trimmed.strip_prefix("\"numbers_found\": ") {
+            if let Ok(n) = rest.trim_end_matches(',').parse::<usize>() {
+                found_nf = Some(n);
+            }
+            continue;
+        }
+        if let Some(rest) = trimmed.strip_prefix("\"numbers_total\": ") {
+            if let Ok(n) = rest.trim_end_matches(',').parse::<usize>() {
+                found_nt = Some(n);
+            }
+            continue;
+        }
+        if let Some(rest) = trimmed.strip_prefix("\"support\": ") {
+            if let Ok(p) = rest.trim_end_matches(',').parse::<f64>() {
+                found_support = Some(p);
+            }
+            continue;
+        }
+        // Object closing - emit if we have enough data
+        if trimmed.starts_with('}') || trimmed.starts_with("},") || trimmed.starts_with('}') {
+            if let (Some(nf), Some(nt)) = (found_nf, found_nt) {
+                claims.insert(
+                    current.clone(),
+                    ClaimCheck {
+                        numbers_found: nf,
+                        numbers_total: nt,
+                        support: found_support,
+                    },
+                );
+            }
+            found_nf = None;
+            found_nt = None;
+            found_support = None;
+        }
+    }
+    (v, n, claims)
 }
 
 /// Deterministic projection: rows sorted by repo, fixed key order, two-space

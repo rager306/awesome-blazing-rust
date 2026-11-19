@@ -357,7 +357,7 @@ pub fn run_signals(
     }
 
     let previous = io.read_opt(SIGNALS).unwrap_or_default();
-    let (verdicts, notes) = signals::parse_previous(&previous);
+    let (verdicts, notes, claims) = signals::parse_previous_with_claims(&previous);
     let triage_on = opts.triage && decisions.model_available();
     let today = signals::today_days();
     let observed = signals::today_utc();
@@ -426,6 +426,7 @@ pub fn run_signals(
         rows.push(SignalRow {
             repo: slug.clone(),
             observed_at: observed.clone(),
+            claim: claims.get(slug).cloned(),
             archived,
             pushed_at,
             stars: health.as_ref().and_then(|h| h.stars),
@@ -452,7 +453,7 @@ pub fn run_signals(
                 u
             },
             flags,
-            claim: None, // filled by `run_verify` when it writes the report
+
             verdict: verdicts.get(slug).cloned(),
             notes: notes.get(slug).cloned(),
         });
