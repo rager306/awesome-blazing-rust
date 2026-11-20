@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "affinitypool",
+      "url": "https://github.com/surrealdb/affinitypool",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "blocking-job thread pool for async runtimes, forked from `threadpool`, where each producer hashes its thread ID to its own queue shard and idle workers steal across shards",
+      "blazing": "criterion midpoints: `multi_producer/4p_4w` 276.5 µs vs 1.70 ms tokio::spawn_blocking (~6×) and 992.9 µs rayon; `spawn_overhead/1w/1000` 150.0 µs vs 811.0 µs rayon — the same [README table](https://github.com/surrealdb/affinitypool#benchmarks) marks rows where rayon/threadpool win instead.",
+      "arch": ["sharding", "work-stealing"]
     }
   ]
 }

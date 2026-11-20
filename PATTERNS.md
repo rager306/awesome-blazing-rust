@@ -96,7 +96,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp, NumKong |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill |  |
+| `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill, affinitypool |  |
 | `shuttle-in-ci` | bbtree |  |
 | `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
@@ -121,7 +121,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `views` | ndarray |  |
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
-| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio |  |
+| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio, affinitypool |  |
 | `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex |  |
 | `zero-macro-ergonomics` | axum |  |
 
