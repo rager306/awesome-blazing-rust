@@ -30,7 +30,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `const-generics` | nalgebra |  |
 | `copy-on-write` | redb |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
-| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, mzstd, molar, wordchipper, gzippy, flock, ForkUnion |  |
+| `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, mzstd, molar, wordchipper, gzippy, flock, ForkUnion, youpipe |  |
 | `datalog` | cozo |  |
 | `declarative-dsl` | slint |  |
 | `density-dependent` | roaring-rs |  |
@@ -63,7 +63,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `io-uring` | glommio, monoio, io-uring, statico, plumbrs, apache/iggy, radixox, spargio |  |
 | `jit` | wasmtime, blaze |  |
 | `join-split` | rayon |  |
-| `kernel-fusion` | burn, NumKong |  |
+| `kernel-fusion` | burn, NumKong, youpipe |  |
 | `kernel-matrix-in-ci` | uringscope |  |
 | `lock-free` | crossbeam, zero-pool, rust-tango, ForkUnion, emdb |  |
 | `lock-free-parallel-walk` | ripgrep, ffind |  |
@@ -121,7 +121,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `views` | ndarray |  |
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
-| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio |  |
+| `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio, youpipe |  |
 | `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex |  |
 | `zero-macro-ergonomics` | axum |  |
 

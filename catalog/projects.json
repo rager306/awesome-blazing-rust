@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "youpipe",
+      "url": "https://github.com/lxl66566/youpipe",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "parallel pipeline library whose map/filter stages fuse into one compiled loop on a rayon-core-derived work-stealing scheduler, with bounded-channel sync-plus-async stages and runtime DAG graphs",
+      "blazing": "author benchmarks on a 32-core AMD Zen Linux box (criterion, [methodology](https://github.com/lxl66566/youpipe/blob/main/docs/src/dev/benchmarks/README.md), interleaved CPU-pinned A/B rounds): up to ~5× vs rayon on 1K–100K-element CPU pipelines, parity at 1M+ where memory bandwidth saturates; up to 25% vs hand-written tokio-channel pipelines on three-stage work; concedes to sequential iterators below ~10 µs of total work ([results](https://github.com/lxl66566/youpipe#performance)).",
+      "arch": ["work-stealing", "kernel-fusion", "data-parallel"]
     }
   ]
 }
