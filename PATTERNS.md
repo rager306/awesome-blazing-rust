@@ -18,7 +18,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `bulk-loading` | rstar |  |
 | `c-binding` | zstd-safe, lionturtle, NumKong, ForkUnion |  |
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider, sparx, radixox, rust-tango, ForkUnion |  |
-| `classical-algorithms` | num-bigint, rust-bio |  |
+| `classical-algorithms` | num-bigint, rust-bio, sthash |  |
 | `code-layout` | cargo-pgo |  |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion, fastdedup, vortex |  |
 | `columnar-layout-optional` | ndarray |  |
