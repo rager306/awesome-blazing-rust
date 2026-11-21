@@ -57,7 +57,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `incremental-view-maintenance` | differential-dataflow, eg-strider |  |
 | `inline-keys` | bbtree |  |
 | `inline-storage` | smallvec |  |
-| `invariants-as-tests` | nachalnik |  |
+| `invariants-as-tests` | nachalnik, xsat |  |
 | `inverted-index` | tantivy, fast-grep-rust |  |
 | `io-driver` | tokio |  |
 | `io-uring` | glommio, monoio, io-uring, statico, plumbrs, apache/iggy, radixox, spargio |  |
@@ -84,8 +84,8 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `poseidon2-gf2` | paramo1d |  |
 | `prefilter` | regex |  |
 | `prefix-keys` | bbtree, radixox |  |
-| [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
-| `pure-rust-port` | lz4_flex, gitoxide, jaq, mzstd, solar, rust-tango |  |
+| [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus, xsat |  |
+| `pure-rust-port` | lz4_flex, gitoxide, jaq, mzstd, solar, rust-tango, xsat |  |
 | `python-bridge` | rustworkx, molar |  |
 | `quality-vs-speed` | qdrant, foldhash, pgvectorscale |  |
 | `quantization` | qdrant, pgvectorscale |  |
