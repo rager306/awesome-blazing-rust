@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "xsat",
+      "url": "https://github.com/orkait/xsat",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "CDCL SAT solver in 100% safe Rust, a function-for-function port of Kissat 4.0.4 with incremental solving, IDRUP proofs, XOR Gaussian elimination and a deterministic parallel portfolio",
+      "blazing": "1.04x geometric mean vs Kissat 4.0.4 (gcc -O3) on eight SAT Competition 2025 instances at a 600 s limit, single core, one run each - [benchmarks.md](https://github.com/orkait/xsat/blob/main/docs/benchmarks.md); correctness artifact: identical conflict/decision/propagation counts and byte-identical DRAT proofs vs Kissat, checked by drat-trim/lrat-check.",
+      "arch": ["pure-rust-port", "invariants-as-tests", "proof-carrying-performance"]
     }
   ]
 }
