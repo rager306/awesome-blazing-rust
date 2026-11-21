@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "polyxor",
+      "url": "https://github.com/orlp/polyxor",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "PolyXOR128, a keyed 128-bit universal hash for stream integrity with its collision bound machine-checked in Lean",
+      "blazing": "126 GB/s single-thread at 16 MiB on a Ryzen 9950X (best of five 0.1 s runs, `target-cpu=native`, [CSV data](https://raw.githubusercontent.com/orlp/polyxor/master/assets/ryzen-9950x.csv)) - ~1.2x vs XXH3-128 (103 GB/s) and ~9x vs BLAKE3 (13.6 GB/s) in the same harness.",
+      "arch": ["simd", "runtime-dispatch", "proof-carrying-performance"]
     }
   ]
 }
