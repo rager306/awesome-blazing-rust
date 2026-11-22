@@ -20,7 +20,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider, sparx, radixox, rust-tango, ForkUnion |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
-| `columnar` | tantivy, polars, apache-arrow-rs, datafusion, fastdedup, vortex |  |
+| `columnar` | tantivy, polars, apache-arrow-rs, datafusion, fastdedup, vortex, burrmill |  |
 | `columnar-layout-optional` | ndarray |  |
 | `combinators` | winnow, ntex |  |
 | `compact-index` | indexmap |  |
@@ -69,7 +69,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `lock-free-parallel-walk` | ripgrep, ffind |  |
 | `lsm` | fjall, SlateDB, SurrealKV, cesiumdb |  |
 | `lsm-plus-btree` | sled, mace |  |
-| [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d |  |
+| [`memory-bounded-streaming`](decisions/004-memory-bounded-streaming.md) | paramo1d, burrmill |  |
 | `merkle-tree` | blake3 |  |
 | `miri-in-ci` | miri |  |
 | `multi-core-hash` | blake3 |  |
@@ -89,7 +89,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `python-bridge` | rustworkx, molar |  |
 | `quality-vs-speed` | qdrant, foldhash, pgvectorscale |  |
 | `quantization` | qdrant, pgvectorscale |  |
-| `query-optimization` | polars, datafusion |  |
+| `query-optimization` | polars, datafusion, burrmill |  |
 | `rank-select` | sux |  |
 | `read-optimized` | papaya |  |
 | `recursive-proofs` | paramo1d, flock |  |
