@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "speedy",
+      "url": "https://github.com/ewwhardik/speedy",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "third-party",
+      "description": "single-file, zero-dependency Rust engine that reads 3.1M web-server log lines and emits per-hour/per-endpoint counts, p50/p95/p99 latencies and 5xx rate (Speed Demon 2026 contest, ingest track)",
+      "blazing": "19 ms and 16 MB peak vs the organisers' Python reference at 32.05 s and 228 MB on the contest scoring box (12 threads, turbo off, byte-exact output check) - ~1,690x, each step tied to a leaderboard run ID in [PERF.md](https://github.com/ewwhardik/speedy/blob/speed-demon/track-a/PERF.md).",
+      "arch": ["simd", "branchless", "data-parallel", "zero-copy"]
     }
   ]
 }
