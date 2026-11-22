@@ -84,7 +84,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `poseidon2-gf2` | paramo1d |  |
 | `prefilter` | regex |  |
 | `prefix-keys` | bbtree, radixox |  |
-| [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus |  |
+| [`proof-carrying-performance`](decisions/003-proof-carrying-performance.md) | verus, polyxor |  |
 | `pure-rust-port` | lz4_flex, gitoxide, jaq, mzstd, solar, rust-tango |  |
 | `python-bridge` | rustworkx, molar |  |
 | `quality-vs-speed` | qdrant, foldhash, pgvectorscale |  |
@@ -94,11 +94,11 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `read-optimized` | papaya |  |
 | `recursive-proofs` | paramo1d, flock |  |
 | `relative-pointers` | rkyv |  |
-| `runtime-dispatch` | faer, pulp, NumKong |  |
+| `runtime-dispatch` | faer, pulp, NumKong, polyxor |  |
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock, polyxor |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
