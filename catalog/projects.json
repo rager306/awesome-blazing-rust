@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "unumsearch",
+      "url": "https://github.com/corpunum/unumsearch",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "trigram-indexed code/file search engine (CLI, daemon, MCP server) that answers ripgrep-compatible queries from a memory-mapped index instead of re-reading every file",
+      "blazing": "217 ms vs 4.03 s for ripgrep 15.1 (18.6x) over 12 agent queries on 258k files, and 64 ms vs 347 ms median per query on 247k files, with identical file lists to rg on 12/12 and 19/20 queries; the honest flip side is the one-shot CLI losing to rg on a small repo (12 vs 9.8 ms) ([method + weak spots](https://github.com/corpunum/unumsearch/blob/main/docs/BENCHMARKS.md)).",
+      "arch": ["inverted-index", "prefilter", "zero-copy", "incremental-view-maintenance"]
     }
   ]
 }
