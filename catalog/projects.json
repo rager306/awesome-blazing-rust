@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "nosj",
+      "url": "https://github.com/yaroslav/nosj",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "DOM-less JSON parser and writer that hands the caller parse events so host code builds its own values directly (no intermediate tree), plus JSON Pointer lookup over raw bytes without parsing",
+      "blazing": "6,666 vs 1,212 MB/s vs serde_json on gsoc-2018 parse and 12,101 vs 4,461 on tolstoy (2-19x serde_json across the suite), ahead of sonic-rs and simd-json on most parse rows but behind sonic-rs on most generate rows — table marks the losses; whole-binary PGO with every contender trained equally, AWS c7a.2xlarge EPYC 9R14 Zen 4, rustc 1.97 ([benchmarks](https://github.com/yaroslav/nosj#benchmarks)).",
+      "arch": ["simd", "runtime-dispatch", "zero-copy", "typed-parse-direct"]
     }
   ]
 }
