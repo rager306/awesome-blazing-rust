@@ -94,11 +94,11 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `read-optimized` | papaya |  |
 | `recursive-proofs` | paramo1d, flock |  |
 | `relative-pointers` | rkyv |  |
-| `runtime-dispatch` | faer, pulp, NumKong |  |
+| `runtime-dispatch` | faer, pulp, NumKong, asmjson |  |
 | `sandboxing` | wasmtime, nachalnik |  |
 | `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill |  |
 | `shuttle-in-ci` | bbtree |  |
-| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock |  |
+| `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock, asmjson |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
@@ -108,7 +108,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `structural-sharing` | im |  |
 | `succinct` | sux |  |
 | `table-driven` | crc32fast |  |
-| `tape-representation` | simd-json |  |
+| `tape-representation` | simd-json, asmjson |  |
 | `thread-per-core` | glommio, monoio, statico, orion, apache/iggy, radixox |  |
 | `tls-13` | quinn |  |
 | `typed-effects` | crux |  |
