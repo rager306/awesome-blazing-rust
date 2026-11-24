@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "aquatic",
+      "url": "https://github.com/greatest-ape/aquatic",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "open BitTorrent tracker for UDP, HTTP and WebTorrent, holding all peer state in memory with one worker thread per socket",
+      "blazing": "the repo's [bencher comparison](https://github.com/greatest-ape/aquatic/blob/master/documents/aquatic-udp-load-test-2024-02-10.md) on a 48-vCPU AMD Epyc server shows the io_uring build answering 2,258,321 requests/s at 16 cores vs opentracker 1,645,828 and chihaya 127,256; in production explodie.org serves ~98,000 requests/s ([tracker stats](https://explodie.org/tracker-stats.html)).",
+      "arch": ["io-uring", "thread-per-core"]
     }
   ]
 }
