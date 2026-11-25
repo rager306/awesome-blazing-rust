@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "ultima_db",
+      "url": "https://github.com/PeterKnego/ultima_db",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "embedded transactional store on a copy-on-write MVCC B-tree, RAM-resident with opt-in fsync-acknowledged WAL durability, single-threaded B-tree core proven in Lean 4",
+      "blazing": "author-run fsync-durable YCSB on an 8-vCPU AWS local-NVMe host: 5.81M ops/s read-only (4.2× vs Fjall), 42.4k ops/s update-heavy (1.8× vs Fjall), 336k ops/s short-range scans (5.4× vs redb) — fastest of RocksDB/Fjall/redb on all six durable workloads, 1.8–5.4×, caveats stated in-repo ([results + methodology](https://github.com/PeterKnego/ultima_db/blob/main/docs/benchmarks/competitor-nvme-2026-07-13.md)).",
+      "arch": ["copy-on-write", "embedded"]
     }
   ]
 }
