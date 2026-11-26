@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "asmjson",
+      "url": "https://github.com/atomicincrement/asmjson",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "JSON parser classifying 64 input bytes per step with hand-written AVX-512BW assembly, a portable SWAR (no-SIMD) fallback, and a flat token-tape output; self-labeled experimental, not production ready",
+      "blazing": "10.93 GiB/s single-threaded DOM parse on 10 MiB synthetic JSON via `cargo bench` (parse + full traversal), ~1.6x vs sonic-rs at 6.92 GiB/s on string arrays; even the assembly-free SWAR path leads sonic-rs 4.91 vs 4.06 GiB/s on string objects; 26.6 GiB/s across 1024 Rayon tasks on 1 GiB JSON Lines ([benchmarks](https://github.com/atomicincrement/asmjson#benchmarks)).",
+      "arch": ["simd", "runtime-dispatch", "tape-representation"]
     }
   ]
 }
