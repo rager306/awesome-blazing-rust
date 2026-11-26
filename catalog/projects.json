@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "jzon-rs",
+      "url": "https://github.com/Rajaniraiyn/jzon-rs",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "Zero-copy JSON whose proc-macro generates a monomorphised typed parser/serializer per struct at compile time, with an any-serde-type mode and a drop-in serde_json patch crate",
+      "blazing": "author-run CI benchmarks vs serde_json/sonic-rs/simd-json ([BENCHMARKS.md](https://github.com/Rajaniraiyn/jzon-rs/blob/main/BENCHMARKS.md)): 3.9x vs serde_json on twitter serialize (57.70 vs 14.86 GiB/s, x86_64 Linux AVX2), best-platform peaks 2.4x vs sonic-rs and 3.6x vs simd-json (criterion medians, five platforms); loses twitter deserialize to serde_json on 3 of 5 platforms, and headline tables are per-run high-water marks.",
+      "arch": ["zero-copy", "typed-parse-direct", "simd"]
     }
   ]
 }
