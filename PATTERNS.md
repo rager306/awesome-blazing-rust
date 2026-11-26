@@ -60,7 +60,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `invariants-as-tests` | nachalnik |  |
 | `inverted-index` | tantivy, fast-grep-rust |  |
 | `io-driver` | tokio |  |
-| `io-uring` | glommio, monoio, io-uring, statico, plumbrs, apache/iggy, radixox, spargio |  |
+| `io-uring` | glommio, monoio, io-uring, statico, plumbrs, apache/iggy, radixox, spargio, aquatic |  |
 | `jit` | wasmtime, blaze |  |
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn, NumKong |  |
@@ -109,7 +109,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `succinct` | sux |  |
 | `table-driven` | crc32fast |  |
 | `tape-representation` | simd-json |  |
-| `thread-per-core` | glommio, monoio, statico, orion, apache/iggy, radixox |  |
+| `thread-per-core` | glommio, monoio, statico, orion, apache/iggy, radixox, aquatic |  |
 | `tls-13` | quinn |  |
 | `typed-effects` | crux |  |
 | `typed-parse-direct` | sonic-rs |  |
