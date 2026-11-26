@@ -7,7 +7,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `aes-ni` | ahash, fastdedup |  |
 | `alloc-tracking` | divan, dhat, hotpath-rs |  |
 | `arrangement-indexing` | differential-dataflow |  |
-| `async-native` | quinn, hyper, ntex, plumbrs, orion, redistill |  |
+| `async-native` | quinn, hyper, ntex, plumbrs, orion, redistill, xitca-web |  |
 | `automata-compilation` | regex, aho-corasick, alyze, wordchipper |  |
 | `backend-trait` | candle, burn |  |
 | `batching` | io-uring, SurrealKV, apache/iggy, lionturtle, emdb, redistill |  |
@@ -122,7 +122,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `wakeup-contract` | strict-future-contract |  |
 | `window-tinylfu` | moka |  |
 | `work-stealing` | tokio, rayon, pingora, ruff, graphrs, may_minihttp, ffind, spargio |  |
-| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex |  |
+| `zero-copy` | ripgrep, sux, itertools, winnow, apache-arrow-rs, rkyv, gitoxide, oxc, statico, ruff, orion, fast-grep-rust, sparx, gzippy, rust-tango, vortex, xitca-web |  |
 | `zero-macro-ergonomics` | axum |  |
 
 ---
