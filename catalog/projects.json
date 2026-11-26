@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "blaze-bpe",
+      "url": "https://github.com/Lulzx/blaze-bpe",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "tiktoken-compatible BPE tokenizer in Rust producing byte-identical output to OpenAI's tiktoken for the cl100k_base/o200k_base encodings (verified against tiktoken-rs on fuzz strings and full corpora), with tiktoken's regex pre-tokenizer replaced by a hand-written NEON bitmask scanner plus per-thread direct-mapped piece caches",
+      "blazing": "single-thread, Apple Silicon, vs tiktoken-rs 0.6: 543.5 vs 14.6 MB/s on English prose (37x) and 724.5 vs 12.1 MB/s on source code (60x); a same-machine showdown with identical token counts across implementations ranks it 617 MB/s vs fastokens 174, omnitoken 60, Python tiktoken 22, HF tokenizers 4.7; rayon batch encode ~3.0 GB/s ([benchmarks](https://github.com/Lulzx/blaze-bpe#benchmarks)); openly documents the size crossover where gigatoken overtakes it at 1 GB (3.75 vs 2.05 GB/s on OpenWebText).",
+      "arch": ["simd", "data-parallel", "cache-conscious-layout", "branchless"]
     }
   ]
 }
