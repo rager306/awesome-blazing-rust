@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "falx",
+      "url": "https://github.com/Mapika/falx",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "parser generator that compiles a declarative format spec (CSV, TSV, logfmt, NDJSON, FASTQ, VCF, BGZF containers) into a standalone std-only Rust parser with runtime-dispatched SIMD kernels, typed Arrow-style column output, and fused parallel aggregation",
+      "blazing": "on 1 GiB files, Xeon w7-3455, 24 threads: CSV column materialization 9.63 GiB/s vs Polars 1.41.2 at 4.64 GiB/s (2.1x), fused CSV aggregation 9.80 vs 2.04 GiB/s (4.8x), NDJSON schema-aware sum 38.19 GiB/s vs simdjson C++ 2.76 GiB/s (a skip-in-document-parsing lane the README bounds itself), BGZF streaming ~1.4x over htslib bgzip, with checksum parity against baselines and per-lane repro commands ([benchmark matrix](https://github.com/Mapika/falx#current-status)).",
+      "arch": ["simd", "runtime-dispatch", "data-parallel"]
     }
   ]
 }
