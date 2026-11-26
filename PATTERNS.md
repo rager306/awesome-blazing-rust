@@ -28,7 +28,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `component-layer` | gpui-kit |  |
 | `connection-coalescing` | pingora |  |
 | `const-generics` | nalgebra |  |
-| `copy-on-write` | redb |  |
+| `copy-on-write` | redb, ultima_db |  |
 | [`cost-model-driven`](decisions/001-cost-model-driven.md) | bbtree |  |
 | `data-parallel` | differential-dataflow, flashraw, gitoxide, oxc, mzstd, molar, wordchipper, gzippy, flock, ForkUnion |  |
 | `datalog` | cozo |  |
@@ -36,7 +36,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `density-dependent` | roaring-rs |  |
 | `dst-in-ci` | shuttle |  |
 | `elm-architecture` | crux |  |
-| `embedded` | cozo, SurrealKV, canopydb, cesiumdb, mace |  |
+| `embedded` | cozo, SurrealKV, canopydb, cesiumdb, mace, ultima_db |  |
 | `embedded-first` | slint |  |
 | `epoch-reclamation` | crossbeam |  |
 | `extensible` | datafusion, vortex |  |
