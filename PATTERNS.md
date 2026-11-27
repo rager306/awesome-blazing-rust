@@ -17,7 +17,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
 | `c-binding` | zstd-safe, lionturtle, NumKong, ForkUnion |  |
-| `cache-conscious-layout` | hashbrown, taffy, eg-strider, sparx, radixox, rust-tango, ForkUnion |  |
+| `cache-conscious-layout` | hashbrown, taffy, eg-strider, sparx, radixox, rust-tango, ForkUnion, leapfrog |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
 | `columnar` | tantivy, polars, apache-arrow-rs, datafusion, fastdedup, vortex |  |
@@ -65,7 +65,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `join-split` | rayon |  |
 | `kernel-fusion` | burn, NumKong |  |
 | `kernel-matrix-in-ci` | uringscope |  |
-| `lock-free` | crossbeam, zero-pool, rust-tango, ForkUnion, emdb |  |
+| `lock-free` | crossbeam, zero-pool, rust-tango, ForkUnion, emdb, leapfrog |  |
 | `lock-free-parallel-walk` | ripgrep, ffind |  |
 | `lsm` | fjall, SlateDB, SurrealKV, cesiumdb |  |
 | `lsm-plus-btree` | sled, mace |  |
@@ -91,7 +91,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `quantization` | qdrant, pgvectorscale |  |
 | `query-optimization` | polars, datafusion |  |
 | `rank-select` | sux |  |
-| `read-optimized` | papaya |  |
+| `read-optimized` | papaya, leapfrog |  |
 | `recursive-proofs` | paramo1d, flock |  |
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp, NumKong |  |
