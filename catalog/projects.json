@@ -1208,6 +1208,16 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "leapfrog",
+      "url": "https://github.com/robclu/leapfrog",
+      "section": "Candidates",
+      "type": "measured",
+      "measured_by": "author",
+      "description": "lock-free concurrent hash map (`LeapMap`) plus a single-threaded map, both built on leapfrog probing",
+      "blazing": "read-heavy workload on a 16-core Ryzen 3950X: 148.0 Mops/s vs DashMap 87.5, Flurry 80.8 and RwLock `HashMap` 11.7 (7.6x vs the lock baseline, 1.7x vs DashMap); 12-core M2 Max: 106.1 vs DashMap 42.2 (5x vs lock); single-threaded ~50 Mops/s vs std `HashMap` ~40 ([README tables](https://github.com/robclu/leapfrog#performance), methodology in the [conc-map-bench fork](https://github.com/robclu/conc-map-bench)).",
+      "arch": ["lock-free", "read-optimized", "cache-conscious-layout"]
     }
   ]
 }
