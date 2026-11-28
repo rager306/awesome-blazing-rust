@@ -1208,6 +1208,15 @@
       "description": "Redis-compatible in-memory key-value store in Rust (Tokio + sharded DashMap, RESP, optional RDB/AOF persistence)",
       "blazing": "self-run memtier_benchmark on one AWS c7i.16xlarge (64 cores): 9.07M ops/s at 160 connections, pipeline 30, 256B values, 1:1 SET:GET vs DragonflyDB 5.43M (1.7x) and Redis 7.0 2.03M (4.5x), p50 0.479ms vs Redis 2.383ms ([methodology](https://github.com/redistill-io/redistill/blob/main/docs/BENCHMARKS.md), raw memtier output checked into the repo).",
       "arch": ["async-native", "sharding", "batching"]
+    },
+    {
+      "name": "fastcrypto",
+      "url": "https://github.com/MystenLabs/fastcrypto",
+      "section": "Candidates",
+      "type": "case-study",
+      "description": "Mysten Labs' cryptography library for the Sui blockchain: Ed25519, ECDSA and BLS12-381 signing/verification plus Groth16 proof checks and encoding utilities behind one trait API, with the fastest backend picked per scheme by benchmark",
+      "blazing": "author-claimed ~30% faster secp256k1 verification vs the pure-Rust k256 crate; no per-operation table quoted in this card — the evidence is a live per-release [criterion report](https://mystenlabs.github.io/fastcrypto/benchmarks/criterion/reports/) (~40 groups covering sign/verify/batch-verify/aggregate on BLS12-381, BLS12-377, BN254, Ed25519, secp256k1, secp256r1, with the BLST C library as comparison baseline) and an ACM ICPE 2024 [methodology paper](https://dl.acm.org/doi/abs/10.1145/3629527.3652266) claiming Rust-ecosystem speed records from continuous benchmarking.",
+      "arch": ["c-binding", "batching", "statistical-rigor"]
     }
   ]
 }
