@@ -5,7 +5,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | Pattern | Used by | Removes |
 | --- | --- | --- |
 | `aes-ni` | ahash, fastdedup |  |
-| `alloc-tracking` | divan, dhat, hotpath-rs |  |
+| `alloc-tracking` | divan, dhat, hotpath-rs, binggan |  |
 | `arrangement-indexing` | differential-dataflow |  |
 | `async-native` | quinn, hyper, ntex, plumbrs, orion, redistill |  |
 | `automata-compilation` | regex, aho-corasick, alyze, wordchipper |  |
@@ -79,7 +79,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `own-renderer` | zed |  |
 | `parallel-algos` | rustworkx, graphrs, sparx |  |
 | `partitioned` | fjall |  |
-| `perf-integration` | cargo-flamegraph |  |
+| `perf-integration` | cargo-flamegraph, binggan |  |
 | `pgo` | cargo-pgo |  |
 | `poseidon2-gf2` | paramo1d |  |
 | `prefilter` | regex |  |
@@ -102,7 +102,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
-| `statistical-rigor` | hyperfine, criterion, solar |  |
+| `statistical-rigor` | hyperfine, criterion, solar, binggan |  |
 | `storage-backend-flag` | oxigraph |  |
 | `stringview` | apache-arrow-rs, datafusion |  |
 | `structural-sharing` | im |  |
