@@ -10,13 +10,13 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `async-native` | quinn, hyper, ntex, plumbrs, orion, redistill |  |
 | `automata-compilation` | regex, aho-corasick, alyze, wordchipper |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring, SurrealKV, apache/iggy, lionturtle, emdb, redistill |  |
+| `batching` | io-uring, SurrealKV, apache/iggy, lionturtle, emdb, redistill, fastcrypto |  |
 | `bitmap-index` | roaring-rs, fast-grep-rust |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
 | `btf-probe` | uringscope |  |
 | `bulk-loading` | rstar |  |
-| `c-binding` | zstd-safe, lionturtle, NumKong, ForkUnion |  |
+| `c-binding` | zstd-safe, lionturtle, NumKong, ForkUnion, fastcrypto |  |
 | `cache-conscious-layout` | hashbrown, taffy, eg-strider, sparx, radixox, rust-tango, ForkUnion |  |
 | `classical-algorithms` | num-bigint, rust-bio |  |
 | `code-layout` | cargo-pgo |  |
@@ -102,7 +102,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
 | `sparql-engine` | oxigraph |  |
 | `speculative-parallel-decode` | flashraw |  |
-| `statistical-rigor` | hyperfine, criterion, solar |  |
+| `statistical-rigor` | hyperfine, criterion, solar, fastcrypto |  |
 | `storage-backend-flag` | oxigraph |  |
 | `stringview` | apache-arrow-rs, datafusion |  |
 | `structural-sharing` | im |  |
