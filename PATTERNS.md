@@ -10,7 +10,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `async-native` | quinn, hyper, ntex, plumbrs, orion, redistill |  |
 | `automata-compilation` | regex, aho-corasick, alyze, wordchipper |  |
 | `backend-trait` | candle, burn |  |
-| `batching` | io-uring, SurrealKV, apache/iggy, lionturtle, emdb, redistill |  |
+| `batching` | io-uring, SurrealKV, apache/iggy, lionturtle, emdb, redistill, perfetto-recorder |  |
 | `bitmap-index` | roaring-rs, fast-grep-rust |  |
 | `branchless` | memchr, foldhash |  |
 | `broad-phase-narrow-phase` | rapier |  |
@@ -96,7 +96,7 @@ The second axis of this list: **how** the speed is achieved. Patterns with a lin
 | `relative-pointers` | rkyv |  |
 | `runtime-dispatch` | faer, pulp, NumKong |  |
 | `sandboxing` | wasmtime, nachalnik |  |
-| `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill |  |
+| `sharding` | dashmap, glommio, apache/iggy, spargio, emdb, redistill, perfetto-recorder |  |
 | `shuttle-in-ci` | bbtree |  |
 | `simd` | ripgrep, memchr, regex, hashbrown, blake3, xxhash-rust, crc32fast, bbtree, aho-corasick, sonic-rs, simd-json, polars, faer, nalgebra, rapier, pulp, flashraw, mzstd, fast-grep-rust, ffind, NumKong, flock |  |
 | [`skills-in-repo`](decisions/005-skills-in-repo.md) | uringscope SKILL.md |  |
